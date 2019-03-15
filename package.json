@@ -1,0 +1,14 @@
+{
+  "name": "gdnbot2",
+  "description": "The next iteration of GDNBot?",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "discord.js": "^11.4.2",
+    "dotenv": "^7.0.0"
+  },
+  "devDependencies": {
+    "chokidar": "^2.1.2"
+  }
+}
