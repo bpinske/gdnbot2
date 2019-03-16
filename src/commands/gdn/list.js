@@ -27,6 +27,7 @@ class ListCommand extends Command {
       memberName: 'list',
       description: 'List info about the server',
       guildOnly: true,
+      userPermissions: ['MANAGE_ROLES', 'MANAGE_CHANNELS'],
       args: [
         {
           key: 'option',
