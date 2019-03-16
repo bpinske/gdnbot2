@@ -8,7 +8,11 @@ const path = require('path');
 const bot = new CommandoClient({
   prefix: '!',
   owner: '148474055949942787',
-  invite: 'https://discord.gg/vH8uVUE'
+  invite: 'https://discord.gg/vH8uVUE',
+  unknownCommandResponse: false,
+  disabledEvents: [
+    'TYPING_START'
+  ]
 });
 
 // Set up a SQLite DB to preserve guide-specific command availability
