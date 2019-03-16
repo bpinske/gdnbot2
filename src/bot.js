@@ -1,7 +1,8 @@
 // Load files from the .env file
 require('dotenv').config();
 
-const { CommandoClient } = require('discord.js-commando');
+const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
+const sqlite = require('sqlite');
 const path = require('path');
 
 const bot = new CommandoClient({
@@ -9,6 +10,13 @@ const bot = new CommandoClient({
   owner: '148474055949942787',
   invite: 'https://discord.gg/vH8uVUE'
 });
+
+// Set up a SQLite DB to preserve guide-specific command availability
+bot.setProvider(
+  sqlite.open(path.join(__dirname, '../settings.db'))
+    .then(db => new SQLiteProvider(db))
+    .catch(error => { console.error('Error loading SQLite DB:', error); })
+);
 
 bot.registry
   .registerDefaultTypes()
