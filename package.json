@@ -7,7 +7,8 @@
     "start": "nodemon src/bot.js"
   },
   "dependencies": {
-    "discord.js": "^11.4.2",
+    "discord.js": "github:discordjs/discord.js",
+    "discord.js-commando": "github:discordjs/Commando",
     "dotenv": "^7.0.0"
   },
   "devDependencies": {
