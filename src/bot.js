@@ -25,8 +25,8 @@ bot.setProvider(
 bot.registry
   .registerDefaultTypes()
   .registerGroups([
-    ['auth', 'Auth Services'],
-    ['gdn', 'GDN Services']
+    ['auth', 'Authentication'],
+    ['gdn', 'Goon Discord Network']
   ])
   .registerDefaultGroups()
   .registerDefaultCommands()
