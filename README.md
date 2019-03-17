@@ -6,23 +6,47 @@ This application runs using the ["GDNDev" bot](https://discordapp.com/developers
 
 ## Requirements
 
-- Node v10.15.3
+- Docker + Compose
+- Node v10.15.3 (Optional)
+  - Install this if you want to install dependencies for editor intellisense during development
 
 ## Development
 
-Install dependencies:
+If you want to install the bot's dependencies locally to allow your editor to perform things like code completion, run the following:
 
 ```sh
 $> npm install
 ```
 
-Run the bot in development mode:
+To run the bot in development mode, launch it with Compose:
 
 ```sh
-$> npm start
+$> docker-compose up
 ```
 
+The bot will start up in a container with the source code bound to the container. This will allow `nodemon` to correctly restart the bot within the container after you edit a file in your editor.
+
 ## Deployment
+
+### Start
+
+To start the bot in production mode, run the following command:
+
+```sh
+$> ./start-prod.sh
+```
+
+The bot will launch without any kind of automatic restart upon file change.
+
+### Update
+
+To deploy a new version of the bot, run the following command:
+
+```sh
+$> ./update-bot-container.sh
+```
+
+This will pull the latest code, stop and clean up old containers, then rebuild and launch the bot in production mode.
 
 ## Additional Notes
 
