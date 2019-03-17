@@ -7,6 +7,9 @@ const path = require('path');
 
 const logger = require('./helpers/logger');
 
+// Auth event handlers
+const guildMemberAddAuth = require('./helpers/auth/guildMemberAdd');
+
 // Create the bot as a Commando client
 const bot = new CommandoClient({
   prefix: '!',
@@ -51,8 +54,10 @@ bot.once('ready', () => {
 });
 
 // Handle errors
-// TODO: Use proper error logging here
 bot.on('error', logger.error);
+
+// Individual Event Handlers
+bot.on('guildMemberAdd', guildMemberAddAuth);
 
 // Start the bot
 bot.login(process.env.DISCORD_BOT_TOKEN);
