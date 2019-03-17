@@ -5,6 +5,7 @@ const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
 const sqlite = require('sqlite');
 const path = require('path');
 
+// Create the bot as a Commando client
 const bot = new CommandoClient({
   prefix: '!',
   owner: '148474055949942787',
@@ -22,6 +23,7 @@ bot.setProvider(
     .catch(error => { console.error('Error loading SQLite DB:', error); })
 );
 
+// Initialize commands and command groups
 bot.registry
   .registerDefaultTypes()
   .registerGroups([
@@ -33,6 +35,7 @@ bot.registry
   // Automatically load commands that exist in the commands/ directory
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
+// Announce the bot's readiness to serve
 bot.once('ready', () => {
   console.log('   __________  _   ______        __');
   console.log('  / ____/ __ \\/ | / / __ )____  / /_');
@@ -45,6 +48,9 @@ bot.once('ready', () => {
   bot.user.setActivity('in the forge');
 });
 
+// Handle errors
+// TODO: Use proper error logging here
 bot.on('error', console.error);
 
+// Start the bot
 bot.login(process.env.DISCORD_BOT_TOKEN);
