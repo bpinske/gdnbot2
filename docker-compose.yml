@@ -11,6 +11,8 @@ services:
     volumes:
       # Preserve the settings database on the host filesystem
       - ./settings.db:/usr/src/app/settings.db:rw
+    networks:
+      - gdn_network
     command: "npm run host"
 
 networks:
