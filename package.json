@@ -4,7 +4,8 @@
   "repository": {},
   "license": "",
   "scripts": {
-    "start": "nodemon src/bot.js"
+    "start": "nodemon src/bot.js",
+    "host": "node src/bot.js"
   },
   "dependencies": {
     "capitalize": "^2.0.0",
