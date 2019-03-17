@@ -1,7 +1,7 @@
 const { Command } = require('discord.js-commando');
 const capitalize = require('capitalize');
 
-const GDNEmbed = require('../../classes/GDNEmbed');
+const GDNEmbed = require('../../helpers/GDNEmbed');
 
 const OPTIONS = {
   ROLES: 'roles',
