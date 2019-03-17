@@ -47,8 +47,4 @@ bot.once('ready', () => {
 
 bot.on('error', console.error);
 
-bot.on('message', (message) => {
-  // console.log(message.content);
-});
-
 bot.login(process.env.DISCORD_BOT_TOKEN);
