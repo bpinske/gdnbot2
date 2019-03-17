@@ -4,8 +4,8 @@
   "repository": {},
   "license": "",
   "scripts": {
-    "start": "nodemon src/bot.js",
-    "host": "node src/bot.js"
+    "start": "NODE_ENV=development nodemon src/bot.js",
+    "host": "NODE_ENV=production node src/bot.js"
   },
   "dependencies": {
     "capitalize": "^2.0.0",
