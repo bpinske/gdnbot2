@@ -1,3 +1,5 @@
+const logger = require('../logger');
+
 /**
  * A series of checks to perform any time an intent to authenticate is registered
  *
@@ -6,12 +8,14 @@
  * - User invokes !authme
  * - User joins a server in which GDNBot resides
  *
+ * @param {object} tag - The output from a call to logger.getLogTag()
  * @param {Guild} guild - The server the user is in
  * @param {Member} member - The member to auth
  * @param {boolean} isAuthMe - Whether this was invoked from !authme, or by the member joining
  * @returns {object} - { canProceed, validatedRole, loggingChannel}
  */
-const startAuthCheck = ({ guild, member, isAuthMe }) => {
+const startAuthCheck = ({ tag, guild, member, isAuthMe }) => {
+  logger.info(tag, 'Beginning auth checks');
   // - Ensure that server is in GDN
   //   - Alert user (if invoked via !authme)
 
@@ -34,6 +38,12 @@ const startAuthCheck = ({ guild, member, isAuthMe }) => {
   //   - Log to logging channel
 
   // - Tell user they've been automatically auth'd
+
+  return {
+    canProceed: false,
+    validatedRole: null,
+    loggingChanne: null
+  };
 };
 
 module.exports = startAuthCheck;
