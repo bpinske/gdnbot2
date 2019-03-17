@@ -5,6 +5,8 @@ const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
 const sqlite = require('sqlite');
 const path = require('path');
 
+const logger = require('./helpers/logger');
+
 // Create the bot as a Commando client
 const bot = new CommandoClient({
   prefix: '!',
@@ -20,7 +22,7 @@ const bot = new CommandoClient({
 bot.setProvider(
   sqlite.open(path.join(__dirname, '../settings.db'))
     .then(db => new SQLiteProvider(db))
-    .catch(error => { console.error('Error loading SQLite DB:', error); })
+    .catch(error => { logger.error('Error loading SQLite DB:', error); })
 );
 
 // Initialize commands and command groups
@@ -37,20 +39,20 @@ bot.registry
 
 // Announce the bot's readiness to serve
 bot.once('ready', () => {
-  console.log('   __________  _   ______        __');
-  console.log('  / ____/ __ \\/ | / / __ )____  / /_');
-  console.log(' / / __/ / / /  |/ / __  / __ \\/ __/');
-  console.log('/ /_/ / /_/ / /|  / /_/ / /_/ / /_');
-  console.log('\\____/_____/_/ |_/_____/\\____/\\__/');
-  console.log(`Logged in as ${bot.user.tag}`);
-  console.log('---:getin:---');
+  logger.info('   __________  _   ______        __');
+  logger.info('  / ____/ __ \\/ | / / __ )____  / /_');
+  logger.info(' / / __/ / / /  |/ / __  / __ \\/ __/');
+  logger.info('/ /_/ / /_/ / /|  / /_/ / /_/ / /_');
+  logger.info('\\____/_____/_/ |_/_____/\\____/\\__/');
+  logger.info(`Logged in as ${bot.user.tag}`);
+  logger.info('---:getin:---');
 
   bot.user.setActivity('in the forge');
 });
 
 // Handle errors
 // TODO: Use proper error logging here
-bot.on('error', console.error);
+bot.on('error', logger.error);
 
 // Start the bot
 bot.login(process.env.DISCORD_BOT_TOKEN);
