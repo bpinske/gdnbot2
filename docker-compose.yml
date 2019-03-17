@@ -8,6 +8,7 @@ services:
     user: root
     environment:
       - DISCORD_BOT_TOKEN
+      - GDN_API_TOKEN
     volumes:
       # Preserve the settings database on the host filesystem
       - ./settings.db:/usr/src/app/settings.db:rw
