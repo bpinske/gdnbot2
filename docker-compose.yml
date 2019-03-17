@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: root
+    environment:
+      - DISCORD_BOT_TOKEN
+    volumes:
+      # Preserve the settings database on the host filesystem
+      - ./settings.db:/usr/src/app/settings.db:rw
+    command: "npm run host"
+
+networks:
+  # This allows GDNBot to communicate with the API server via Nginx.
+  # see the backend's docker-compose.yml
+  gdn_network:
+    external: true
+    name: backend-network
