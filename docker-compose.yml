@@ -9,12 +9,15 @@ services:
     environment:
       - DISCORD_BOT_TOKEN
       - GDN_API_TOKEN
+      - PAPERTRAIL_HOST
+      - PAPERTRAIL_PORT
     volumes:
       # Preserve the settings database on the host filesystem
       - ./settings.db:/usr/src/app/settings.db:rw
     networks:
       - gdn_network
     command: "npm run host"
+    restart: unless-stopped:0
 
 networks:
   # This allows GDNBot to communicate with the API server via Nginx.
