@@ -34,8 +34,6 @@ const logger = bunyan.createLogger({
   ]
 });
 
-console.log(process.env.PWD);
-
 logger.on('error', (err, stream) => {
   console.error('an error occurred in the logger:', err);
 });
@@ -50,8 +48,7 @@ logger.on('error', (err, stream) => {
  */
 logger.getLogTag = (id) => ({ req_id: id });
 
-if (process.env.NODE_ENV !== 'production') {
-  logger.info('adding PaperTrail stream');
+if (process.env.NODE_ENV === 'production') {
   // Add a Papertrail stream
   logger.addStream({
     type: 'raw',
