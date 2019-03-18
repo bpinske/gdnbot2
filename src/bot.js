@@ -54,7 +54,9 @@ bot.once('ready', () => {
 });
 
 // Handle errors
-bot.on('error', logger.error);
+bot.on('error', (err) => {
+  logger.error(err);
+});
 
 // Individual Event Handlers
 bot.on('guildMemberAdd', guildMemberAddAuth);
