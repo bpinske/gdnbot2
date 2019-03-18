@@ -2,4 +2,6 @@ node_modules
 .env
 *.db
 .DS_Store
+# Rolling logger output
 *.log
+*.log.*
