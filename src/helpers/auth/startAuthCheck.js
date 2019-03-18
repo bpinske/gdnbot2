@@ -14,8 +14,11 @@ const logger = require('../logger');
  * @param {boolean} isAuthMe - Whether this was invoked from !authme, or by the member joining
  * @returns {object} - { canProceed, validatedRole, loggingChannel}
  */
-const startAuthCheck = ({ tag, guild, member, isAuthMe }) => {
+const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   logger.info(tag, 'Beginning auth checks');
+
+  let reason = 'Because I said so';
+
   // - Ensure that server is in GDN
   //   - Alert user (if invoked via !authme)
 
@@ -41,6 +44,7 @@ const startAuthCheck = ({ tag, guild, member, isAuthMe }) => {
 
   return {
     canProceed: false,
+    reason,
     validatedRole: null,
     loggingChanne: null
   };
