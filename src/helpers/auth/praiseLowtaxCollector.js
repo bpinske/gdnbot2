@@ -13,11 +13,14 @@ const { ArgumentCollector } = require('discord.js-commando');
  * - `confirmation.cancelled` can be null, `user`, or `time`. Any value here indicates that the
  *   user didn't reply as expected.
  */
-const praiseLowtaxCollector = (client) => new ArgumentCollector(
+const praiseLowtaxCollector = (
+  client,
+  message = 'Type "**praise Lowtax**" to continue'
+) => new ArgumentCollector(
   client,
   [{
     key: 'praise',
-    prompt: 'Type "**praise Lowtax**" to continue',
+    prompt: message,
     type: 'string',
     validate: text => text.toLowerCase() === 'praise lowtax',
     wait: 300 // seconds
