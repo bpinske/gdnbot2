@@ -5,7 +5,9 @@
   "license": "",
   "scripts": {
     "start": "NODE_ENV=development nodemon src/bot.js | bunyan",
-    "host": "NODE_ENV=production node src/bot.js"
+    "host": "NODE_ENV=production node src/bot.js",
+    "test": "jest",
+    "test:coverage": "npm test -- --coverage"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -20,6 +22,8 @@
   },
   "devDependencies": {
     "husky": "^1.3.1",
+    "jest": "^24.5.0",
+    "jest-mock-axios": "^2.3.0",
     "lint-staged": "^8.1.5",
     "nodemon": "^1.18.10",
     "semistandard": "^13.0.1"
@@ -40,6 +44,14 @@
       "package.json",
       "node_modules/*",
       ".vscode/*"
+    ]
+  },
+  "semistandard": {
+    "env": [
+      "jest"
+    ],
+    "ignore": [
+      "jest.config.js"
     ]
   }
 }

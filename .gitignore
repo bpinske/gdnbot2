@@ -5,3 +5,4 @@ node_modules
 # Rolling logger output
 *.log
 *.log.*
+coverage
