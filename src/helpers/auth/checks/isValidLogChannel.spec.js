@@ -1,14 +1,41 @@
+jest.mock('../../logger');
+
 const isValidLogChannel = require('./isValidLogChannel');
 
-test('return undefined channel when no channel ID passed in', async () => {
-  const { validatedChannel } = await isValidLogChannel({
-    tag: { tag: 'aaa' },
-    guild: {
-      channels: {
-        get: jest.fn()
-      }
-    }
-  });
+const validChannelId = '123';
+
+// Pretend this is a ChannelStore that might check the API for channels by ID
+const simpleChannelMatch = jest.fn().mockImplementation(
+  (id) => Promise.resolve(id === validChannelId ? { name: 'foobar' } : undefined)
+);
+
+const tag = () => ({ tag: Date.now() });
+const guild = {
+  channels: {
+    get: jest.fn(simpleChannelMatch)
+  }
+};
+
+test('return undefined when no channel ID passed in', async () => {
+  const { validatedChannel } = await isValidLogChannel({ tag: tag(), guild });
 
   expect(validatedChannel).toBeUndefined();
+});
+
+test('return channel when passed a valid ID', async () => {
+  const { validatedChannel } = await isValidLogChannel({ tag: tag(), guild, channelId: validChannelId });
+
+  expect(validatedChannel).not.toBeUndefined();
+});
+
+test('return undefined when passed an invalid ID', async () => {
+  const { validatedChannel } = await isValidLogChannel({ tag: tag(), guild, channelId: 456 });
+
+  expect(validatedChannel).toBeUndefined();
+});
+
+test('return channel when passed a valid ID of type Number', async () => {
+  const { validatedChannel } = await isValidLogChannel({ tag: tag(), guild, channelId: 123 });
+
+  expect(validatedChannel).not.toBeUndefined();
 });
