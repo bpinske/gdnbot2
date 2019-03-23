@@ -7,6 +7,7 @@
     "start": "NODE_ENV=development nodemon src/bot.js | bunyan",
     "host": "NODE_ENV=production node src/bot.js",
     "test": "jest",
+    "test:watch": "jest --watch",
     "test:coverage": "npm test -- --coverage"
   },
   "dependencies": {
