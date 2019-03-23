@@ -12,4 +12,13 @@ const axiosGDN = axios.create({
   }
 });
 
-module.exports = axiosGDN;
+const GDN_URLS = {
+  MEMBERS: '/gdn/members',
+  GUILDS: '/gdn/servers',
+  SA: 'gdn/sa'
+};
+
+module.exports = {
+  axiosGDN,
+  GDN_URLS
+};
