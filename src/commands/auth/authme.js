@@ -4,6 +4,7 @@ const { stripIndents, oneLine } = require('common-tags');
 // Helpers
 const {
   axiosGDN,
+  GDN_URLS,
   logger,
   cleanupMessages
 } = require('../../helpers');
@@ -12,11 +13,6 @@ const {
   praiseLowtaxCollector,
   startAuthCheck
 } = require('../../helpers/auth');
-
-const URLS = {
-  MEMBERS: '/gdn/members',
-  SERVERS: '/gdn/servers'
-};
 
 class AuthmeCommand extends Command {
   constructor (client) {
@@ -83,13 +79,13 @@ class AuthmeCommand extends Command {
 
     // An example of talking to the GDN API
     try {
-      const resp = await axiosGDN.get(`${URLS.MEMBERS}/${member.id}`);
+      const resp = await axiosGDN.get(`${GDN_URLS.MEMBERS}/${member.id}`);
       logger.info(tag, 'status:', resp.status);
     } catch (err) {
       const { response } = err;
       if (response && response.status === 404) {
         logger.info(tag, 'user has not authed before');
-        // Clean up the auth message
+        // Clean up the auth message from the member's DMs
         cleanupMessages([hashMessage]);
       } else {
         logger.error(tag, err);
