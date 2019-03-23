@@ -1,4 +1,11 @@
-const logger = require('../logger');
+const {
+  logger
+} = require('../');
+
+const hasGuildEnrolled = require('./checks/hasGuildEnrolled');
+const canMemberAuth = require('./checks/canMemberAuth');
+const isValidAuthRole = require('./checks/isValidAuthRole');
+const isValidLogChannel = require('./checks/isValidLogChannel');
 
 /**
  * A series of checks to perform any time an intent to authenticate is registered
@@ -12,41 +19,73 @@ const logger = require('../logger');
  * @param {Guild} guild - The server the user is in
  * @param {Member} member - The member to auth
  * @param {boolean} isAuthMe - Whether this was invoked from !authme, or by the member joining
- * @returns {object} - { canProceed, validatedRole, loggingChannel}
+ * @returns {object} - { canProceed, reason?, validatedRole, loggingChannel }
  */
 const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
-  logger.info(tag, 'Beginning auth checks');
+  logger.info(
+    tag,
+    `Beginning auth checks for ${member.name} (${member.id}) in ${guild.name} (${guild.id})`
+  );
 
-  let reason = 'Because I said so';
+  /**
+   * Ensure that server is in GDN
+   */
+  const {
+    isEnrolled,
+    reason: guildReason,
+    roleId,
+    channelId
+  } = await hasGuildEnrolled({ tag, guild });
 
-  // - Ensure that server is in GDN
-  //   - Alert user (if invoked via !authme)
+  if (!isEnrolled) {
+    return {
+      canProceed: false,
+      reason: guildReason
+    };
+  }
 
-  // - Ensure by Discord ID that user has authed before
-  //   - GET /gdn/members/{Discord member id} === 200
+  /**
+   * Check that member can proceed with authentication
+   */
+  const {
+    canAuth,
+    reason: memberAuthReason
+  } = await canMemberAuth({ tag, member });
 
-  // - Ensure by SA ID that user has not been blacklisted
-  //   - GET /gdn/sa/{SA ID stored in DB for Discord member ID above} => resp.blacklisted !== true
-  //     - A little complex, but since a single SA ID can be used for multiple Discord accounts, we have to do this
-  //   - Alert user (if invoked via !authme)
+  if (!canAuth) {
+    return {
+      canProceed: false,
+      reason: memberAuthReason
+    };
+  }
 
-  // - Ensure that server has specified a role for auth'd users
-  //   - Verify that role still exists
-  //     - Alert user (if invoked via !authme) that authme is enabled but no valid role is specified
+  /**
+   * Ensure that server has specified a role for auth'd users
+   */
+  const {
+    isValid: isValidRole,
+    reason: roleReason,
+    validatedRole
+  } = isValidAuthRole({ tag, guild, roleId });
 
-  // - Check for (optional) logging channel and verify its validity
+  if (!isValidRole) {
+    return {
+      canProceed: false,
+      reason: roleReason
+    };
+  }
 
-  // - Authenticate user
-  //   - Give role
-  //   - Log to logging channel
-
-  // - Tell user they've been automatically auth'd
+  /**
+   * Check for (optional) logging channel and validate it
+   */
+  const {
+    validatedChannel
+  } = isValidLogChannel({ tag, guild, channelId });
 
   return {
-    canProceed: false,
-    reason,
-    validatedRole: null,
-    loggingChanne: null
+    canProceed: true,
+    validatedRole,
+    validatedChannel
   };
 };
 
