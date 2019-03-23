@@ -6,7 +6,12 @@ const {
   GDN_URLS
 } = require('../../');
 
-const catchErrorMessage = oneLine`
+const reasonBlacklisted = oneLine`
+  You are blacklisted from the Goon Discord Network. You may appeal this decision here:
+  https://discord.gg/vH8uVUE
+`;
+
+const reasonCatchError = oneLine`
   An error occurred while attempting to verify that you can proceed with auth. The bot
   owner has been notified. Thank you for your patience while they get this fixed!
 `;
@@ -38,7 +43,7 @@ const canMemberAuth = async ({ tag, member }) => {
       logger.error({ ...tag, err }, 'Error checking if member has authed');
       return {
         canAuth: false,
-        reason: catchErrorMessage
+        reason: reasonCatchError
       };
     }
   }
@@ -52,17 +57,14 @@ const canMemberAuth = async ({ tag, member }) => {
       logger.warn(tag, 'Member has authed before but is BLACKLISTED, ignoring');
       return {
         canAuth: false,
-        reason: oneLine`
-          You are blacklisted from the Goon Discord Network. You may appeal this decision here:
-          https://discord.gg/vH8uVUE
-        `
+        reason: reasonBlacklisted
       };
     }
   } catch (err) {
     logger.error({ ...tag, err }, 'Error checking if member is blacklisted');
     return {
       canAuth: false,
-      reason: catchErrorMessage
+      reason: reasonCatchError
     };
   }
 
