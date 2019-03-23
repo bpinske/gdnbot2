@@ -11,7 +11,7 @@ const {
  *
  * @param {object} tag - The output from a call to logger.getLogTag()
  * @param {Guild} guild - The guild to verify enrollment in GDN
- * @returns {object} - { enrolled, reason, roleId, channelId }
+ * @returns {object} - { isEnrolled, reason, roleId, channelId }
  */
 const hasGuildEnrolled = async ({ tag, guild }) => {
   logger.info(tag, `Checking if guild ${guild.name} has enrolled in GDN`);
