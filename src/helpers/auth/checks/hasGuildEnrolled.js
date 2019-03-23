@@ -23,7 +23,7 @@ const hasGuildEnrolled = async ({ tag, guild }) => {
     logger.info(tag, 'Server is enrolled in GDN');
 
     return {
-      enrolled: true,
+      isEnrolled: true,
       roleId: data.validated_role_id,
       channelId: data.logging_channel_id
     };
@@ -33,7 +33,7 @@ const hasGuildEnrolled = async ({ tag, guild }) => {
     if (response && response.status === 404) {
       logger.info(tag, '...but no server info was found, returning false');
       return {
-        enrolled: false,
+        isEnrolled: false,
         reason: oneLine`
           This server is not enrolled in the Goon Discord Network. Please have an
           admin enroll the server and then activate auth.
@@ -42,7 +42,7 @@ const hasGuildEnrolled = async ({ tag, guild }) => {
     } else {
       logger.error({ ...tag, err }, 'Error checking for server info');
       return {
-        enrolled: false,
+        isEnrolled: false,
         reason: oneLine`
           An error occurred while attempting to verify guild enrollment in GDN. The bot owner has
           been notified. Thank you for your patience while they get this fixed!
