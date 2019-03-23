@@ -14,11 +14,24 @@ const guildMemberAdd = (member) => {
   // Generate a logging tag with the snowflake
   const tag = logger.getLogTag(eventId);
 
-  logger.info(tag, `Member ${member.name} joined guild ${guild.name}`);
+  logger.info(tag, `EVENT: Member added to guild`);
 
   // Wait a second before proceeding with auto-auth
   setTimeout(() => {
-    startAuthCheck({ tag, guild, member, isAuthMe: false });
+    const {
+      canProceed
+      // canProceed,
+      // validatedRole,
+      // validatedChannel
+    } = startAuthCheck({ tag, guild, member, isAuthMe: false });
+
+    if (canProceed) {
+      // - Authenticate user
+      //   - Give role
+      //   - Log to logging channel
+
+      // - Tell user they've been automatically auth'd
+    }
   }, 1000);
 };
 
