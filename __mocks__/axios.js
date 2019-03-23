@@ -1,3 +1,5 @@
-import mockAxios from 'jest-mock-axios';
+const mockAxios = require('jest-mock-axios');
 
-export default mockAxios;
+mockAxios.create = jest.fn();
+
+module.exports = mockAxios;
