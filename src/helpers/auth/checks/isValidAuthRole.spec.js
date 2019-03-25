@@ -1,4 +1,4 @@
-// jest.mock('../../logger');
+jest.mock('../../logger');
 
 const isValidAuthRole = require('./isValidAuthRole');
 
@@ -30,7 +30,7 @@ test('return false when an invalid role ID is passed in', async () => {
 test('return a reason when an invalid role ID is passed in', async () => {
   const { reason } = await isValidAuthRole({ tag, guild });
 
-  expect(reason).toBeTruthy();
+  expect(reason).toMatch(/set up properly/);
 });
 
 test('return true when a valid role ID is passed in', async () => {
