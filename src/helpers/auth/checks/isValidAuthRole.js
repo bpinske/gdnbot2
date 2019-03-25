@@ -18,9 +18,10 @@ const invalidRoleReason = oneLine`
  * @returns {object} - { isValid, reason?, validatedRole }
  */
 const isValidAuthRole = async ({ tag, guild, roleId }) => {
-  logger.info(tag, `Validating auth role ID "${roleId}"`);
+  const id = String(roleId);
+  logger.info(tag, `Validating auth role ID "${id}"`);
 
-  const validatedRole = await guild.roles.fetch(roleId);
+  const validatedRole = await guild.roles.fetch(id);
 
   if (!validatedRole) {
     logger.info(tag, `Could not find a role with that ID in guild, returning false`);
