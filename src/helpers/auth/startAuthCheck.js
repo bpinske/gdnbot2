@@ -38,6 +38,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   } = await hasGuildEnrolled({ tag, guild });
 
   if (!isEnrolled) {
+    logger.info(tag, 'Guild is not enrolled, exiting');
     return {
       canProceed: false,
       reason: guildReason
@@ -53,6 +54,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   } = await canMemberAuth({ tag, member });
 
   if (!canAuth) {
+    logger.info(tag, 'Member cannot proceed with auth, exiting');
     return {
       canProceed: false,
       reason: memberAuthReason
@@ -69,6 +71,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   } = isValidAuthRole({ tag, guild, roleId });
 
   if (!isValidRole) {
+    logger.info(tag, 'Auth role is not valid, exiting');
     return {
       canProceed: false,
       reason: roleReason
@@ -82,6 +85,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
     validatedChannel
   } = isValidLogChannel({ tag, guild, channelId });
 
+  logger.info(tag, 'Auth checks passed, continuing');
   return {
     canProceed: true,
     validatedRole,

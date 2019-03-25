@@ -30,7 +30,7 @@ const hasGuildEnrolled = async ({ tag, guild }) => {
     // Not erroring out here means the server is in GDN
     const { data } = await axiosGDN.get(`${GDN_URLS.GUILDS}/${guild.id}`);
 
-    logger.info(tag, 'Server is enrolled in GDN');
+    logger.info(tag, 'Server is enrolled in GDN, continuing');
 
     return {
       isEnrolled: true,
@@ -41,13 +41,13 @@ const hasGuildEnrolled = async ({ tag, guild }) => {
     const { response } = err;
 
     if (response && response.status === 404) {
-      logger.info(tag, '...but no server info was found, returning false');
+      logger.info(tag, '...but no server info was found, exiting');
       return {
         isEnrolled: false,
         reason: reasonNotEnrolled
       };
     } else {
-      logger.error({ ...tag, err }, 'Error checking for server info');
+      logger.error({ ...tag, err }, 'Error checking for server info, exiting');
       return {
         isEnrolled: false,
         reason: reasonCatchError
