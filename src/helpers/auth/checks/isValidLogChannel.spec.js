@@ -9,33 +9,37 @@ const simpleChannelMatch = jest.fn().mockImplementation(
   (id) => Promise.resolve(id === validChannelId ? { name: 'foobar' } : undefined)
 );
 
-const tag = () => ({ tag: Date.now() });
+let tag;
 const guild = {
   channels: {
     get: jest.fn(simpleChannelMatch)
   }
 };
 
+beforeEach(() => {
+  tag = { tag: Date.now() };
+});
+
 test('return undefined when no channel ID passed in', async () => {
-  const { validatedChannel } = await isValidLogChannel({ tag: tag(), guild });
+  const { validatedChannel } = await isValidLogChannel({ tag, guild });
 
   expect(validatedChannel).toBeUndefined();
 });
 
 test('return channel when passed a valid ID', async () => {
-  const { validatedChannel } = await isValidLogChannel({ tag: tag(), guild, channelId: validChannelId });
+  const { validatedChannel } = await isValidLogChannel({ tag, guild, channelId: validChannelId });
 
   expect(validatedChannel).not.toBeUndefined();
 });
 
 test('return undefined when passed an invalid ID', async () => {
-  const { validatedChannel } = await isValidLogChannel({ tag: tag(), guild, channelId: 456 });
+  const { validatedChannel } = await isValidLogChannel({ tag, guild, channelId: 456 });
 
   expect(validatedChannel).toBeUndefined();
 });
 
 test('return channel when passed a valid ID of type Number', async () => {
-  const { validatedChannel } = await isValidLogChannel({ tag: tag(), guild, channelId: 123 });
+  const { validatedChannel } = await isValidLogChannel({ tag, guild, channelId: 123 });
 
   expect(validatedChannel).not.toBeUndefined();
 });
