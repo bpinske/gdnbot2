@@ -26,7 +26,7 @@ const reasonCatchError = oneLine`
 const canMemberAuth = async ({ tag, member }) => {
   let dataGDN;
 
-  logger.info(tag, `Checking if member ${member.name} has authed in GDN`);
+  logger.info(tag, `Checking if member '${member.name}' has authed in GDN`);
   try {
     const resp = await axiosGDN.get(`${GDN_URLS.MEMBERS}/${member.id}`);
     dataGDN = resp.data;
@@ -48,7 +48,7 @@ const canMemberAuth = async ({ tag, member }) => {
     }
   }
 
-  logger.info(tag, `Checking if member ${member.name} is blacklisted`);
+  logger.info(tag, 'Checking if member is blacklisted');
   try {
     logger.info(tag, 'Requesting internal GDN member profile by SA ID');
     const { data } = await axiosGDN.get(`${GDN_URLS.SA}/${dataGDN.sa_id}`);
