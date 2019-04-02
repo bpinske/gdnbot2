@@ -37,6 +37,8 @@ class AuthmeCommand extends Command {
     // Prepare a tag for logging
     const tag = logger.getLogTag(message.id);
 
+    logger.info(tag, 'EVENT: !authme');
+
     /* eslint-disable-next-line */
     const { canProceed, reason: checkReason, validatedRole, loggingChannel } = await startAuthCheck({
       tag,
@@ -96,13 +98,18 @@ class AuthmeCommand extends Command {
       return member.send(confirmReason);
     }
 
+    // We're done with the hash, so remove it
     cleanupMessages([hashMessage]);
 
-    // User is confirmed. Add the auth role and log it to the channel
+    // TODO: Check if the user is blacklisted by SA ID
+    // const { id } = scrapeSAProfile({ tag, username });
+    // TODO: See canMemberAuth.js -> L59 for blacklist check by SA ID
+
+    // TODO: User is confirmed and not blacklisted. Add the auth role and log it to the channel
     // await addAuthRole({ tag, role, member });
     // await logAuthMessage({ tag, channel, message });
 
-    // Commit the user to the DB
+    // TODO: Commit the user to the DB
     // await addUserToDB({ tag, member, saUsername, saID })
 
     return message.say(`${guild.name}: authenticating ${username}`);
