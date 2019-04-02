@@ -18,30 +18,30 @@ const errorNoValidate = oneLine`
  * @param {object} tag - The output from a call to logger.getLogTag()
  * @param {Member} member - The Discord member attempting to auth
  * @param {string} username - The Discord member's SA username
- * @returns {object} - { validated, reason? }
+ * @returns {object} - { confirmed, reason? }
  */
 const confirmHash = async ({ tag, member, username }) => {
   try {
-    logger.info(`Confirming hash placement for ${member.name} (SA: ${username})`);
+    logger.info(tag, `Confirming hash placement for ${member.user.tag} (SA: ${username})`);
     const { data } = await axiosGoonAuth.post(GOON_AUTH_URLS.CONFIRM_HASH, { username });
     const { validated } = data;
 
     if (!validated) {
       logger.warn(tag, 'Hash missing from SA profile');
       return {
-        validated,
+        confirmed: false,
         reason: reasonNotValidated
       };
     }
 
     logger.info(tag, 'Confirmed hash in SA profile');
     return {
-      validated
+      confirmed: true
     };
   } catch (err) {
     logger.error({ ...tag, err }, 'Error confirming hash');
     return {
-      validated: false,
+      confirmed: false,
       reason: errorNoValidate
     };
   }
