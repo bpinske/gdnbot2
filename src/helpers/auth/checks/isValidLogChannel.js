@@ -17,11 +17,11 @@ const isValidLogChannel = async ({ tag, guild, channelId }) => {
     // Convert to string in case we get a number
     const id = String(channelId);
 
-    logger.info(tag, `Validating logging channel ID: ${id}`);
+    logger.info(tag, `Validating logging channel ID: '${id}'`);
     validatedChannel = await guild.channels.get(id);
 
     if (validatedChannel) {
-      logger.info(tag, `Found valid channel: ${validatedChannel.name}`);
+      logger.info(tag, `Found valid channel: '#${validatedChannel.name}'`);
     } else {
       logger.info(tag, 'No channel found by that ID');
     }
