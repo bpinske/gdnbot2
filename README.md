@@ -8,7 +8,7 @@ This application runs using the ["GDNDev" bot](https://discordapp.com/developers
 
 - Docker + Compose
 - Node v10.15.3 (Optional)
-  - Install this if you want to install dependencies for editor intellisense during development
+  - Install this if you want to install dependencies for editor autocomplete during development
 
 ## Development
 
@@ -47,6 +47,26 @@ $> ./update-bot-container.sh
 ```
 
 This will pull the latest code, stop and clean up old containers, then rebuild and launch the bot in production mode.
+
+## Testing
+
+Unit tests can be run once using the following command:
+
+```sh
+$> npm run test
+```
+
+While writing tests, a "watch" mode can be activated that will automatically re-run tests whenever a file is changed:
+
+```sh
+$> npm run test:watch
+```
+
+To see a coverage report, run the following:
+
+```sh
+$> npm run test:coverage
+```
 
 ## Additional Notes
 
