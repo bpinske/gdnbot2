@@ -19,7 +19,9 @@ const guild = {
   id: 1
 };
 const member = {
-  name: 'fizzbuzz',
+  user: {
+    tag: 'fizzbuzz'
+  },
   id: 2
 };
 const isAuthMe = false;
@@ -61,12 +63,12 @@ beforeEach(() => {
 test('log tag, member name, member ID, guild name, and guild ID on start', async () => {
   await startAuthCheck({ tag, guild, member, isAuthMe });
 
-  const [ _tag, _message ] = logger.info.mock.calls[0];
+  const [_tag, _message] = logger.info.mock.calls[0];
 
   // request tag
   expect(_tag).toEqual(tag);
   expect(_message).toMatch(`${guild.name} (${guild.id})`);
-  expect(_message).toMatch(`${member.name} (${member.id})`);
+  expect(_message).toMatch(`${member.user.tag} (${member.id})`);
 });
 
 test('return true, auth role, and log channel when all checks pass', async () => {

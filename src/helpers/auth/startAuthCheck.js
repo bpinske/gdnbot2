@@ -24,7 +24,7 @@ const isValidLogChannel = require('./checks/isValidLogChannel');
 const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   logger.info(
     tag,
-    `Beginning auth checks for ${member.name} (${member.id}) in ${guild.name} (${guild.id})`
+    `Beginning auth checks for ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`
   );
 
   /**

@@ -26,7 +26,7 @@ const reasonCatchError = oneLine`
 const canMemberAuth = async ({ tag, member }) => {
   let dataGDN;
 
-  logger.info(tag, `Checking if member '${member.name}' has authed in GDN`);
+  logger.info(tag, `Checking if member ${member.user.tag} has authed in GDN`);
   try {
     const resp = await axiosGDN.get(`${GDN_URLS.MEMBERS}/${member.id}`);
     dataGDN = resp.data;
