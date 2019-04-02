@@ -68,7 +68,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
     isValid: isValidRole,
     reason: roleReason,
     validatedRole
-  } = isValidAuthRole({ tag, guild, roleId });
+  } = await isValidAuthRole({ tag, guild, roleId });
 
   if (!isValidRole) {
     logger.info(tag, 'Auth role is not valid, exiting');
@@ -83,7 +83,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
    */
   const {
     validatedChannel
-  } = isValidLogChannel({ tag, guild, channelId });
+  } = await isValidLogChannel({ tag, guild, channelId });
 
   logger.info(tag, 'Auth checks passed, continuing');
   return {
