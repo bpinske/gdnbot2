@@ -23,7 +23,7 @@ const reasonCatchError = oneLine`
  * @param {Member} member - The member to verify enrollment in GDN
  * @returns {object} - { canAuth, reason? }
  */
-const canMemberAuth = async ({ tag, member }) => {
+const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   let dataGDN;
 
   logger.info(tag, `Checking if member ${member.user.tag} has authed in GDN`);
@@ -35,17 +35,25 @@ const canMemberAuth = async ({ tag, member }) => {
     const { response } = err;
 
     if (response && response.status === 404) {
-      logger.info(tag, 'Member has not authed before, OK to auth');
-      return {
-        canAuth: true
-      };
-    } else {
-      logger.error({ ...tag, err }, 'Error checking if member has authed');
+      if (isAuthMe) {
+        logger.info(tag, 'Member has not authed before and can proceed with !authme');
+        return {
+          canAuth: true
+        };
+      }
+
+      logger.info(tag, 'Member has not authed before and so cannot proceed with auto-auth');
       return {
         canAuth: false,
-        reason: reasonCatchError
+        reason: 'Cancelling auto-auth'
       };
     }
+
+    logger.error({ ...tag, err }, 'Error checking if member has authed');
+    return {
+      canAuth: false,
+      reason: reasonCatchError
+    };
   }
 
   logger.info(tag, 'Checking if member is blacklisted');

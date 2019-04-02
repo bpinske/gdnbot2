@@ -51,7 +51,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   const {
     canAuth,
     reason: memberAuthReason
-  } = await canMemberAuth({ tag, member });
+  } = await canMemberAuth({ tag, member, isAuthMe });
 
   if (!canAuth) {
     logger.info(tag, 'Member cannot proceed with auth, exiting');
