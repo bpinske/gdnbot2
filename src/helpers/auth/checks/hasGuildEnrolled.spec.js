@@ -80,7 +80,7 @@ test('return reason when server is not found', async () => {
   });
 
   const { reason } = await hasGuildEnrolled({ tag, guild });
-  expect(reason).toMatch(/server is not enrolled/);
+  expect(reason).toMatch(/server is not enrolled/i);
 });
 
 test('return false when API server error occurs', async () => {
@@ -98,5 +98,5 @@ test('return API server error reason when unexpected response received', async (
   });
 
   const { reason } = await hasGuildEnrolled({ tag, guild });
-  expect(reason).toMatch(/An error occurred/);
+  expect(reason).toMatch(/error occurred/i);
 });

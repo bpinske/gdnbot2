@@ -104,7 +104,7 @@ test('return reason when server error occurs when requesting member by ID', asyn
   });
 
   const { reason } = await canMemberAuth({ tag, member });
-  expect(reason).toMatch(/An error occurred/);
+  expect(reason).toMatch(/error occurred/i);
 });
 
 test('return false when server error occurs when requesting member by SA ID', async () => {
@@ -136,5 +136,5 @@ test('return reason when server error occurs when requesting member by SA ID', a
   });
 
   const { reason } = await canMemberAuth({ tag, member });
-  expect(reason).toMatch(/An error occurred/);
+  expect(reason).toMatch(/error occurred/i);
 });

@@ -30,7 +30,7 @@ test('return false when an invalid role ID is passed in', async () => {
 test('return a reason when an invalid role ID is passed in', async () => {
   const { reason } = await isValidAuthRole({ tag, guild });
 
-  expect(reason).toMatch(/set up properly/);
+  expect(reason).toMatch(/set up properly/i);
 });
 
 test('return true when a valid role ID is passed in', async () => {
