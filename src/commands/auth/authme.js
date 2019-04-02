@@ -2,17 +2,16 @@ const { Command } = require('discord.js-commando');
 const { stripIndents, oneLine } = require('common-tags');
 
 // Helpers
-const {
-  axiosGDN,
-  GDN_URLS,
-  logger,
-  cleanupMessages
-} = require('../../helpers');
+const logger = require('../../helpers/logger');
+const cleanupMessages = require('../../helpers/cleanupMessages');
+
 // Auth helpers
-const {
-  praiseLowtaxCollector,
-  startAuthCheck
-} = require('../../helpers/auth');
+const startAuthCheck = require('../../helpers/auth/startAuthCheck');
+const praiseLowtaxCollector = require('../../helpers/auth/praiseLowtaxCollector');
+
+// Auth actions
+const getHash = require('../../helpers/auth/actions/getHash');
+const confirmHash = require('../../helpers/auth/actions/confirmHash');
 
 class AuthmeCommand extends Command {
   constructor (client) {
@@ -34,10 +33,12 @@ class AuthmeCommand extends Command {
 
   async run (message, { username }) {
     const { guild, member } = message;
+
+    // Prepare a tag for logging
     const tag = logger.getLogTag(message.id);
 
-    // const { canProceed, validatedRole, loggingChannel } = await startAuthCheck({
-    const { canProceed, reason } = await startAuthCheck({
+    /* eslint-disable-next-line */
+    const { canProceed, reason: checkReason, validatedRole, loggingChannel } = await startAuthCheck({
       tag,
       guild,
       member,
@@ -45,12 +46,17 @@ class AuthmeCommand extends Command {
     });
 
     if (!canProceed) {
-      return message.say(oneLine`
-        I could not proceed with authentication for the following reason: ${reason}
-      `);
+      return message.say(checkReason);
     }
 
-    const hash = 'aaa';
+    // Generate a hash for the user
+    const { hash, reason: hashReason } = await getHash({ tag, member, username });
+
+    if (!hash) {
+      return message.say(hashReason);
+    }
+
+    logger.info(tag, 'Messaging hash + instructions to user');
 
     // Send the user a PM and instructions
     const hashMessage = await member.send(stripIndents`
@@ -60,6 +66,8 @@ class AuthmeCommand extends Command {
 
       Return to the server afterwards to continue the process.
     `);
+
+    logger.info(tag, 'Awaiting response from user');
 
     // Wait for the user to respond after they've placed the hash in their profile
     const confirmation = await praiseLowtaxCollector(
@@ -71,32 +79,31 @@ class AuthmeCommand extends Command {
     ).obtain(message);
 
     if (confirmation.cancelled) {
+      logger.warn(tag, 'User did not praise Lowtax, exiting');
+
       cleanupMessages([hashMessage]);
-      return message.say(`
-        You have not yet been authenticated. Please feel free to try again.
-      `);
+
+      return member.send('You have not been authenticated. Please feel free to try again.');
     }
 
-    // An example of talking to the GDN API
-    try {
-      const resp = await axiosGDN.get(`${GDN_URLS.MEMBERS}/${member.id}`);
-      logger.info(tag, 'status:', resp.status);
-    } catch (err) {
-      const { response } = err;
-      if (response && response.status === 404) {
-        logger.info(tag, 'user has not authed before');
-        // Clean up the auth message from the member's DMs
-        cleanupMessages([hashMessage]);
-      } else {
-        logger.error(tag, err);
-      }
+    logger.info(tag, 'User responded, proceeding with SA profile check');
+
+    // Check SA profile for hash
+    const { confirmed, reason: confirmReason } = await confirmHash({ tag, member, username });
+
+    if (!confirmed) {
+      cleanupMessages([hashMessage]);
+      return member.send(confirmReason);
     }
 
-    // if (confirmation.cancelled) {
-    //   logger.warn(tag, 'User did not praise Lowtax, returning');
-    //   return member.send('Lowtax is displeased. Go back and try again');
-    // }
-    // logger.info(tag, 'user confirmed, proceeding with SA profile check');
+    cleanupMessages([hashMessage]);
+
+    // User is confirmed. Add the auth role and log it to the channel
+    // await addAuthRole({ tag, role, member });
+    // await logAuthMessage({ tag, channel, message });
+
+    // Commit the user to the DB
+    // await addUserToDB({ tag, member, saUsername, saID })
 
     return message.say(`${guild.name}: authenticating ${username}`);
   }
