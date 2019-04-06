@@ -37,6 +37,15 @@ const isMemberBlacklisted = async ({ tag, saID }) => {
       isBlacklisted: false
     };
   } catch (err) {
+    const { response } = err;
+
+    if (response && response.status === 404) {
+      logger.info(tag, 'SA ID has not been used to auth before');
+      return {
+        isBlacklisted: false
+      };
+    }
+
     logger.error({ ...tag, err }, 'Error checking if member is blacklisted');
     return {
       isBlacklisted: true,
