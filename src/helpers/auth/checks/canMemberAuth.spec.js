@@ -10,7 +10,9 @@ const canMemberAuth = require('./canMemberAuth');
 
 let tag;
 const member = {
-  name: 'foobar',
+  user: {
+    tag: 'foobar'
+  },
   id: 123
 };
 const saID = 456;
