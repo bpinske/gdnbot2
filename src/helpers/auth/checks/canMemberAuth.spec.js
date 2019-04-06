@@ -61,13 +61,23 @@ test('return true when member exists on server and is not blacklisted', async ()
   expect(canAuth).toEqual(true);
 });
 
-test('return true when member does not exist on server', async () => {
+test('return false when attempting auto-auth and member does not exist on server', async () => {
   moxios.stubRequest(API_URL, {
     status: 404,
     response: {}
   });
 
   const { canAuth } = await canMemberAuth({ tag, member });
+  expect(canAuth).toEqual(false);
+});
+
+test('return true when !authme is called and member does not exist on server', async () => {
+  moxios.stubRequest(API_URL, {
+    status: 404,
+    response: {}
+  });
+
+  const { canAuth } = await canMemberAuth({ tag, member, isAuthMe: true });
   expect(canAuth).toEqual(true);
 });
 
