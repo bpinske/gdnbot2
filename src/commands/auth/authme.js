@@ -8,10 +8,12 @@ const cleanupMessages = require('../../helpers/cleanupMessages');
 // Auth helpers
 const startAuthCheck = require('../../helpers/auth/startAuthCheck');
 const praiseLowtaxCollector = require('../../helpers/auth/praiseLowtaxCollector');
+const isMemberBlacklisted = require('../../helpers/auth/checks/isMemberBlacklisted');
 
 // Auth actions
 const getHash = require('../../helpers/auth/actions/getHash');
 const confirmHash = require('../../helpers/auth/actions/confirmHash');
+const getSAID = require('../../helpers/auth/actions/getSAID');
 
 class AuthmeCommand extends Command {
   constructor (client) {
@@ -39,6 +41,9 @@ class AuthmeCommand extends Command {
 
     logger.info(tag, 'EVENT: !authme');
 
+    /**
+     * PERFORMING AUTH CHECKS
+     */
     /* eslint-disable-next-line */
     const { canProceed, reason: checkReason, validatedRole, loggingChannel } = await startAuthCheck({
       tag,
@@ -51,16 +56,20 @@ class AuthmeCommand extends Command {
       return message.say(checkReason);
     }
 
-    // Generate a hash for the user
+    /**
+     * GENERATING A VERIFICATION HASH
+     */
     const { hash, reason: hashReason } = await getHash({ tag, member, username });
 
     if (!hash) {
       return message.say(hashReason);
     }
 
+    /**
+     * SENDING HASH AND INSTRUCTIONS AS PM
+     */
     logger.info(tag, 'Messaging hash + instructions to user');
 
-    // Send the user a PM and instructions
     const hashMessage = await member.send(stripIndents`
       You want access? You have **five minutes** to get this string into your SA profile (anywhere in the **Additional Information** section here https://forums.somethingawful.com/member.php?action=editprofile):
 
@@ -69,9 +78,11 @@ class AuthmeCommand extends Command {
       Return to the server afterwards to continue the process.
     `);
 
+    /**
+     * WAITING FOR USER RESPONSE TO TRIGGER HASH PLACEMENT VERIFICATION
+     */
     logger.info(tag, 'Awaiting response from user');
 
-    // Wait for the user to respond after they've placed the hash in their profile
     const confirmation = await praiseLowtaxCollector(
       this.client,
       oneLine`
@@ -88,6 +99,9 @@ class AuthmeCommand extends Command {
       return member.send('You have not been authenticated. Please feel free to try again.');
     }
 
+    /**
+     * VERIFYING HASH PLACEMENT
+     */
     logger.info(tag, 'User responded, proceeding with SA profile check');
 
     // Check SA profile for hash
@@ -101,18 +115,36 @@ class AuthmeCommand extends Command {
     // We're done with the hash, so remove it
     cleanupMessages([hashMessage]);
 
-    // TODO: Check if the user is blacklisted by SA ID
-    // const { id } = scrapeSAProfile({ tag, username });
-    // TODO: See canMemberAuth.js -> L59 for blacklist check by SA ID
+    /**
+     * RETRIEVING SA ID FROM USER PROFILE
+     */
+    logger.info(tag, 'Retrieving SA ID');
 
-    // TODO: User is confirmed and not blacklisted. Add the auth role and log it to the channel
+    const { id } = getSAID({ tag, username });
+
+    /**
+     * CHECKING IF USER IS BLACKLISTED BY SA ID
+     */
+    logger.info(tag, 'Checking if SA ID is blacklisted');
+
+    const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted({ tag, saID: id });
+    if (isBlacklisted) {
+      return member.send(blacklistedReason);
+    }
+
+    /**
+     * ADDING AUTH ROLE AND LOGGING MESSAGE
+     */
+    logger.info(tag, 'Adding auth role');
     // await addAuthRole({ tag, role, member });
+    logger.info(tag, 'Sending a message to the logging channel');
     // await logAuthMessage({ tag, channel, message });
 
     // TODO: Commit the user to the DB
+    logger.info(tag, 'Committing user info to the DB');
     // await addUserToDB({ tag, member, saUsername, saID })
 
-    return message.say(`${guild.name}: authenticating ${username}`);
+    // return message.say(`${guild.name}: authenticating ${username}`);
   }
 }
 
