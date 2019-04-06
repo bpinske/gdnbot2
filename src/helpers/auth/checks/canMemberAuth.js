@@ -1,15 +1,8 @@
 const { oneLine } = require('common-tags');
 
-const {
-  logger,
-  axiosGDN,
-  GDN_URLS
-} = require('../../');
-
-const reasonBlacklisted = oneLine`
-  You are blacklisted from the Goon Discord Network. You may appeal this decision here:
-  https://discord.gg/vH8uVUE
-`;
+const logger = require('../../logger');
+const { axiosGDN, GDN_URLS } = require('../../axiosGDN');
+const isMemberBlacklisted = require('./isMemberBlacklisted');
 
 const reasonCatchError = oneLine`
   A system error occurred while attempting to verify that you can proceed with auth. The bot
@@ -56,28 +49,18 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
     };
   }
 
-  logger.info(tag, 'Checking if member is blacklisted');
-  try {
-    logger.info(tag, 'Requesting internal GDN member profile by SA ID');
-    const { data } = await axiosGDN.get(`${GDN_URLS.SA}/${dataGDN.sa_id}`);
+  const saID = dataGDN.sa_id;
+  const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted({ tag, saID });
 
-    if (data.blacklisted) {
-      logger.warn(tag, 'Member has authed before but is BLACKLISTED, ignoring');
-      return {
-        canAuth: false,
-        reason: reasonBlacklisted
-      };
-    }
-  } catch (err) {
-    logger.error({ ...tag, err }, 'Error checking if member is blacklisted');
+  if (isBlacklisted) {
     return {
       canAuth: false,
-      reason: reasonCatchError
+      reason: blacklistedReason
     };
   }
 
-  // User has authed before and isn't blacklisted, so allow them to auth
-  logger.info(tag, 'Member is not blacklisted, OK to auth');
+  // User has passed all of the auth checks, so allow them to auth
+  logger.info(tag, 'Member is OK to auth');
   return {
     canAuth: true
   };
