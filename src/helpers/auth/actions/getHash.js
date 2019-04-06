@@ -4,7 +4,7 @@ const { axiosGoonAuth, GOON_AUTH_URLS } = require('../../axiosGoonAuth');
 const logger = require('../../logger');
 
 const errorNoHash = oneLine`
-  An error occurred while generating a hash to help you to verify your SA membership.
+  A system error occurred while generating a hash to help you to verify your SA membership.
   The bot owner has been notified. Thank you for your patience while they get this fixed!
 `;
 

@@ -8,8 +8,8 @@ const reasonNotValidated = oneLine`
 `;
 
 const errorNoValidate = oneLine`
-  An error occurred while confirming the hash's existence in your SA profile. The bot owner has
-  been notified. Thank you for your patience while they get this fixed!
+  A system error occurred while confirming the hash's existence in your SA profile. The bot owner
+  has been notified. Thank you for your patience while they get this fixed!
 `;
 
 /**

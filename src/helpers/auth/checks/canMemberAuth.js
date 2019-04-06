@@ -12,7 +12,7 @@ const reasonBlacklisted = oneLine`
 `;
 
 const reasonCatchError = oneLine`
-  An error occurred while attempting to verify that you can proceed with auth. The bot
+  A system error occurred while attempting to verify that you can proceed with auth. The bot
   owner has been notified. Thank you for your patience while they get this fixed!
 `;
 
