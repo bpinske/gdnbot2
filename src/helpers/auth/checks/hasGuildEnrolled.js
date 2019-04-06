@@ -24,7 +24,7 @@ const reasonCatchError = oneLine`
  * @returns {object} - { isEnrolled, reason, roleId, channelId }
  */
 const hasGuildEnrolled = async ({ tag, guild }) => {
-  logger.info(tag, `Checking if guild ${guild.name} has enrolled in GDN`);
+  logger.info(tag, `Checking if guild has enrolled in GDN`);
 
   try {
     // Not erroring out here means the server is in GDN

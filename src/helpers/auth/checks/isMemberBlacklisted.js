@@ -20,9 +20,8 @@ const reasonCatchError = oneLine`
  * @returns {object} - { isBlacklisted, reason? }
  */
 const isMemberBlacklisted = async ({ tag, saID }) => {
-  logger.info(tag, 'Checking if member is blacklisted');
+  logger.info(tag, 'Checking if member is blacklisted by SA ID');
   try {
-    logger.info(tag, 'Requesting internal GDN member profile by SA ID');
     const { data } = await axiosGDN.get(`${GDN_URLS.SA}/${saID}`);
 
     if (data.blacklisted) {

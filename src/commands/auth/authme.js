@@ -68,7 +68,7 @@ class AuthmeCommand extends Command {
     /**
      * SENDING HASH AND INSTRUCTIONS AS PM
      */
-    logger.info(tag, 'Messaging hash + instructions to user');
+    logger.info(tag, 'Sending hash + instructions to member');
 
     const hashMessage = await member.send(stripIndents`
       You want access? You have **five minutes** to get this string into your SA profile (anywhere in the **Additional Information** section here https://forums.somethingawful.com/member.php?action=editprofile):
@@ -81,7 +81,7 @@ class AuthmeCommand extends Command {
     /**
      * WAITING FOR USER RESPONSE TO TRIGGER HASH PLACEMENT VERIFICATION
      */
-    logger.info(tag, 'Awaiting response from user');
+    logger.info(tag, 'Awaiting response from member');
 
     const confirmation = await praiseLowtaxCollector(
       this.client,
@@ -102,14 +102,14 @@ class AuthmeCommand extends Command {
     /**
      * VERIFYING HASH PLACEMENT
      */
-    logger.info(tag, 'User responded, proceeding with SA profile check');
+    logger.info(tag, 'Member responded, continuing');
 
     // Check SA profile for hash
     const { confirmed, reason: confirmReason } = await confirmHash({ tag, member, username });
 
     if (!confirmed) {
       cleanupMessages([hashMessage]);
-      return member.send(confirmReason);
+      return message.say(confirmReason);
     }
 
     // We're done with the hash, so remove it
@@ -118,18 +118,19 @@ class AuthmeCommand extends Command {
     /**
      * RETRIEVING SA ID FROM USER PROFILE
      */
-    logger.info(tag, 'Retrieving SA ID');
+    const { id, reason: reasonNoID } = await getSAID({ tag, username });
 
-    const { id } = getSAID({ tag, username });
+    if (!id) {
+      return message.say(reasonNoID);
+    }
 
     /**
      * CHECKING IF USER IS BLACKLISTED BY SA ID
      */
-    logger.info(tag, 'Checking if SA ID is blacklisted');
-
     const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted({ tag, saID: id });
+
     if (isBlacklisted) {
-      return member.send(blacklistedReason);
+      return message.say(blacklistedReason);
     }
 
     /**
@@ -144,7 +145,7 @@ class AuthmeCommand extends Command {
     logger.info(tag, 'Committing user info to the DB');
     // await addUserToDB({ tag, member, saUsername, saID })
 
-    // return message.say(`${guild.name}: authenticating ${username}`);
+    return message.say(`${guild.name}: ${username} successfully completed authme`);
   }
 }
 

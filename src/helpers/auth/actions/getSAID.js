@@ -44,7 +44,7 @@ const reasonCatchError = oneLine`
  * @return {object} - { id }
  */
 async function getSAID ({ tag, username }) {
-  logger.info(tag, `Finding user ID for SA user ${username}`);
+  logger.info(tag, 'Retrieving SA ID from SA profile');
 
   const url = `${PROFILE_URL}${username}`;
 
@@ -71,7 +71,7 @@ async function getSAID ({ tag, username }) {
       };
     }
 
-    logger.info(tag, `Found user ID: ${id}`);
+    logger.info(tag, `Found SA ID: ${id}`);
     return {
       id
     };

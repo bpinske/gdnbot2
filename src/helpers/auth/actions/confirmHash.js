@@ -22,19 +22,19 @@ const errorNoValidate = oneLine`
  */
 const confirmHash = async ({ tag, member, username }) => {
   try {
-    logger.info(tag, `Confirming hash placement for ${member.user.tag} (SA: ${username})`);
+    logger.info(tag, 'Confirming hash placement in SA profile');
     const { data } = await axiosGoonAuth.post(GOON_AUTH_URLS.CONFIRM_HASH, { username });
     const { validated } = data;
 
     if (!validated) {
-      logger.warn(tag, 'Hash missing from SA profile');
+      logger.warn(tag, 'Hash not found');
       return {
         confirmed: false,
         reason: reasonNotValidated
       };
     }
 
-    logger.info(tag, 'Confirmed hash in SA profile');
+    logger.info(tag, 'Hash confirmed');
     return {
       confirmed: true
     };
