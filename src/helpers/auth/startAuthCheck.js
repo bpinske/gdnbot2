@@ -19,7 +19,7 @@ const isValidLogChannel = require('./checks/isValidLogChannel');
  * @param {Guild} guild - The server the user is in
  * @param {Member} member - The member to auth
  * @param {boolean} isAuthMe - Whether this was invoked from !authme, or by the member joining
- * @returns {object} - { canProceed, reason?, validatedRole, loggingChannel }
+ * @returns {object} - { canProceed, reason?, alreadyAuthed, validatedRole, loggingChannel }
  */
 const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   logger.info(
@@ -50,7 +50,8 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
    */
   const {
     canAuth,
-    reason: memberAuthReason
+    reason: memberAuthReason,
+    alreadyAuthed
   } = await canMemberAuth({ tag, member, isAuthMe });
 
   if (!canAuth) {
@@ -88,6 +89,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   logger.info(tag, 'Auth checks passed, continuing');
   return {
     canProceed: true,
+    alreadyAuthed,
     validatedRole,
     validatedChannel
   };
