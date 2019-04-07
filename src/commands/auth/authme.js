@@ -14,6 +14,7 @@ const isMemberBlacklisted = require('../../helpers/auth/checks/isMemberBlacklist
 const getHash = require('../../helpers/auth/actions/getHash');
 const confirmHash = require('../../helpers/auth/actions/confirmHash');
 const getSAID = require('../../helpers/auth/actions/getSAID');
+const addRoleAndLog = require('../../helpers/auth/actions/addRoleAndLog');
 
 class AuthmeCommand extends Command {
   constructor (client) {
@@ -44,8 +45,13 @@ class AuthmeCommand extends Command {
     /**
      * PERFORMING AUTH CHECKS
      */
-    /* eslint-disable-next-line */
-    const { canProceed, reason: checkReason, validatedRole, loggingChannel } = await startAuthCheck({
+    const {
+      canProceed,
+      reason: checkReason,
+      alreadyAuthed,
+      validatedRole,
+      validatedChannel
+    } = await startAuthCheck({
       tag,
       guild,
       member,
@@ -54,6 +60,19 @@ class AuthmeCommand extends Command {
 
     if (!canProceed) {
       return message.say(checkReason);
+    }
+
+    if (alreadyAuthed) {
+      logger.info(tag, 'User has already authed, bypassing hash check');
+
+      await addRoleAndLog({
+        tag,
+        member,
+        saUsername: username,
+        role: validatedRole,
+        channel: validatedChannel
+      });
+      return;
     }
 
     /**
@@ -75,7 +94,7 @@ class AuthmeCommand extends Command {
 
       **${hash}**
 
-      Return to the server afterwards to continue the process.
+      After you've completed this, return **here** and respond with **Praise Lowtax** to verify your SA membership.
     `);
 
     /**
@@ -83,20 +102,17 @@ class AuthmeCommand extends Command {
      */
     logger.info(tag, 'Awaiting response from member');
 
-    const confirmation = await praiseLowtaxCollector(
-      this.client,
-      oneLine`
-        I've DM'd you with a hash and further instructions. After you've completed them,
-        return here and respond with **Praise Lowtax** to verify your SA membership.
-      `
-    ).obtain(message);
+    const confirmation = await praiseLowtaxCollector({ channel: hashMessage.channel });
+
+    // We're done with the hash, so remove it
+    cleanupMessages([hashMessage]);
 
     if (confirmation.cancelled) {
       logger.warn(tag, 'User did not praise Lowtax, exiting');
 
-      cleanupMessages([hashMessage]);
-
-      return member.send('You have not been authenticated. Please feel free to try again.');
+      return member.send(oneLine`
+        You have not been authenticated. Please feel free to try again back in **${guild.name}**.
+      `);
     }
 
     /**
@@ -108,12 +124,8 @@ class AuthmeCommand extends Command {
     const { confirmed, reason: confirmReason } = await confirmHash({ tag, member, username });
 
     if (!confirmed) {
-      cleanupMessages([hashMessage]);
-      return message.say(confirmReason);
+      return member.send(confirmReason);
     }
-
-    // We're done with the hash, so remove it
-    cleanupMessages([hashMessage]);
 
     /**
      * RETRIEVING SA ID FROM USER PROFILE
@@ -121,7 +133,7 @@ class AuthmeCommand extends Command {
     const { id, reason: reasonNoID } = await getSAID({ tag, username });
 
     if (!id) {
-      return message.say(reasonNoID);
+      return member.send(reasonNoID);
     }
 
     /**
@@ -130,22 +142,24 @@ class AuthmeCommand extends Command {
     const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted({ tag, saID: id });
 
     if (isBlacklisted) {
+      // Purposefully send this to the Guild channel so that admins can notice blacklisted users
       return message.say(blacklistedReason);
     }
 
     /**
      * ADDING AUTH ROLE AND LOGGING MESSAGE
      */
-    logger.info(tag, 'Adding auth role');
-    // await addAuthRole({ tag, role, member });
-    logger.info(tag, 'Sending a message to the logging channel');
-    // await logAuthMessage({ tag, channel, message });
+    await addRoleAndLog({
+      tag,
+      member,
+      saUsername: username,
+      role: validatedRole,
+      channel: validatedChannel
+    });
 
     // TODO: Commit the user to the DB
     logger.info(tag, 'Committing user info to the DB');
     // await addUserToDB({ tag, member, saUsername, saID })
-
-    return message.say(`${guild.name}: ${username} successfully completed authme`);
   }
 }
 
