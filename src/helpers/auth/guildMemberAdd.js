@@ -1,7 +1,9 @@
 const { SnowflakeUtil } = require('discord.js');
 
-const { logger } = require('../');
+const logger = require('../logger');
 const startAuthCheck = require('./startAuthCheck');
+
+const addRoleAndLog = require('../../helpers/auth/actions/addRoleAndLog');
 
 /**
  * A handler for the "guildMemberAdd" event, when a member joins a server the bot is on
@@ -14,24 +16,25 @@ const guildMemberAdd = (member) => {
   // Generate a logging tag with the snowflake
   const tag = logger.getLogTag(eventId);
 
-  logger.info(tag, `EVENT: Member added to guild`);
+  logger.info(tag, `[EVENT: guildMemberAdd]`);
 
   // Wait a second before proceeding with auto-auth
   setTimeout(async () => {
     const {
-      canProceed
-      // canProceed,
-      // validatedRole,
-      // validatedChannel
+      canProceed,
+      saUsername,
+      validatedRole,
+      validatedChannel
     } = await startAuthCheck({ tag, guild, member, isAuthMe: false });
 
     if (canProceed) {
-      logger.info(tag, 'Automatically auth-ing user');
-      // - Authenticate user
-      //   - Give role
-      //   - Log to logging channel
-
-      // - Tell user they've been automatically auth'd
+      addRoleAndLog({
+        tag,
+        member,
+        saUsername,
+        role: validatedRole,
+        channel: validatedChannel
+      });
     } else {
       logger.info(tag, 'Did not proceed with auto-auth');
     }
