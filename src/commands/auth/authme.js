@@ -15,6 +15,7 @@ const getHash = require('../../helpers/auth/actions/getHash');
 const confirmHash = require('../../helpers/auth/actions/confirmHash');
 const getSAID = require('../../helpers/auth/actions/getSAID');
 const addRoleAndLog = require('../../helpers/auth/actions/addRoleAndLog');
+const addUserToDB = require('../../helpers/auth/actions/addUserToDB');
 
 class AuthmeCommand extends Command {
   constructor (client) {
@@ -40,7 +41,7 @@ class AuthmeCommand extends Command {
     // Prepare a tag for logging
     const tag = logger.getLogTag(message.id);
 
-    logger.info(tag, 'EVENT: !authme');
+    logger.info(tag, '[EVENT: !authme]');
 
     /**
      * PERFORMING AUTH CHECKS
@@ -157,9 +158,15 @@ class AuthmeCommand extends Command {
       channel: validatedChannel
     });
 
-    // TODO: Commit the user to the DB
-    logger.info(tag, 'Committing user info to the DB');
-    // await addUserToDB({ tag, member, saUsername, saID })
+    /**
+     * INSERTING USER INTO DATABASE
+     */
+    await addUserToDB({
+      tag,
+      member,
+      saID: id,
+      saUsername: username
+    });
   }
 }
 
