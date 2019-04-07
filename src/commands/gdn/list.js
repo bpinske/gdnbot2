@@ -3,6 +3,9 @@ const capitalize = require('capitalize');
 
 const GDNEmbed = require('../../helpers/GDNEmbed');
 
+const listTextChannels = require('../../helpers/gdn/listTextChannels');
+const listRoles = require('../../helpers/gdn/listRoles');
+
 const OPTIONS = {
   ROLES: 'roles',
   CHANNELS: 'channels'
@@ -48,14 +51,12 @@ class ListCommand extends Command {
 
     switch (option) {
       case OPTIONS.CHANNELS:
-        guild.channels.each(channel => {
-          if (channel.type === 'text') {
-            listEmbed.addField(channel.name, channel.id);
-          }
+        listTextChannels(guild).each(channel => {
+          listEmbed.addField(channel.name, channel.id);
         });
         break;
       case OPTIONS.ROLES:
-        guild.roles.each(role => {
+        listRoles(guild).each(role => {
           listEmbed.addField(role.name, role.id);
         });
         break;
