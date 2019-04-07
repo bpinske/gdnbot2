@@ -70,6 +70,15 @@ $> npm run test:coverage
 
 ## Additional Notes
 
+### Discord API status codes:
+
+Error codes that may appear when executing certain actions can be cross-referenced here: https://discordapp.com/developers/docs/topics/opcodes-and-status-codes
+
+Common ones experienced so far:
+
+- **50013** (Missing Permissions): The bot's highest role is _lower_ than the highest role assigned to the Member.
+    - This definitely causes issues when trying to add a role to an admin user, as the admin user's role will almost certainly be higher up the Roles hierarchy than any of the bot's roles. I think it'll be fine, though, because auth attempts will most likely occur before any kind of role escalation...
+
 ### Current GDNBot commands:
 
 ```
