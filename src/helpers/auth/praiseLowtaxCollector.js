@@ -1,31 +1,22 @@
-const { ArgumentCollector } = require('discord.js-commando');
+const filter = text => text.content.toLowerCase() === 'praise lowtax';
+const collectorOptions = {
+  max: 1,
+  maxProcessed: 3,
+  errors: ['time'],
+  time: 300000 // milliseconds (5 minutes)
+};
 
 /**
- * An ArgumentCollector specifically for requesting the user to type 'praise lowtax' after
+ * A collector specifically for requesting the user to type 'praise lowtax' after
  * adding the auth hash to their SA profile. This should trigger the verification step of the
  * authme process.
  *
- * ArgumentCollector is a Promise. It returns an object (`confirmation` below) containing values
- * that can be used to confirm the user followed through as expected:
- *
- * - `confirmation.values` can be null, or an object with properties matching the `key`s specified
- *   in each argument. This should only be used if `cancelled` below is falsy
- * - `confirmation.cancelled` can be null, `user`, or `time`. Any value here indicates that the
- *   user didn't reply as expected.
+ * @returns {Promise} - { cancelled, values? }
  */
-const praiseLowtaxCollector = (
-  client,
-  message = 'Type "**praise Lowtax**" to continue'
-) => new ArgumentCollector(
-  client,
-  [{
-    key: 'praise',
-    prompt: message,
-    type: 'string',
-    validate: text => text.toLowerCase() === 'praise lowtax',
-    wait: 300 // seconds
-  }],
-  3
-);
+const praiseLowtaxCollector = async ({ channel }) => {
+  return channel.awaitMessages(filter, collectorOptions)
+    .then((collected) => ({ cancelled: false }))
+    .catch((collected) => ({ cancelled: true }));
+};
 
 module.exports = praiseLowtaxCollector;
