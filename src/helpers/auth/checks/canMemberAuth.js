@@ -14,7 +14,7 @@ const reasonCatchError = oneLine`
  *
  * @param {object} tag - The output from a call to logger.getLogTag()
  * @param {Member} member - The member to verify enrollment in GDN
- * @returns {object} - { canAuth, reason?, alreadyAuthed }
+ * @returns {object} - { canAuth, reason?, alreadyAuthed?, saUsername? }
  */
 const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   let dataGDN;
@@ -68,7 +68,8 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   logger.info(tag, 'Member is OK to auth');
   return {
     canAuth: true,
-    alreadyAuthed
+    alreadyAuthed,
+    saUsername: dataGDN.sa_username
   };
 };
 
