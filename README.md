@@ -93,10 +93,10 @@ GDNServices:
   gdn_set_description Set the server's Directory description
   gdn_set_invite_url  Set the server's Instant Invite URL
   gdn_set_name        Set the server's name
-  gdn_update_counts   Update member counts for all GDN servers
+✅gdn_update_counts   Update member counts for all GDN servers (now automated, every 24 hours)
 ✅list_channels       List all text channels and IDs for this server
 ✅list_roles          List all roles and IDs for this server
-  list_server_info    DEBUG: List cached info on this server
+❌list_server_info    DEBUG: List cached info on this server (check admin panel instead)
 ModCommands:
   gdn_mute            Mute a user to block their messages
   gdn_unmute          Unmute a user so they can message again
