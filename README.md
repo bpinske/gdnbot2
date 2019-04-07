@@ -86,7 +86,7 @@ Your server's interface to the Goon Discord Network (GDN).
 Official GDN Discord Server: https://discord.gg/vH8uVUE
 
 Auth:
-  authme              Authenticate your SA account
+✅authme              Authenticate your SA account
 GDNServices:
   gdn_activate_auth   Initialize `!authme` on this server
   gdn_enroll_server   Enroll this server in Goon Discord Network
