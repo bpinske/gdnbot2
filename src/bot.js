@@ -55,7 +55,12 @@ bot.once('ready', () => {
 
 // Handle errors
 bot.on('error', (err) => {
-  logger.error(err);
+  if (err.message === 'Cannot read property \'trim\' of undefined') {
+    // Swallow a bug in discord.js-commando at:
+    // node_modules/discord.js-commando/src/extensions/message.js:109:28
+  } else {
+    logger.error(err, 'Bot system error');
+  }
 });
 
 // Individual Event Handlers
