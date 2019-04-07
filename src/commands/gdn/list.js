@@ -12,6 +12,7 @@ const oneOf = [
   OPTIONS.CHANNELS,
   OPTIONS.ROLES
 ];
+const oneOfFormatted = oneOf.map(opt => `\`${opt}\``).join(', ');
 
 /**
  * !list
@@ -31,7 +32,7 @@ class ListCommand extends Command {
       args: [
         {
           key: 'option',
-          prompt: `What would you like a list of?\nOptions: ${oneOf.map(opt => `\`${opt}\``)}\n`,
+          prompt: `What would you like a list of?\nOptions: ${oneOfFormatted}\n`,
           type: 'string',
           oneOf
         }
@@ -48,7 +49,9 @@ class ListCommand extends Command {
     switch (option) {
       case OPTIONS.CHANNELS:
         guild.channels.each(channel => {
-          listEmbed.addField(channel.name, channel.id);
+          if (channel.type === 'text') {
+            listEmbed.addField(channel.name, channel.id);
+          }
         });
         break;
       case OPTIONS.ROLES:
