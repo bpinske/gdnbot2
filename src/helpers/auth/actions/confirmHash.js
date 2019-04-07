@@ -3,8 +3,9 @@ const { oneLine } = require('common-tags');
 const { axiosGoonAuth, GOON_AUTH_URLS } = require('../../axiosGoonAuth');
 const logger = require('../../logger');
 
-const reasonNotValidated = oneLine`
-  Lowtax is disappointed in you. Enter **!authme {0}** back in the server to try again :getout:
+const reasonNotValidated = username => oneLine`
+  Lowtax is disappointed in you. Enter **!authme ${username}** back in the server to try again
+  :getout:
 `;
 
 const errorNoValidate = oneLine`
@@ -30,7 +31,7 @@ const confirmHash = async ({ tag, member, username }) => {
       logger.warn(tag, 'Hash not found');
       return {
         confirmed: false,
-        reason: reasonNotValidated
+        reason: reasonNotValidated(username)
       };
     }
 
