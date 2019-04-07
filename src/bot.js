@@ -7,8 +7,10 @@ const path = require('path');
 
 const logger = require('./helpers/logger');
 
-// Auth event handlers
+// Event handlers
 const guildMemberAddAuth = require('./helpers/auth/guildMemberAdd');
+const updateServerCountActivity = require('./eventHandlers/updateServerCountActivity');
+const { updateHomepageMemberCounts, UPDATE_INTERVAL } = require('./eventHandlers/updateHomepageMemberCounts');
 
 // Create the bot as a Commando client
 const bot = new CommandoClient({
@@ -51,6 +53,9 @@ bot.once('ready', () => {
   logger.info('---:getin:---');
 
   bot.user.setActivity('in the forge');
+
+  // Update homepage server counts on boot
+  updateHomepageMemberCounts(bot)();
 });
 
 // Handle errors
@@ -65,6 +70,10 @@ bot.on('error', (err) => {
 
 // Individual Event Handlers
 bot.on('guildMemberAdd', guildMemberAddAuth);
+bot.on('guildCreate', updateServerCountActivity(bot));
+
+// Update server member counts on the GDN Homepage
+bot.setInterval(updateHomepageMemberCounts(bot), UPDATE_INTERVAL);
 
 // Start the bot
 bot.login(process.env.DISCORD_BOT_TOKEN);
