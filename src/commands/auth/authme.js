@@ -24,6 +24,17 @@ class AuthmeCommand extends Command {
       group: 'auth',
       memberName: 'authme',
       description: 'Authenticate your SA account',
+      details: stripIndents`
+        To authenticate your SA account, follow these simple instructions:
+
+        1. Type **!authme SA-Username-Here** to begin (replace **SA-Username-Here** with your actual SA username; spaces are fine too).
+
+        Ex:
+        **!authme LeetLikeJeffK**
+        **!authme DickWad Johnson**
+
+        2. After you paste the code on your profile, go back to the bot and **type 'Praise Lowtax'** to finish the auth process.
+      `,
       guildOnly: true,
       args: [
         {
