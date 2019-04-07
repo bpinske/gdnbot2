@@ -25,7 +25,7 @@ const error50013 = (member, role) => {
  * @param {GuildChannel} channel - An optional channel to log the auth message to
  */
 const addRoleAndLog = async ({ tag, member, saUsername, role, channel }) => {
-  logger.info('Adding role to member');
+  logger.info(tag, 'Adding role to member');
 
   try {
     await member.edit({ roles: [role], reason: 'GDN: Successful Auth' });
@@ -49,8 +49,8 @@ const addRoleAndLog = async ({ tag, member, saUsername, role, channel }) => {
   }
 
   if (channel) {
-    logger.info(tag, 'logging successful auth message to channel');
-    await channel.send(`${member.user.tag} (SA: ${saUsername}) successfully validated`);
+    logger.info(tag, 'logging successful auth message to logging channel');
+    await channel.send(`${member.user.tag} (SA: ${saUsername}) successfully authed`);
   }
 
   logger.info(tag, 'Informing user of successful auth');
