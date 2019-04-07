@@ -34,20 +34,6 @@ const logger = bunyan.createLogger({
   ]
 });
 
-logger.on('error', (err, stream) => {
-  console.error('an error occurred in the logger:', err);
-});
-
-/**
- * A helper method to generate an object that can be used to tag logged messages generated from
- * a singular "request". This will help with troubleshooting sequences events by allowing for
- * filtering on this particular, consistent ID.
- *
- * @param {string|number} id - Typically `message.id`
- * @returns {object}
- */
-logger.getLogTag = (id) => ({ req_id: id });
-
 if (process.env.NODE_ENV === 'production') {
   // Add a Papertrail stream
   logger.addStream({
@@ -61,5 +47,19 @@ if (process.env.NODE_ENV === 'production') {
     })
   });
 }
+
+logger.on('error', (err, stream) => {
+  console.error('an error occurred in the logger:', err);
+});
+
+/**
+ * A helper method to generate an object that can be used to tag logged messages generated from
+ * a singular "request". This will help with troubleshooting sequences events by allowing for
+ * filtering on this particular, consistent ID.
+ *
+ * @param {string|number} id - Typically `message.id`
+ * @returns {object}
+ */
+logger.getLogTag = (id) => ({ req_id: id });
 
 module.exports = logger;
