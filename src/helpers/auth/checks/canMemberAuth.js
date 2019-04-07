@@ -14,16 +14,21 @@ const reasonCatchError = oneLine`
  *
  * @param {object} tag - The output from a call to logger.getLogTag()
  * @param {Member} member - The member to verify enrollment in GDN
- * @returns {object} - { canAuth, reason? }
+ * @returns {object} - { canAuth, reason?, alreadyAuthed }
  */
 const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   let dataGDN;
+
+  let alreadyAuthed = false;
 
   logger.info(tag, 'Checking if member has authed in GDN');
   try {
     const resp = await axiosGDN.get(`${GDN_URLS.MEMBERS}/${member.id}`);
     dataGDN = resp.data;
+
     logger.info(tag, 'Member has authed in GDN');
+
+    alreadyAuthed = true;
   } catch (err) {
     const { response } = err;
 
@@ -59,10 +64,11 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
     };
   }
 
-  // User has passed all of the auth checks, so allow them to auth
+  // User has passed all of the auth checks, so allow them to auth if they haven't already
   logger.info(tag, 'Member is OK to auth');
   return {
-    canAuth: true
+    canAuth: true,
+    alreadyAuthed
   };
 };
 
