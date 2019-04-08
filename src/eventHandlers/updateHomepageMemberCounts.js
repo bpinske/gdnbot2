@@ -3,7 +3,7 @@ const { SnowflakeUtil } = require('discord.js');
 const logger = require('../helpers/logger');
 const { axiosGDN, GDN_URLS } = require('../helpers/axiosGDN');
 
-const UPDATE_INTERVAL = 1000 * 60 * 24;
+const UPDATE_INTERVAL = 1000 * 60 * 60 * 24; // 24 Hours
 
 const updateHomepageMemberCounts = bot => async () => {
   // Generate a logger tag
