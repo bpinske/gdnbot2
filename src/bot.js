@@ -55,9 +55,9 @@ bot.once('ready', () => {
   bot.user.setActivity('in the forge');
 
   // Update bot activity to reflect number of guilds
-  // updateServerCountActivity(bot)();
+  // updateServerCountActivity({ bot });
   // Update homepage server counts on boot
-  updateHomepageMemberCounts(bot)();
+  updateHomepageMemberCounts({ bot });
 });
 
 // Handle errors
@@ -70,12 +70,34 @@ bot.on('error', (err) => {
   }
 });
 
-// Individual Event Handlers
-bot.on('guildMemberAdd', autoAuth);
-bot.on('guildCreate', updateServerCountActivity(bot));
+/**
+ * Event Handlers
+ */
+
+// When the bot joins a Guild
+bot.on('guildCreate', async () => {
+  await updateServerCountActivity({ bot });
+});
+
+// When the bot leaves a Guild
+bot.on('guildDelete', async (guild) => {
+  // TODO: receives a `guild` instance
+  // await removeServerFromGDN({ guild });
+  await updateServerCountActivity({ bot });
+});
+
+// When a Member joins a Guild
+bot.on('guildMemberAdd', async (member) => {
+  await autoAuth({ member });
+});
 
 // Update server member counts on the GDN Homepage
-bot.setInterval(updateHomepageMemberCounts(bot), UPDATE_INTERVAL);
+bot.setInterval(
+  () => {
+    updateHomepageMemberCounts({ bot });
+  },
+  UPDATE_INTERVAL
+);
 
 // Start the bot
 bot.login(process.env.DISCORD_BOT_TOKEN);

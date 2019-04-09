@@ -5,7 +5,7 @@
  */
 const updateEnrolledServersCount = async ({ bot }) => {
   const totalGuilds = bot.guilds.size;
-  bot.user.setActivity(`in ${totalGuilds} enrolled servers`);
+  await bot.user.setActivity(`in ${totalGuilds} enrolled servers`);
 };
 
 module.exports = updateEnrolledServersCount;

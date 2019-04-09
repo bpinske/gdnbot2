@@ -28,7 +28,7 @@ const autoAuth = ({ member }) => {
     } = await startAuthCheck({ tag, guild, member, isAuthMe: false });
 
     if (canProceed) {
-      addRoleAndLog({
+      await addRoleAndLog({
         tag,
         member,
         saUsername,
