@@ -3,7 +3,7 @@
  *
  * @param {Client} bot
  */
-const updateEnrolledServersCount = bot => () => {
+const updateEnrolledServersCount = async ({ bot }) => {
   const totalGuilds = bot.guilds.size;
   bot.user.setActivity(`in ${totalGuilds} enrolled servers`);
 };

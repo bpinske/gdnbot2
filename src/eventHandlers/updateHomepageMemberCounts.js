@@ -5,7 +5,7 @@ const { axiosGDN, GDN_URLS } = require('../helpers/axiosGDN');
 
 const UPDATE_INTERVAL = 1000 * 60 * 60 * 24; // 24 Hours
 
-const updateHomepageMemberCounts = bot => async () => {
+const updateHomepageMemberCounts = async ({ bot }) => {
   // Generate a logger tag
   const eventId = SnowflakeUtil.generate();
   const tag = logger.getLogTag(eventId);

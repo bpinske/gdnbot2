@@ -8,7 +8,7 @@ const addRoleAndLog = require('../helpers/auth/actions/addRoleAndLog');
 /**
  * A handler for the "guildMemberAdd" event, when a member joins a server the bot is on
  */
-const autoAuth = (member) => {
+const autoAuth = ({ member }) => {
   const { guild } = member;
 
   // Generate a snowflake since we won't get one here from Discord
