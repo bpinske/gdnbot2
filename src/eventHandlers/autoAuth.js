@@ -1,14 +1,14 @@
 const { SnowflakeUtil } = require('discord.js');
 
-const logger = require('../logger');
-const startAuthCheck = require('./startAuthCheck');
+const logger = require('../helpers/logger');
 
-const addRoleAndLog = require('../../helpers/auth/actions/addRoleAndLog');
+const startAuthCheck = require('../helpers/auth/startAuthCheck');
+const addRoleAndLog = require('../helpers/auth/actions/addRoleAndLog');
 
 /**
  * A handler for the "guildMemberAdd" event, when a member joins a server the bot is on
  */
-const guildMemberAdd = (member) => {
+const autoAuth = (member) => {
   const { guild } = member;
 
   // Generate a snowflake since we won't get one here from Discord
@@ -16,7 +16,7 @@ const guildMemberAdd = (member) => {
   // Generate a logging tag with the snowflake
   const tag = logger.getLogTag(eventId);
 
-  logger.info(tag, `[EVENT: guildMemberAdd]`);
+  logger.info(tag, `[EVENT: User joined ${guild.name}]`);
 
   // Wait a second before proceeding with auto-auth
   setTimeout(async () => {
@@ -41,4 +41,4 @@ const guildMemberAdd = (member) => {
   }, 1000);
 };
 
-module.exports = guildMemberAdd;
+module.exports = autoAuth;

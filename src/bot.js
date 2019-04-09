@@ -8,7 +8,7 @@ const path = require('path');
 const logger = require('./helpers/logger');
 
 // Event handlers
-const guildMemberAddAuth = require('./helpers/auth/guildMemberAdd');
+const autoAuth = require('./eventHandlers/autoAuth');
 const updateServerCountActivity = require('./eventHandlers/updateServerCountActivity');
 const { updateHomepageMemberCounts, UPDATE_INTERVAL } = require('./eventHandlers/updateHomepageMemberCounts');
 
@@ -54,6 +54,8 @@ bot.once('ready', () => {
 
   bot.user.setActivity('in the forge');
 
+  // Update bot activity to reflect number of guilds
+  // updateServerCountActivity(bot)();
   // Update homepage server counts on boot
   updateHomepageMemberCounts(bot)();
 });
@@ -69,7 +71,7 @@ bot.on('error', (err) => {
 });
 
 // Individual Event Handlers
-bot.on('guildMemberAdd', guildMemberAddAuth);
+bot.on('guildMemberAdd', autoAuth);
 bot.on('guildCreate', updateServerCountActivity(bot));
 
 // Update server member counts on the GDN Homepage
