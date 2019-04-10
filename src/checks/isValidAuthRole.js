@@ -1,8 +1,6 @@
 const { oneLine } = require('common-tags');
 
-const {
-  logger
-} = require('../../');
+const logger = require('../helpers/logger');
 
 const invalidRoleReason = oneLine`
   \`!authme\` doesn't appear to be set up properly here. Please contact a guild admin and ask them

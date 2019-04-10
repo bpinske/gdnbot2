@@ -1,6 +1,4 @@
-const {
-  logger
-} = require('../../');
+const logger = require('../helpers/logger');
 
 /**
  * Try to find a logging channel matching the guild's authme logging channel ID

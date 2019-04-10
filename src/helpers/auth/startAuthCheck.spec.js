@@ -1,14 +1,14 @@
 jest.mock('../logger');
-jest.mock('./checks/hasGuildEnrolled');
-jest.mock('./checks/canMemberAuth');
-jest.mock('./checks/isValidAuthRole');
-jest.mock('./checks/isValidLogChannel');
+jest.mock('../../checks/hasGuildEnrolled');
+jest.mock('../../checks/canMemberAuth');
+jest.mock('../../checks/isValidAuthRole');
+jest.mock('../../checks/isValidLogChannel');
 
 const logger = require('../logger');
-const hasGuildEnrolled = require('./checks/hasGuildEnrolled');
-const canMemberAuth = require('./checks/canMemberAuth');
-const isValidAuthRole = require('./checks/isValidAuthRole');
-const isValidLogChannel = require('./checks/isValidLogChannel');
+const hasGuildEnrolled = require('../../checks/hasGuildEnrolled');
+const canMemberAuth = require('../../checks/canMemberAuth');
+const isValidAuthRole = require('../../checks/isValidAuthRole');
+const isValidLogChannel = require('../../checks/isValidLogChannel');
 
 // The actual module we're testing
 const startAuthCheck = require('./startAuthCheck');

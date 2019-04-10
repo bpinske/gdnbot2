@@ -1,10 +1,7 @@
 const moxios = require('moxios');
-jest.mock('../../logger');
+jest.mock('../helpers/logger');
 
-const {
-  GDN_URLS,
-  axiosGDN
-} = require('../../');
+const { axiosGDN, GDN_URLS } = require('../helpers/axiosGDN');
 
 const canMemberAuth = require('./canMemberAuth');
 

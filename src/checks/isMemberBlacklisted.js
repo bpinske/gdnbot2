@@ -1,7 +1,7 @@
 const { oneLine } = require('common-tags');
 
-const logger = require('../../logger');
-const { axiosGDN, GDN_URLS } = require('../../axiosGDN');
+const logger = require('../helpers/logger');
+const { axiosGDN, GDN_URLS } = require('../helpers/axiosGDN');
 
 const reasonBlacklisted = oneLine`
   You are blacklisted from the Goon Discord Network. You may appeal this decision here:

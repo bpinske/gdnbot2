@@ -1,10 +1,7 @@
 const { oneLine } = require('common-tags');
 
-const {
-  logger,
-  axiosGDN,
-  GDN_URLS
-} = require('../../');
+const logger = require('../helpers/logger');
+const { axiosGDN, GDN_URLS } = require('../helpers/axiosGDN');
 
 const reasonNotEnrolled = oneLine`
   This server is not enrolled in the Goon Discord Network. Please have an

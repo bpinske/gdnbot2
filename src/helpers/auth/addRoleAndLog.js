@@ -1,6 +1,6 @@
 const { oneLine, stripIndents } = require('common-tags');
 
-const logger = require('../../logger');
+const logger = require('../logger');
 
 const error50013 = (member, role) => {
   const _role = `**${role.name}**`;

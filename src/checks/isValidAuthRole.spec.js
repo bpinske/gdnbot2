@@ -1,4 +1,4 @@
-jest.mock('../../logger');
+jest.mock('../helpers/logger');
 
 const isValidAuthRole = require('./isValidAuthRole');
 

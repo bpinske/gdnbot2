@@ -1,6 +1,4 @@
-const {
-  logger
-} = require('../');
+const logger = require('../helpers/logger');
 
 const hasGuildEnrolled = require('./checks/hasGuildEnrolled');
 const canMemberAuth = require('./checks/canMemberAuth');
