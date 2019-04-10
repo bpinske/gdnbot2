@@ -14,7 +14,7 @@ const { updateHomepageMemberCounts, UPDATE_INTERVAL } = require('./eventHandlers
 
 // Create the bot as a Commando client
 const bot = new CommandoClient({
-  prefix: '!',
+  commandPrefix: '!',
   owner: '148474055949942787',
   invite: 'https://discord.gg/vH8uVUE',
   unknownCommandResponse: false,
