@@ -27,7 +27,7 @@ const reasonCatchError = oneLine`
 async function getSAID ({ tag, username }) {
   logger.info(tag, 'Retrieving SA ID from SA profile');
 
-  const url = `${SA_URLS.PROFILE}${username}`;
+  const url = `${SA_URLS.PROFILE}${encodeURIComponent(username)}`;
 
   try {
     // Request HTML
