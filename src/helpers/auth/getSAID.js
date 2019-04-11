@@ -2,7 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const { oneLine } = require('common-tags');
 
-const logger = require('../../logger');
+const logger = require('../logger');
 
 const PROFILE_URL = 'http://forums.somethingawful.com/member.php?action=getinfo&username=';
 

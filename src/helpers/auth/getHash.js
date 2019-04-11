@@ -1,7 +1,7 @@
 const { oneLine } = require('common-tags');
 
-const { axiosGoonAuth, GOON_AUTH_URLS } = require('../../axiosGoonAuth');
-const logger = require('../../logger');
+const { axiosGoonAuth, GOON_AUTH_URLS } = require('../axiosGoonAuth');
+const logger = require('../logger');
 
 const errorNoHash = oneLine`
   A system error occurred while generating a hash to help you to verify your SA membership.

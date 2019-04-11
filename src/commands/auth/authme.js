@@ -5,17 +5,19 @@ const { stripIndents, oneLine } = require('common-tags');
 const logger = require('../../helpers/logger');
 const cleanupMessages = require('../../helpers/cleanupMessages');
 
+// Checks
+const isMemberBlacklisted = require('../../checks/isMemberBlacklisted');
+
 // Auth helpers
 const startAuthCheck = require('../../helpers/auth/startAuthCheck');
 const praiseLowtaxCollector = require('../../helpers/auth/praiseLowtaxCollector');
-const isMemberBlacklisted = require('../../helpers/auth/checks/isMemberBlacklisted');
 
 // Auth actions
-const getHash = require('../../helpers/auth/actions/getHash');
-const confirmHash = require('../../helpers/auth/actions/confirmHash');
-const getSAID = require('../../helpers/auth/actions/getSAID');
-const addRoleAndLog = require('../../helpers/auth/actions/addRoleAndLog');
-const addUserToDB = require('../../helpers/auth/actions/addUserToDB');
+const getHash = require('../../helpers/auth/getHash');
+const confirmHash = require('../../helpers/auth/confirmHash');
+const getSAID = require('../../helpers/auth/getSAID');
+const addRoleAndLog = require('../../helpers/auth/addRoleAndLog');
+const addUserToDB = require('../../helpers/auth/addUserToDB');
 
 class AuthmeCommand extends Command {
   constructor (client) {

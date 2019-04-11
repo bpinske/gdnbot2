@@ -1,7 +1,7 @@
 const { oneLine } = require('common-tags');
 
-const { axiosGoonAuth, GOON_AUTH_URLS } = require('../../axiosGoonAuth');
-const logger = require('../../logger');
+const { axiosGoonAuth, GOON_AUTH_URLS } = require('../axiosGoonAuth');
+const logger = require('../logger');
 
 const reasonNotValidated = username => oneLine`
   Lowtax is disappointed in you. Enter **!authme ${username}** back in the server to try again

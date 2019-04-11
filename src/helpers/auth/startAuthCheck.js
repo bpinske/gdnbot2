@@ -1,9 +1,9 @@
-const logger = require('../helpers/logger');
+const logger = require('../logger');
 
-const hasGuildEnrolled = require('./checks/hasGuildEnrolled');
-const canMemberAuth = require('./checks/canMemberAuth');
-const isValidAuthRole = require('./checks/isValidAuthRole');
-const isValidLogChannel = require('./checks/isValidLogChannel');
+const hasGuildEnrolled = require('../../checks/hasGuildEnrolled');
+const canMemberAuth = require('../../checks/canMemberAuth');
+const isValidAuthRole = require('../../checks/isValidAuthRole');
+const isValidLogChannel = require('../../checks/isValidLogChannel');
 
 /**
  * A series of checks to perform any time an intent to authenticate is registered

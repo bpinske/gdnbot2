@@ -1,5 +1,5 @@
-const logger = require('../../logger');
-const { axiosGDN, GDN_URLS } = require('../../axiosGDN');
+const logger = require('../logger');
+const { axiosGDN, GDN_URLS } = require('../axiosGDN');
 
 /**
  * Insert the authed user into the GDN database
