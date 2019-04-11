@@ -161,3 +161,59 @@ test('adds role to user that has never authed before', async () => {
 
   expect(member.edit).toHaveBeenCalledWith({ roles: [authRole], reason: 'GDN: Successful Auth' });
 });
+
+test('messages channel !authme was called in when Guild is not enrolled', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 404
+  });
+
+  // User enters "!authme saUsername"
+  await authme.run(message, { username: saUsername });
+
+  expect(message.say).toHaveBeenCalledWith('This server is not enrolled in the Goon Discord Network. Please have an admin enroll the server and then activate auth.');
+});
+
+test('messages channel !authme was called in when error occurs while checking Guild enrollment', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 500
+  });
+
+  // User enters "!authme saUsername"
+  await authme.run(message, { username: saUsername });
+
+  expect(message.say).toHaveBeenCalledWith('A system error occurred while attempting to verify guild enrollment in GDN. The bot owner has been notified. Thank you for your patience while they get this fixed!');
+});
+
+test('skips hash check for user that has authed before and is not blacklisted', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 200,
+    response: {
+      validated_role_id: roleID,
+      logging_channel_id: channelID
+    }
+  });
+
+  // Member has never authed before
+  moxios.stubRequest(GDN_MEMBER, {
+    status: 200,
+    response: {
+      sa_id: saID
+    }
+  });
+
+  // GoonAuth generates hash for user
+  moxios.stubRequest(GDN_SA, {
+    status: 200,
+    response: {
+      blacklisted: false
+    }
+  });
+
+  // User enters "!authme saUsername"
+  await authme.run(message, { username: saUsername });
+
+  expect(member.edit).toHaveBeenCalledWith({ roles: [authRole], reason: 'GDN: Successful Auth' });
+});
