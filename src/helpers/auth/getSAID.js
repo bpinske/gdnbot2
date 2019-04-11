@@ -1,27 +1,8 @@
-const axios = require('axios');
 const cheerio = require('cheerio');
 const { oneLine } = require('common-tags');
 
 const logger = require('../logger');
-
-const PROFILE_URL = 'http://forums.somethingawful.com/member.php?action=getinfo&username=';
-
-const COOKIES = {
-  sessionid: '87654063',
-  sessionhash: '6cd7e0953b0c6cd47ac6860ce6271d87',
-  bbuserid: '186135',
-  bbpassword: 'e6cf0cd6bc8218c6a361755d76deae38'
-};
-
-// Format the above cookies into a value suitable for use as the Cookie header
-const Cookie = Object.entries(COOKIES).map(([key, val]) => `${key}=${val}`).join('; ');
-
-// Prepare an Axios client with SA user cookies
-const saScraper = axios.create({
-  headers: {
-    Cookie
-  }
-});
+const { axiosSA, SA_URLS } = require('../axiosSA');
 
 const reasonNoIDFound = oneLine`
   I could not find an ID on the SA profile page for the username you provided. The bot owner has
@@ -46,11 +27,11 @@ const reasonCatchError = oneLine`
 async function getSAID ({ tag, username }) {
   logger.info(tag, 'Retrieving SA ID from SA profile');
 
-  const url = `${PROFILE_URL}${username}`;
+  const url = `${SA_URLS.PROFILE}${username}`;
 
   try {
     // Request HTML
-    const resp = await saScraper.get(url);
+    const resp = await axiosSA.get(url);
     // Prepare to parse it
     const $ = cheerio.load(resp.data);
     // Try to grab the ID
