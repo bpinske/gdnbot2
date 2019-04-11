@@ -15,7 +15,7 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   /**
    * CHECK IF USER HAS AUTHED BEFORE
    */
-  const { hasAuthed, dataGDN } = await hasUserAuthed({ tag, member });
+  const { hasAuthed, data: dataGDN } = await hasUserAuthed({ tag, member });
 
   if (!hasAuthed) {
     if (isAuthMe) {
@@ -32,6 +32,8 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
     };
   }
 
+  alreadyAuthed = true;
+
   /**
    * CHECK IF AUTHED USER IS BLACKLISTED
    */
@@ -41,6 +43,7 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   if (isBlacklisted) {
     return {
       canAuth: false,
+      alreadyAuthed,
       reason: blacklistedReason
     };
   }
