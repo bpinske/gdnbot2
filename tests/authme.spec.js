@@ -7,13 +7,6 @@ const { axiosGDN, GDN_URLS } = require('../src/helpers/axiosGDN');
 const { axiosGoonAuth, GOON_AUTH_URLS } = require('../src/helpers/axiosGoonAuth');
 const { SA_URLS } = require('../src/helpers/axiosSA');
 
-// Enable defining a new tag every test
-let member;
-let guild;
-let _guildRoles;
-let _guildChannels;
-let message;
-
 // Discord IDs
 const guildID = '123';
 const memberID = '456';
@@ -38,6 +31,47 @@ const userDM = {
 const saUsername = 'TestGoon';
 const saID = 789;
 
+// An instance of a Member
+let member = {
+  id: memberID,
+  user: {
+    tag: 'foobar'
+  },
+  roles: [],
+  edit: jest.fn(),
+  send: jest.fn().mockImplementation(() => ({
+    channel: userDM,
+    delete: jest.fn() }))
+};
+
+// An instance of a Guild
+let _guildRoles = [authRole];
+let _guildChannels = [logChannel];
+let guild = {
+  id: guildID,
+  name: 'Test Guild',
+  roles: {
+    get () { return _guildRoles; },
+    set (newRoles) {},
+    fetch: jest.fn().mockImplementation(
+      (_id) => Promise.resolve(_id === roleID ? _guildRoles[0] : null)
+    )
+  },
+  channels: {
+    get: jest.fn().mockImplementation(
+      (_id) => Promise.resolve(_id === channelID ? _guildChannels[0] : null)
+    )
+  }
+};
+
+// An instance of a Message
+let message = {
+  id: 'messageIdHere',
+  guild,
+  member,
+  say: jest.fn()
+};
+
 let GDN_GUILD = `${axiosGDN.defaults.baseURL}${GDN_URLS.GUILDS}/${guildID}`;
 let GDN_MEMBER = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}/${memberID}`;
 let GDN_SA = `${axiosGDN.defaults.baseURL}${GDN_URLS.SA}/${saID}`;
@@ -49,50 +83,6 @@ let GAUTH_CONFIRM = `${axiosGoonAuth.defaults.baseURL}/${GOON_AUTH_URLS.CONFIRM_
 let SA_PROFILE = `${SA_URLS.PROFILE}${saUsername}`;
 
 let authme = new AuthmeCommand({});
-
-beforeEach(() => {
-  // An instance of a Member
-  member = {
-    id: memberID,
-    user: {
-      tag: 'foobar'
-    },
-    roles: [],
-    edit: jest.fn(),
-    send: jest.fn().mockImplementation(() => ({
-      channel: userDM,
-      delete: jest.fn() }))
-  };
-
-  // An instance of a Guild
-  _guildRoles = [authRole];
-  _guildChannels = [logChannel];
-
-  guild = {
-    id: guildID,
-    name: 'Test Guild',
-    roles: {
-      get () { return _guildRoles; },
-      set (newRoles) {},
-      fetch: jest.fn().mockImplementation(
-        (_id) => Promise.resolve(_id === roleID ? _guildRoles[0] : null)
-      )
-    },
-    channels: {
-      get: jest.fn().mockImplementation(
-        (_id) => Promise.resolve(_id === channelID ? _guildChannels[0] : null)
-      )
-    }
-  };
-
-  // An instance of a Message
-  message = {
-    id: 'messageIdHere',
-    guild,
-    member,
-    say: jest.fn()
-  };
-});
 
 /**
  * Test cases testing the entire !authme command flow
