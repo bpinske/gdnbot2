@@ -1,14 +1,9 @@
-require('dotenv').config();
-
 const moxios = require('moxios');
-
-jest.mock('discord.js-commando');
-jest.mock('../src/helpers/logger');
 
 const AuthmeCommand = require('../src/commands/auth/authme');
 const { axiosGDN, GDN_URLS } = require('../src/helpers/axiosGDN');
 const { axiosGoonAuth, GOON_AUTH_URLS } = require('../src/helpers/axiosGoonAuth');
-const { axiosSA, SA_URLS } = require('../src/helpers/axiosSA');
+const { SA_URLS } = require('../src/helpers/axiosSA');
 
 // Enable defining a new tag every test
 let member;
@@ -54,10 +49,6 @@ let SA_PROFILE = `${SA_URLS.PROFILE}${saUsername}`;
 let authme = new AuthmeCommand({});
 
 beforeEach(() => {
-  moxios.install(axiosGDN);
-  moxios.install(axiosGoonAuth);
-  moxios.install(axiosSA);
-
   // An instance of a Member
   member = {
     id: memberID,
@@ -95,12 +86,6 @@ beforeEach(() => {
     member,
     say: jest.fn()
   };
-});
-
-afterEach(() => {
-  moxios.uninstall(axiosGDN);
-  moxios.uninstall(axiosGoonAuth);
-  moxios.uninstall(axiosSA);
 });
 
 /**

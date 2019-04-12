@@ -1,5 +1,6 @@
 const bunyan = require('bunyan');
 
+jest.unmock('./logger');
 let logger = require('./logger');
 
 // Values for matching
