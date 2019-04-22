@@ -20,7 +20,9 @@ const getHash = async ({ tag, member, username }) => {
   try {
     logger.info(tag, `Requesting hash for SA user: ${username}`);
     const { data } = await axiosGoonAuth.post(GOON_AUTH_URLS.GET_HASH, { username });
-    return { hash: data.hash };
+    return {
+      hash: data.hash
+    };
   } catch (err) {
     logger.error({ ...tag, err }, 'Error requesting hash');
     return {
