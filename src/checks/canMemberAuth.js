@@ -15,7 +15,15 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   /**
    * CHECK IF USER HAS AUTHED BEFORE
    */
-  const { hasAuthed, data: dataGDN } = await hasUserAuthed({ tag, member });
+  const { hasAuthed, reason: hasAuthedReason, data: dataGDN } = await hasUserAuthed({ tag, member });
+
+  // An error reason was returned
+  if (hasAuthedReason) {
+    return {
+      canAuth: false,
+      reason: hasAuthedReason
+    };
+  }
 
   if (!hasAuthed) {
     if (isAuthMe) {
