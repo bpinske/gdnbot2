@@ -17,8 +17,11 @@ const getHash = require('../../helpers/auth/getHash');
 const confirmHash = require('../../helpers/auth/confirmHash');
 const getSAProfile = require('../../helpers/auth/getSAProfile');
 const getSAID = require('../../helpers/auth/getSAID');
+const getSAPostCount = require('../../helpers/auth/getSAPostCount');
 const addRoleAndLog = require('../../helpers/auth/addRoleAndLog');
 const addUserToDB = require('../../helpers/auth/addUserToDB');
+
+const MIN_POST_COUNT = parseInt(process.env.MIN_POST_COUNT, 10);
 
 class AuthmeCommand extends Command {
   constructor (client) {
@@ -158,6 +161,23 @@ class AuthmeCommand extends Command {
 
     if (!id) {
       return member.send(reasonNoID);
+    }
+
+    /**
+     * RETRIEVING POST COUNT FROM USER PROFILE
+     */
+    const { count, reason: reasonNoPostCount } = await getSAPostCount({ tag, profile });
+
+    if (count < 0) {
+      return member.send(reasonNoPostCount);
+    }
+
+    // Require SA accounts to have a minimum number of posts
+    if (count < MIN_POST_COUNT) {
+      logger.info(tag, 'User post count is below minimum, exiting');
+      return message.say(oneLine`
+        Your SA account has an insufficient posting history. Please try again later.
+      `);
     }
 
     /**
