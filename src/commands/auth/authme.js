@@ -15,6 +15,7 @@ const praiseLowtaxCollector = require('../../helpers/auth/praiseLowtaxCollector'
 // Auth actions
 const getHash = require('../../helpers/auth/getHash');
 const confirmHash = require('../../helpers/auth/confirmHash');
+const getSAProfile = require('../../helpers/auth/getSAProfile');
 const getSAID = require('../../helpers/auth/getSAID');
 const addRoleAndLog = require('../../helpers/auth/addRoleAndLog');
 const addUserToDB = require('../../helpers/auth/addUserToDB');
@@ -142,9 +143,18 @@ class AuthmeCommand extends Command {
     }
 
     /**
+     * Get SA profile for analysis
+     */
+    const { profile, reason: reasonErrorProfileLoad } = await getSAProfile({ tag, username });
+
+    if (!profile) {
+      return member.send(reasonErrorProfileLoad);
+    }
+
+    /**
      * RETRIEVING SA ID FROM USER PROFILE
      */
-    const { id, reason: reasonNoID } = await getSAID({ tag, username });
+    const { id, reason: reasonNoID } = await getSAID({ tag, profile });
 
     if (!id) {
       return member.send(reasonNoID);
