@@ -25,6 +25,6 @@ afterEach(() => {
   moxios.uninstall(axiosGoonAuth);
   moxios.uninstall(axiosSA);
 
-  // Reset all mocks
+  // Reset all mock calls
   jest.clearAllMocks();
 });
