@@ -14,6 +14,7 @@ const reasonCatchError = oneLine`
 `;
 
 /**
+ * Check if a given SA ID is blacklisted on any Discord accounts that it's been used with
  *
  * @param {object} tag - The output from a call to logger.getLogTag()
  * @param {string} saID - The user's SA ID
