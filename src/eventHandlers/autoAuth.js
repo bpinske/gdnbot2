@@ -3,7 +3,7 @@ const { SnowflakeUtil } = require('discord.js');
 const logger = require('../helpers/logger');
 
 const startAuthCheck = require('../helpers/auth/startAuthCheck');
-const addRoleAndLog = require('../helpers/auth/actions/addRoleAndLog');
+const addRoleAndLog = require('../helpers/auth/addRoleAndLog');
 
 /**
  * A handler for the "guildMemberAdd" event, when a member joins a server the bot is on
