@@ -19,7 +19,7 @@ const reasonNoPostCountFound = oneLine`
  * @param {CheerioElement} profile - The user's profile page HTML wrapped in Cheerio
  * @return {object} - { count, reason? }
  */
-async function getSAID ({ tag, profile }) {
+async function getSAPostCount ({ tag, profile }) {
   logger.info(tag, 'Retrieving post count from SA profile');
 
   // Prepare to parse it
@@ -37,7 +37,7 @@ async function getSAID ({ tag, profile }) {
    * 3) Maybe the username WAS mis-spelled
    */
   if (!match) {
-    logger.error(tag, `No post count was found`);
+    logger.error(tag, 'No post count was found');
     return {
       count: -1,
       reason: reasonNoPostCountFound
@@ -52,4 +52,4 @@ async function getSAID ({ tag, profile }) {
   };
 }
 
-module.exports = getSAID;
+module.exports = getSAPostCount;
