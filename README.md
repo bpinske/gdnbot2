@@ -98,8 +98,8 @@ GDNServices:
 ✅list_roles          List all roles and IDs for this server
 ❌list_server_info    DEBUG: List cached info on this server (check admin panel instead)
 ModCommands:
-  gdn_mute            Mute a user to block their messages
-  gdn_unmute          Unmute a user so they can message again
+❌gdn_mute            Mute a user to block their messages (defer till next bot?)
+❌gdn_unmute          Unmute a user so they can message again (defer till next bot?)
 ​No Category:
   help                Shows this message.
   list_extensions
@@ -108,4 +108,3 @@ ModCommands:
 Type !help command for more info on a command.
 You can also type !help category for more info on a category.
 ```
-
