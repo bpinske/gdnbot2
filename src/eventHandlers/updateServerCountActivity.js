@@ -3,9 +3,9 @@
  *
  * @param {Client} bot
  */
-const updateEnrolledServersCount = async ({ bot }) => {
+const updateServerCountActivity = async ({ bot }) => {
   const totalGuilds = bot.guilds.size;
-  await bot.user.setActivity(`in ${totalGuilds} enrolled servers`);
+  await bot.user.setActivity(`in ${totalGuilds} servers`);
 };
 
-module.exports = updateEnrolledServersCount;
+module.exports = updateServerCountActivity;
