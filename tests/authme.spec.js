@@ -146,6 +146,34 @@ const badPostCountSAProfileHTML = oneLine`
 </html>
 `;
 
+// Bad Profile: Profile page markup changed significantly
+const badChangedMarkupSAProfileHTML = oneLine`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Document</title>
+</head>
+<body>
+  <table>
+    <tr>
+      <td class="post-count">
+        <p>
+          There have been <b>12</b> posts made by <i>${saUsername}</i>, an
+          average of 0.00 posts per day, since registering on <b>Apr 11, 2012</b>.
+        </p>
+      </td>
+      <td class="genderInfo">
+        <p>
+          <i>Goon API</i> claims to be a porpoise.
+        </p>
+      </td>
+    </tr>
+  </table>
+  <input type="hidden" name="userid" value="${saID}" />
+</body>
+</html>
+`;
+
 let GDN_GUILD = `${axiosGDN.defaults.baseURL}${GDN_URLS.GUILDS}/${guildID}`;
 let GDN_MEMBER = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}/${memberID}`;
 let GDN_SA = `${axiosGDN.defaults.baseURL}${GDN_URLS.SA}/${saID}`;
@@ -690,4 +718,150 @@ test('messages channel when user post count is too low', async () => {
   await authme.run(message, { username: saUsername });
 
   expect(message.say).toHaveBeenLastCalledWith('Your SA account has an insufficient posting history. Please try again later.');
+});
+
+test('messages user and logs error when an error occurs while retrieving SA profile', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 200,
+    response: {
+      validated_role_id: roleID,
+      logging_channel_id: channelID
+    }
+  });
+
+  // Member has never authed before
+  moxios.stubRequest(GDN_MEMBER, {
+    status: 404
+  });
+
+  // GoonAuth generates hash for user
+  moxios.stubRequest(GAUTH_GET, {
+    status: 200,
+    response: {
+      hash: 'abc'
+    }
+  });
+
+  // User responds with "praise lowtax"
+  userDM.awaitMessages.mockResolvedValue([]);
+
+  // GoonAuth is able to find hash in SA profile
+  moxios.stubRequest(GAUTH_CONFIRM, {
+    status: 200,
+    response: {
+      validated: true
+    }
+  });
+
+  // Error occurs while checking retrieving SA profile
+  moxios.stubRequest(SA_PROFILE, {
+    status: 500
+  });
+
+  await authme.run(message, { username: saUsername });
+
+  expect(member.send).toHaveBeenLastCalledWith('A system error occurred while reading your SA profile. The bot owner has been notified. Thank you for your patience while they get this fixed!');
+  expect(logger.error).toHaveBeenCalledWith({ req_id: message.id, err: new Error('Request failed with status code 500') }, 'Error retrieving SA profile page');
+});
+
+test('messages user when bot is unable to parse post count from profile', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 200,
+    response: {
+      validated_role_id: roleID,
+      logging_channel_id: channelID
+    }
+  });
+
+  // Member has never authed before
+  moxios.stubRequest(GDN_MEMBER, {
+    status: 404
+  });
+
+  // GoonAuth generates hash for user
+  moxios.stubRequest(GAUTH_GET, {
+    status: 200,
+    response: {
+      hash: 'abc'
+    }
+  });
+
+  // User responds with "praise lowtax"
+  userDM.awaitMessages.mockResolvedValue([]);
+
+  // GoonAuth is able to find hash in SA profile
+  moxios.stubRequest(GAUTH_CONFIRM, {
+    status: 200,
+    response: {
+      validated: true
+    }
+  });
+
+  // SA username returns a valid SA profile
+  moxios.stubRequest(SA_PROFILE, {
+    status: 200,
+    response: badChangedMarkupSAProfileHTML
+  });
+
+  await authme.run(message, { username: saUsername });
+
+  expect(member.send).toHaveBeenLastCalledWith('I could not find a post count on the SA profile page for the username you provided. The bot owner has been notified. Thank you for your patience while they get this fixed!');
+  expect(logger.error).toHaveBeenCalledWith({ req_id: message.id }, 'No post count was found');
+});
+
+test('logs error when error occurs while adding user to database', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 200,
+    response: {
+      validated_role_id: roleID,
+      logging_channel_id: channelID
+    }
+  });
+
+  // Member has never authed before
+  moxios.stubRequest(GDN_MEMBER, {
+    status: 404
+  });
+
+  // GoonAuth generates hash for user
+  moxios.stubRequest(GAUTH_GET, {
+    status: 200,
+    response: {
+      hash: 'abc'
+    }
+  });
+
+  // User responds with "praise lowtax"
+  userDM.awaitMessages.mockResolvedValue([]);
+
+  // GoonAuth is able to find hash in SA profile
+  moxios.stubRequest(GAUTH_CONFIRM, {
+    status: 200,
+    response: {
+      validated: true
+    }
+  });
+
+  // SA username returns a valid SA profile
+  moxios.stubRequest(SA_PROFILE, {
+    status: 200,
+    response: goodSAProfileHTML
+  });
+
+  // SA ID hasn't been used by another account
+  moxios.stubRequest(GDN_SA, {
+    status: 404
+  });
+
+  // DB accepts new user
+  moxios.stubRequest(GDN_DB, {
+    status: 500
+  });
+
+  await authme.run(message, { username: saUsername });
+
+  expect(logger.error).toHaveBeenCalledWith({ req_id: message.id, err: new Error('Request failed with status code 500') }, 'Error inserting user');
 });
