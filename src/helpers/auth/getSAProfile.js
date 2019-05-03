@@ -31,7 +31,7 @@ const getSAProfile = async ({ tag, username }) => {
       profile
     };
   } catch (err) {
-    logger.error({ ...tag, err }, 'System error retrieving SA profile page');
+    logger.error({ ...tag, err }, 'Error retrieving SA profile page');
     return {
       profile: null,
       reason: reasonErrorLoadingProfile
