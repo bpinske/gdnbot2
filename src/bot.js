@@ -55,7 +55,7 @@ bot.once('ready', () => {
   bot.user.setActivity('in the forge');
 
   // Update bot activity to reflect number of guilds
-  // updateServerCountActivity({ bot });
+  updateServerCountActivity({ bot });
   // Update homepage server counts on boot
   updateHomepageMemberCounts({ bot });
 });
