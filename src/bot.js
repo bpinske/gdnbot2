@@ -81,8 +81,6 @@ bot.on('guildCreate', async () => {
 
 // When the bot leaves a Guild
 bot.on('guildDelete', async (guild) => {
-  // TODO: receives a `guild` instance
-  // await removeServerFromGDN({ guild });
   await updateServerCountActivity({ bot });
 });
 
