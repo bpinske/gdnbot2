@@ -1,11 +1,16 @@
+const logger = require('../helpers/logger');
+
 /**
- * Update the number of enrolled servers in the bot's activity
+ * Set the bot's activity to show the number of servers it's sitting in
  *
  * @param {Client} bot
  */
 const updateServerCountActivity = async ({ bot }) => {
-  const totalGuilds = bot.guilds.size;
-  await bot.user.setActivity(`in ${totalGuilds} servers`);
+  const activity = `in ${bot.guilds.size} servers`;
+
+  logger.info(`setting activity to "${activity}"`);
+
+  await bot.user.setActivity(activity);
 };
 
 module.exports = updateServerCountActivity;
