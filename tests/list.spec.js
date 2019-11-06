@@ -19,10 +19,10 @@ const ROLE_2 = {
   id: 456,
   name: 'Role 2'
 };
-const roles = [
-  ROLE_1,
-  ROLE_2
-];
+const roles = new Collection([
+  [ROLE_1, ROLE_1],
+  [ROLE_2, ROLE_2]
+]);
 
 const TEXT_CHANNEL_1 = {
   id: 123,
@@ -40,29 +40,15 @@ const TEXT_CHANNEL_2 = {
   type: 'text'
 };
 const channels = new Collection([
-  TEXT_CHANNEL_1,
-  VOICE_CHANNEL,
-  TEXT_CHANNEL_2
+  [TEXT_CHANNEL_1, TEXT_CHANNEL_1],
+  [VOICE_CHANNEL, VOICE_CHANNEL],
+  [TEXT_CHANNEL_2, TEXT_CHANNEL_2]
 ]);
-
-console.log(channels);
 
 const guild = {
   name: 'testGuild',
-  // TODO: Figure out how to make this a Collection so we don't have to mock its implementation
-  roles: {
-    each: cb => { roles.forEach(role => cb(role)); }
-  },
-  // TODO: Figure out how to make this a Collection so we don't have to mock its implementation
-  channels: {
-    each: cb => { channels.forEach(channel => cb(channel)); },
-    filter: cb => {
-      const filtered = channels.filter(channel => cb(channel));
-      return {
-        each: cb => { filtered.forEach(_channel => cb(_channel)); }
-      };
-    }
-  }
+  roles,
+  channels
 };
 
 const message = {
