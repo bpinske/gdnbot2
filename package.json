@@ -11,7 +11,7 @@
     "test:coverage": "npm test -- --coverage"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bunyan": "^1.8.12",
     "bunyan-syslog": "^0.3.2",
     "capitalize": "^2.0.0",
