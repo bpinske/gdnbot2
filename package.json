@@ -4,8 +4,9 @@
   "repository": {},
   "license": "",
   "scripts": {
-    "start": "NODE_ENV=development nodemon src/bot.js | bunyan",
-    "host": "NODE_ENV=production node src/bot.js",
+    "start": "NODE_ENV=development nodemon src/bot.ts | bunyan",
+    "build": "tsc",
+    "host": "NODE_ENV=production node dist/bot.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "npm test -- --coverage"
