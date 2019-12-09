@@ -2,7 +2,7 @@ import { oneLine } from 'common-tags';
 import { Guild } from 'discord.js';
 
 import logger, { LogTag } from '../helpers/logger';
-import { axiosGDN, GDN_URLS, GuildByIdResponse } from '../helpers/axiosGDN';
+import { axiosGDN, GDN_URLS, APIGuild } from '../helpers/axiosGDN';
 
 const reasonNotEnrolled = oneLine`
   This server is not enrolled in the Goon Discord Network. Please have an
@@ -29,7 +29,7 @@ export default async function hasGuildEnrolled (tag: LogTag, guild: Guild): Prom
 
   try {
     // Not erroring out here means the server is in GDN
-    const { data }: GuildByIdResponse = await axiosGDN.get(`${GDN_URLS.GUILDS}/${guild.id}`);
+    const { data } = await axiosGDN.get<APIGuild>(`${GDN_URLS.GUILDS}/${guild.id}`);
 
     logger.info(tag, 'Server is enrolled in GDN, continuing');
 

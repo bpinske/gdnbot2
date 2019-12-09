@@ -2,7 +2,7 @@ import { SnowflakeUtil } from 'discord.js';
 import { CommandoClient } from 'discord.js-commando';
 
 import logger, { getLogTag } from '../helpers/logger';
-import { axiosGDN, GDN_URLS, GuildsResponse, APIGuild } from '../helpers/axiosGDN';
+import { axiosGDN, GDN_URLS, APIGuild } from '../helpers/axiosGDN';
 
 interface GuildsMap {
   [key: string]: APIGuild;
@@ -19,7 +19,7 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
 
   try {
     // Get the servers from the back end and map them by server ID
-    const resp: GuildsResponse = await axiosGDN(GDN_URLS.GUILDS);
+    const resp = await axiosGDN.get<APIGuild[]>(GDN_URLS.GUILDS);
     const apiGuilds = resp.data;
     const guildsMap: GuildsMap = {};
     apiGuilds.forEach(guild => {
