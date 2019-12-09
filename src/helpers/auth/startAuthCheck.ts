@@ -49,7 +49,7 @@ export default async function startAuthCheck (
     reason: guildReason,
     roleId,
     channelId,
-  } = await hasGuildEnrolled({ tag, guild });
+  } = await hasGuildEnrolled(tag, guild);
 
   if (!isEnrolled) {
     logger.info(tag, 'Guild is not enrolled, exiting');
