@@ -10,7 +10,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "npm test -- --coverage",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/ --ext .ts"
   },
   "dependencies": {
     "@types/bunyan": "^1.8.6",
