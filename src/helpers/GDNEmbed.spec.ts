@@ -1,7 +1,9 @@
-const { MessageEmbed } = require('discord.js');
-const { Colors } = require('discord.js/src/util/Constants');
+import { MessageEmbed } from 'discord.js';
+// Discord.js doesn't export Colors directly but we can still access it like this
+// @ts-ignore
+import { Colors } from 'discord.js/src/util/Constants';
 
-const GDNEmbed = require('./GDNEmbed');
+import GDNEmbed from './GDNEmbed';
 
 test('subclass Discord.js MessageEmbed', () => {
   const embed = new GDNEmbed({});
