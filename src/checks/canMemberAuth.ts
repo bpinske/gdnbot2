@@ -2,7 +2,7 @@ import { GuildMember } from 'discord.js';
 
 import logger, { LogTag } from '../helpers/logger';
 import isMemberBlacklisted from './isMemberBlacklisted';
-import hasUserAuthed from './hasUserAuthed';
+import hasMemberAuthed from './hasMemberAuthed';
 
 interface MemberAuth {
   canAuth: boolean;
@@ -27,8 +27,8 @@ export default async function canMemberAuth (
   const {
     hasAuthed,
     reason: hasAuthedReason,
-    data: dataGDN,
-  } = await hasUserAuthed({ tag, member });
+    memberData,
+  } = await hasMemberAuthed(tag, member);
 
   // An error reason was returned
   if (hasAuthedReason) {
@@ -61,7 +61,7 @@ export default async function canMemberAuth (
   const {
     sa_id: saID,
     sa_username: saUsername,
-  } = dataGDN;
+  } = memberData;
   const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted({ tag, saID });
 
   if (isBlacklisted) {
