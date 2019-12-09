@@ -1,5 +1,14 @@
 import axios from 'axios';
 
+export interface APIGuild {
+  'server_id': string;
+  'validated_role_id': string;
+}
+
+export interface GuildsResponse {
+  data: APIGuild[];
+}
+
 /**
  * An instance of Axios configured to speak with the GDN APIs over Docker's internal network
  */
