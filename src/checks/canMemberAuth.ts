@@ -62,7 +62,7 @@ export default async function canMemberAuth (
     sa_id: saID,
     sa_username: saUsername,
   } = memberData;
-  const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted({ tag, saID });
+  const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted(tag, saID);
 
   if (isBlacklisted) {
     return {
