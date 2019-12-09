@@ -1,10 +1,10 @@
-import { Guild, GuildChannel } from 'discord.js';
+import { Guild, TextChannel } from 'discord.js';
 
 import logger, { LogTag } from '../helpers/logger';
 
 interface ValidatedLogChannel {
   isValid: boolean;
-  guildChannel?: GuildChannel;
+  logChannel?: TextChannel;
 }
 
 /**
@@ -15,7 +15,7 @@ export default async function isValidLogChannel (
   guild: Guild,
   channelId: string,
 ): Promise<ValidatedLogChannel> {
-  let guildChannel;
+  let logChannel: TextChannel;
   let isValid = false;
 
   if (channelId) {
@@ -23,13 +23,14 @@ export default async function isValidLogChannel (
     const id = String(channelId);
 
     logger.info(tag, `Validating logging channel ID: '${id}'`);
-    guildChannel = await guild.channels.get(id);
+    const textChannel = await guild.channels.get(id);
 
-    if (guildChannel) {
-      logger.info(tag, `Found valid channel: '#${guildChannel.name}'`);
+    if (textChannel.type === 'text') {
+      logger.info(tag, `Found valid text channel: '#${logChannel.name}'`);
       isValid = true;
+      logChannel = (textChannel as TextChannel);
     } else {
-      logger.info(tag, 'No channel found by that ID');
+      logger.info(tag, 'No text channel found by that ID');
     }
   } else {
     logger.info(tag, 'No channel ID provided');
@@ -37,6 +38,6 @@ export default async function isValidLogChannel (
 
   return {
     isValid,
-    guildChannel,
+    logChannel: logChannel,
   };
 }

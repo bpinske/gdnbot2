@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Role, Channel } from 'discord.js';
+import { Guild, GuildMember, Role, TextChannel } from 'discord.js';
 
 import logger, { LogTag } from '../logger';
 
@@ -13,7 +13,7 @@ interface AuthCheckDecision {
   alreadyAuthed?: boolean;
   saUsername?: string;
   validatedRole?: Role;
-  validatedChannel?: Channel;
+  validatedChannel?: TextChannel;
 }
 
 /**
@@ -92,7 +92,7 @@ export default async function startAuthCheck (
    * Check for (optional) logging channel and validate it
    */
   const {
-    guildChannel: validatedChannel,
+    logChannel: validatedChannel,
   } = await isValidLogChannel(tag, guild, channelId);
 
   logger.info(tag, 'Auth checks passed, continuing');
