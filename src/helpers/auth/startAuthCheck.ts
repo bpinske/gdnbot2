@@ -77,8 +77,8 @@ export default async function startAuthCheck (
   const {
     isValid: isValidRole,
     reason: roleReason,
-    validatedRole,
-  } = await isValidAuthRole({ tag, guild, roleId });
+    guildRole,
+  } = await isValidAuthRole(tag, guild, roleId);
 
   if (!isValidRole) {
     logger.info(tag, 'Auth role is not valid, exiting');
@@ -100,7 +100,7 @@ export default async function startAuthCheck (
     canProceed: true,
     alreadyAuthed,
     saUsername,
-    validatedRole,
+    validatedRole: guildRole,
     validatedChannel,
   };
 }
