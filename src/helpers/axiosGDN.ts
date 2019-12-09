@@ -3,10 +3,15 @@ import axios from 'axios';
 export interface APIGuild {
   'server_id': string;
   'validated_role_id': string;
+  'logging_channel_id'?: string;
 }
 
 export interface GuildsResponse {
   data: APIGuild[];
+}
+
+export interface GuildByIdResponse {
+  data: APIGuild;
 }
 
 /**
