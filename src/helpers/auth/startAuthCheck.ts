@@ -13,7 +13,7 @@ interface AuthCheckDecision {
   alreadyAuthed?: boolean;
   saUsername?: string;
   validatedRole?: Role;
-  loggingChannel?: Channel;
+  validatedChannel?: Channel;
 }
 
 /**
@@ -92,8 +92,8 @@ export default async function startAuthCheck (
    * Check for (optional) logging channel and validate it
    */
   const {
-    validatedChannel,
-  } = await isValidLogChannel({ tag, guild, channelId });
+    guildChannel: validatedChannel,
+  } = await isValidLogChannel(tag, guild, channelId);
 
   logger.info(tag, 'Auth checks passed, continuing');
   return {
