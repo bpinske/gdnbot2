@@ -19,10 +19,6 @@ const reasonNoPostCountFound = oneLine`
  *
  * This will get called _after_ the hash has been successfully verified, which means we're
  * assuming the username is valid.
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {CheerioElement} profile - The user's profile page HTML wrapped in Cheerio
- * @return {object} - { count, reason? }
  */
 export default async function getSAPostCount (tag: LogTag, profile: CheerioStatic): Promise<SAPostCount> {
   logger.info(tag, 'Retrieving post count from SA profile');

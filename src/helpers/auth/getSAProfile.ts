@@ -5,8 +5,8 @@ import logger, { LogTag } from '../logger';
 import { axiosSA, SA_URLS } from '../axiosSA';
 
 interface SAProfile {
-  reason?: string;
   profile?: CheerioStatic,
+  reason?: string;
 }
 
 const reasonErrorLoadingProfile = oneLine`
@@ -16,10 +16,6 @@ const reasonErrorLoadingProfile = oneLine`
 
 /**
  * Grab the user's SA Profile page and wrap it in Cheerio
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {string} username - The member's SA Username
- * @returns {CheerioElement} - { profile, reason? }
  */
 export default async function getSAProfile (tag: LogTag, username: string): Promise<SAProfile> {
   logger.info(tag, 'Retrieving SA profile page');
