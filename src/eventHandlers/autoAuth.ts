@@ -24,7 +24,7 @@ const autoAuth = ({ member }) => {
       canProceed,
       saUsername,
       validatedRole,
-      validatedChannel
+      validatedChannel,
     } = await startAuthCheck({ tag, guild, member, isAuthMe: false });
 
     if (canProceed) {
@@ -33,7 +33,7 @@ const autoAuth = ({ member }) => {
         member,
         saUsername,
         role: validatedRole,
-        channel: validatedChannel
+        channel: validatedChannel,
       });
     } else {
       logger.info(tag, 'Did not proceed with auto-auth');

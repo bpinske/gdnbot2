@@ -35,7 +35,7 @@ const updateHomepageMemberCounts = async ({ bot }) => {
       } else {
         // Go through each Member and filter for ones that have the Guild's auth role
         authedUsers = guild.members.filter(
-          member => member.roles.some(role => role.id === authedRoleID)
+          member => member.roles.some(role => role.id === authedRoleID),
         );
         message = `Updating authed member count for ${guild.name} (${guild.id}): ${authedUsers.size}`;
       }
@@ -53,7 +53,7 @@ const updateHomepageMemberCounts = async ({ bot }) => {
         logger.debug(tag, `Rounded user count: ${count}`);
 
         await axiosGDN.patch(`${GDN_URLS.GUILDS}/${guild.id}`, {
-          user_count: count
+          user_count: count,
         });
 
         logger.info(tag, 'Successfully updated guild member count on server');
@@ -68,5 +68,5 @@ const updateHomepageMemberCounts = async ({ bot }) => {
 
 module.exports = {
   updateHomepageMemberCounts,
-  UPDATE_INTERVAL
+  UPDATE_INTERVAL,
 };
