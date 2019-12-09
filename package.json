@@ -14,7 +14,7 @@
     "axios": "^0.18.1",
     "bunyan": "^1.8.12",
     "bunyan-syslog": "^0.3.3",
-    "capitalize": "^2.0.0",
+    "capitalize": "^2.0.1",
     "cheerio": "^1.0.0-rc.3",
     "common-tags": "^1.8.0",
     "discord.js": "github:discordjs/discord.js",
