@@ -23,12 +23,6 @@ interface AuthCheckDecision {
  *
  * - User invokes !authme
  * - User joins a server in which GDNBot resides
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {Guild} guild - The server the user is in
- * @param {Member} member - The member to auth
- * @param {boolean} isAuthMe - Whether this was invoked from !authme, or by the member joining
- * @returns {object} - { canProceed, reason?, alreadyAuthed?, saUsername?, validatedRole, loggingChannel }
  */
 export default async function startAuthCheck (
   tag: LogTag,
