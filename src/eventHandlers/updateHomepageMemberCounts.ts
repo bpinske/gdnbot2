@@ -1,22 +1,31 @@
-const { SnowflakeUtil } = require('discord.js');
+import { SnowflakeUtil } from 'discord.js';
+import { CommandoClient } from 'discord.js-commando';
 
-const logger = require('../helpers/logger');
-const { axiosGDN, GDN_URLS } = require('../helpers/axiosGDN');
+import logger, { getLogTag } from '../helpers/logger';
+import { axiosGDN, GDN_URLS, GuildsResponse, APIGuild } from '../helpers/axiosGDN';
 
-const UPDATE_INTERVAL = 1000 * 60 * 60 * 24; // 24 Hours
+interface Args {
+  bot: CommandoClient;
+}
 
-const updateHomepageMemberCounts = async ({ bot }) => {
+interface GuildsMap {
+  [key: string]: APIGuild;
+}
+
+export const UPDATE_INTERVAL = 1000 * 60 * 60 * 24; // 24 Hours
+
+export const updateHomepageMemberCounts = async ({ bot }: Args) => {
   // Generate a logger tag
   const eventId = SnowflakeUtil.generate();
-  const tag = logger.getLogTag(eventId);
+  const tag = getLogTag(eventId);
 
   logger.info(tag, '[Updating member counts]');
 
   try {
     // Get the servers from the back end and map them by server ID
-    const resp = await axiosGDN(GDN_URLS.GUILDS);
+    const resp: GuildsResponse = await axiosGDN(GDN_URLS.GUILDS);
     const apiGuilds = resp.data;
-    const guildsMap = {};
+    const guildsMap: GuildsMap = {};
     apiGuilds.forEach(guild => {
       guildsMap[guild.server_id] = guild;
     });
@@ -64,9 +73,4 @@ const updateHomepageMemberCounts = async ({ bot }) => {
   } catch (err) {
     logger.error({ ...tag, err }, 'Error updating server member counts');
   }
-};
-
-module.exports = {
-  updateHomepageMemberCounts,
-  UPDATE_INTERVAL,
 };
