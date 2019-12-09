@@ -1,30 +1,35 @@
-const { Command } = require('discord.js-commando');
-const { stripIndents, oneLine } = require('common-tags');
+import { DMChannel } from 'discord.js';
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { stripIndents, oneLine } from 'common-tags';
 
 // Helpers
-const logger = require('../../helpers/logger');
-const cleanupMessages = require('../../helpers/cleanupMessages');
+import logger, { getLogTag } from '../../helpers/logger';
+import cleanupMessages from '../../helpers/cleanupMessages';
 
 // Checks
-const isMemberBlacklisted = require('../../checks/isMemberBlacklisted');
+import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
 
 // Auth helpers
-const startAuthCheck = require('../../helpers/auth/startAuthCheck');
-const praiseLowtaxCollector = require('../../helpers/auth/praiseLowtaxCollector');
+import startAuthCheck from '../../helpers/auth/startAuthCheck';
+import praiseLowtaxCollector from '../../helpers/auth/praiseLowtaxCollector';
 
 // Auth actions
-const getHash = require('../../helpers/auth/getHash');
-const confirmHash = require('../../helpers/auth/confirmHash');
-const getSAProfile = require('../../helpers/auth/getSAProfile');
-const getSAID = require('../../helpers/auth/getSAID');
-const getSAPostCount = require('../../helpers/auth/getSAPostCount');
-const addRoleAndLog = require('../../helpers/auth/addRoleAndLog');
-const addUserToDB = require('../../helpers/auth/addUserToDB');
+import getHash from '../../helpers/auth/getHash';
+import confirmHash from '../../helpers/auth/confirmHash';
+import getSAProfile from '../../helpers/auth/getSAProfile';
+import getSAID from '../../helpers/auth/getSAID';
+import getSAPostCount from '../../helpers/auth/getSAPostCount';
+import addRoleAndLog from '../../helpers/auth/addRoleAndLog';
+import addUserToDB from '../../helpers/auth/addUserToDB';
+
+interface AuthmeCommandArgs {
+  username: string;
+}
 
 const MIN_POST_COUNT = parseInt(process.env.MIN_POST_COUNT, 10);
 
 class AuthmeCommand extends Command {
-  constructor (client) {
+  constructor (client: CommandoClient) {
     super(client, {
       name: 'authme',
       group: 'auth',
@@ -46,17 +51,17 @@ class AuthmeCommand extends Command {
         {
           key: 'username',
           prompt: 'What is your SA username?',
-          type: 'string'
-        }
-      ]
+          type: 'string',
+        },
+      ],
     });
   }
 
-  async run (message, { username }) {
+  async run (message: CommandoMessage, { username }: AuthmeCommandArgs) {
     const { guild, member } = message;
 
     // Prepare a tag for logging
-    const tag = logger.getLogTag(message.id);
+    const tag = getLogTag(message.id);
 
     logger.info(tag, '[EVENT: !authme]');
 
@@ -68,13 +73,13 @@ class AuthmeCommand extends Command {
       reason: checkReason,
       alreadyAuthed,
       validatedRole,
-      validatedChannel
-    } = await startAuthCheck({
+      validatedChannel,
+    } = await startAuthCheck(
       tag,
       guild,
       member,
-      isAuthMe: true
-    });
+      true,
+    );
 
     if (!canProceed) {
       return message.say(checkReason);
@@ -83,20 +88,20 @@ class AuthmeCommand extends Command {
     if (alreadyAuthed) {
       logger.info(tag, 'User has already authed, bypassing hash check');
 
-      await addRoleAndLog({
+      await addRoleAndLog(
         tag,
         member,
-        saUsername: username,
-        role: validatedRole,
-        channel: validatedChannel
-      });
+        username,
+        validatedRole,
+        validatedChannel,
+      );
       return;
     }
 
     /**
      * GENERATING A VERIFICATION HASH
      */
-    const { hash, reason: hashReason } = await getHash({ tag, member, username });
+    const { hash, reason: hashReason } = await getHash(tag, member, username);
 
     if (!hash) {
       return message.say(hashReason);
@@ -120,7 +125,7 @@ class AuthmeCommand extends Command {
      */
     logger.info(tag, 'Awaiting response from member');
 
-    const confirmation = await praiseLowtaxCollector({ channel: hashMessage.channel });
+    const confirmation = await praiseLowtaxCollector((hashMessage.channel as DMChannel));
 
     // We're done with the hash, so remove it
     cleanupMessages([hashMessage]);
@@ -139,7 +144,7 @@ class AuthmeCommand extends Command {
     logger.info(tag, 'Member responded, continuing');
 
     // Check SA profile for hash
-    const { confirmed, reason: confirmReason } = await confirmHash({ tag, member, username });
+    const { confirmed, reason: confirmReason } = await confirmHash(tag, member, username);
 
     if (!confirmed) {
       return member.send(confirmReason);
@@ -148,7 +153,7 @@ class AuthmeCommand extends Command {
     /**
      * Get SA profile for analysis
      */
-    const { profile, reason: reasonErrorProfileLoad } = await getSAProfile({ tag, username });
+    const { profile, reason: reasonErrorProfileLoad } = await getSAProfile(tag, username);
 
     if (!profile) {
       return member.send(reasonErrorProfileLoad);
@@ -157,16 +162,16 @@ class AuthmeCommand extends Command {
     /**
      * RETRIEVING SA ID FROM USER PROFILE
      */
-    const { id, reason: reasonNoID } = await getSAID({ tag, profile });
+    const { id: saID, reason: reasonNoID } = await getSAID(tag, profile);
 
-    if (!id) {
+    if (!saID) {
       return member.send(reasonNoID);
     }
 
     /**
      * RETRIEVING POST COUNT FROM USER PROFILE
      */
-    const { count, reason: reasonNoPostCount } = await getSAPostCount({ tag, profile });
+    const { count, reason: reasonNoPostCount } = await getSAPostCount(tag, profile);
 
     if (count < 0) {
       return member.send(reasonNoPostCount);
@@ -183,7 +188,7 @@ class AuthmeCommand extends Command {
     /**
      * CHECKING IF USER IS BLACKLISTED BY SA ID
      */
-    const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted({ tag, saID: id });
+    const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted(tag, saID);
 
     if (isBlacklisted) {
       // Purposefully send this to the Guild channel so that admins can notice blacklisted users
@@ -193,23 +198,23 @@ class AuthmeCommand extends Command {
     /**
      * ADDING AUTH ROLE AND LOGGING MESSAGE
      */
-    await addRoleAndLog({
+    await addRoleAndLog(
       tag,
       member,
-      saUsername: username,
-      role: validatedRole,
-      channel: validatedChannel
-    });
+      username,
+      validatedRole,
+      validatedChannel,
+    );
 
     /**
      * INSERTING USER INTO DATABASE
      */
-    await addUserToDB({
+    await addUserToDB(
       tag,
       member,
-      saID: id,
-      saUsername: username
-    });
+      saID,
+      username,
+    );
   }
 }
 
