@@ -1,11 +1,13 @@
 // Load files from the .env file
-require('dotenv').config();
+import dotenv from 'dotenv';
 
-const { CommandoClient, SQLiteProvider } = require('discord.js-commando');
-const sqlite = require('sqlite');
-const path = require('path');
+import { CommandoClient, SQLiteProvider } from 'discord.js-commando';
+import sqlite from 'sqlite';
+import path from 'path';
 
-const logger = require('./helpers/logger');
+import logger from './helpers/logger';
+
+dotenv.config();
 
 // Event handlers
 const autoAuth = require('./eventHandlers/autoAuth');
@@ -17,28 +19,27 @@ const bot = new CommandoClient({
   commandPrefix: '!',
   owner: '148474055949942787',
   invite: 'https://discord.gg/vH8uVUE',
-  unknownCommandResponse: false,
   disabledEvents: [
-    'TYPING_START'
-  ]
+    'TYPING_START',
+  ],
 });
 
 // Set up a SQLite DB to preserve guide-specific command availability
-bot.setProvider(
-  sqlite.open(path.join(__dirname, '../settings.db'))
-    .then(db => new SQLiteProvider(db))
-    .catch(error => { logger.error('Error loading SQLite DB:', error); })
-);
+sqlite.open(path.join(__dirname, '../settings.db'))
+  .then(db => bot.setProvider(new SQLiteProvider(db)))
+  .catch(error => { logger.error('Error loading SQLite DB:', error); });
 
 // Initialize commands and command groups
 bot.registry
   .registerDefaultTypes()
   .registerGroups([
     ['auth', 'Authentication'],
-    ['gdn', 'Goon Discord Network']
+    ['gdn', 'Goon Discord Network'],
   ])
   .registerDefaultGroups()
-  .registerDefaultCommands()
+  .registerDefaultCommands({
+    unknownCommand: false,
+  })
   // Automatically load commands that exist in the commands/ directory
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
@@ -80,7 +81,7 @@ bot.on('guildCreate', async () => {
 });
 
 // When the bot leaves a Guild
-bot.on('guildDelete', async (guild) => {
+bot.on('guildDelete', async () => {
   await updateServerCountActivity({ bot });
 });
 
@@ -94,7 +95,7 @@ bot.setInterval(
   () => {
     updateHomepageMemberCounts({ bot });
   },
-  UPDATE_INTERVAL
+  UPDATE_INTERVAL,
 );
 
 // Start the bot
