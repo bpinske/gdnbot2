@@ -1,19 +1,23 @@
-const { Command } = require('discord.js-commando');
-const capitalize = require('capitalize');
+import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import capitalize from 'capitalize';
 
-const GDNEmbed = require('../../helpers/GDNEmbed');
+import GDNEmbed from '../../helpers/GDNEmbed';
 
-const listTextChannels = require('../../helpers/gdn/listTextChannels');
-const listRoles = require('../../helpers/gdn/listRoles');
+import listTextChannels from '../../helpers/gdn/listTextChannels';
+import listRoles from '../../helpers/gdn/listRoles';
+
+interface ListCommandArgs {
+  option: string;
+}
 
 const OPTIONS = {
   ROLES: 'roles',
-  CHANNELS: 'channels'
+  CHANNELS: 'channels',
 };
 
 const oneOf = [
   OPTIONS.CHANNELS,
-  OPTIONS.ROLES
+  OPTIONS.ROLES,
 ];
 const oneOfFormatted = oneOf.map(opt => `\`${opt}\``).join(', ');
 
@@ -24,7 +28,7 @@ const oneOfFormatted = oneOf.map(opt => `\`${opt}\``).join(', ');
  * server the command is run in
  */
 class ListCommand extends Command {
-  constructor (client) {
+  constructor (client: CommandoClient) {
     super(client, {
       name: 'list',
       group: 'gdn',
@@ -37,13 +41,13 @@ class ListCommand extends Command {
           key: 'option',
           prompt: `What would you like a list of?\nOptions: ${oneOfFormatted}\n`,
           type: 'string',
-          oneOf
-        }
-      ]
+          oneOf,
+        },
+      ],
     });
   }
 
-  run (message, { option }) {
+  run (message: CommandoMessage, { option }: ListCommandArgs) {
     const { guild } = message;
 
     const listEmbed = new GDNEmbed()
