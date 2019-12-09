@@ -27,7 +27,7 @@ const oneOfFormatted = oneOf.map(opt => `\`${opt}\``).join(', ');
  * Can be used to display a list of roles, channels, etc... (see `options` above) for whatever
  * server the command is run in
  */
-class ListCommand extends Command {
+export default class ListCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
       name: 'list',
@@ -70,5 +70,3 @@ class ListCommand extends Command {
     return message.embed(listEmbed);
   }
 }
-
-module.exports = ListCommand;
