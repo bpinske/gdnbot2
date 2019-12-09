@@ -61,7 +61,7 @@ export default async function startAuthCheck (
     reason: memberAuthReason,
     alreadyAuthed,
     saUsername,
-  } = await canMemberAuth({ tag, member, isAuthMe });
+  } = await canMemberAuth(tag, member, isAuthMe);
 
   if (!canAuth) {
     logger.info(tag, 'Member cannot proceed with auth, exiting');

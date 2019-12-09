@@ -1,27 +1,39 @@
-const logger = require('../helpers/logger');
-const isMemberBlacklisted = require('./isMemberBlacklisted');
-const hasUserAuthed = require('./hasUserAuthed');
+import logger, { LogTag } from '../helpers/logger';
+import isMemberBlacklisted from './isMemberBlacklisted';
+import hasUserAuthed from './hasUserAuthed';
+import { GuildMember } from 'discord.js';
+
+interface MemberAuth {
+  canAuth: boolean;
+  reason?: string;
+  alreadyAuthed?: boolean;
+  saUsername?: string;
+}
 
 /**
  * Check to see if a member has authed before in Goon Discord Network
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {Member} member - The member to verify enrollment in GDN
- * @returns {object} - { canAuth, reason?, alreadyAuthed?, saUsername? }
  */
-const canMemberAuth = async ({ tag, member, isAuthMe }) => {
+export default async function canMemberAuth (
+  tag: LogTag,
+  member: GuildMember,
+  isAuthMe: boolean,
+): Promise<MemberAuth> {
   let alreadyAuthed = false;
 
   /**
    * CHECK IF USER HAS AUTHED BEFORE
    */
-  const { hasAuthed, reason: hasAuthedReason, data: dataGDN } = await hasUserAuthed({ tag, member });
+  const {
+    hasAuthed,
+    reason: hasAuthedReason,
+    data: dataGDN,
+  } = await hasUserAuthed({ tag, member });
 
   // An error reason was returned
   if (hasAuthedReason) {
     return {
       canAuth: false,
-      reason: hasAuthedReason
+      reason: hasAuthedReason,
     };
   }
 
@@ -29,14 +41,14 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
     if (isAuthMe) {
       logger.info(tag, 'Member can proceed with !authme');
       return {
-        canAuth: true
+        canAuth: true,
       };
     }
 
     logger.info(tag, 'Member cannot proceed with auto-auth');
     return {
       canAuth: false,
-      reason: 'Cancelling auto-auth'
+      reason: 'Cancelling auto-auth',
     };
   }
 
@@ -45,14 +57,17 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   /**
    * CHECK IF AUTHED USER IS BLACKLISTED
    */
-  const saID = dataGDN.sa_id;
+  const {
+    sa_id: saID,
+    sa_username: saUsername,
+  } = dataGDN;
   const { isBlacklisted, reason: blacklistedReason } = await isMemberBlacklisted({ tag, saID });
 
   if (isBlacklisted) {
     return {
       canAuth: false,
       alreadyAuthed,
-      reason: blacklistedReason
+      reason: blacklistedReason,
     };
   }
 
@@ -61,8 +76,6 @@ const canMemberAuth = async ({ tag, member, isAuthMe }) => {
   return {
     canAuth: true,
     alreadyAuthed,
-    saUsername: dataGDN.sa_username
+    saUsername,
   };
-};
-
-module.exports = canMemberAuth;
+}
