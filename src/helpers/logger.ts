@@ -1,14 +1,6 @@
 import bunyan from 'bunyan';
 import bsyslog from 'bunyan-syslog';
 
-interface LogTag {
-  req_id: string;
-}
-
-interface GDNLogger extends bunyan {
-  getLogTag: (id: string) => LogTag;
-}
-
 /**
  * A logger responsible for the following:
  *
@@ -20,6 +12,10 @@ interface GDNLogger extends bunyan {
  * - Specify a `req_id` when logging to help tie logged messages by invocations of the various
  *   bot commands (e.g. logger.info({ req_id: message.id }, 'Something happened'); )
  */
+
+interface LogTag {
+  req_id: string;
+}
 
 const logger = bunyan.createLogger({
   name: 'gdnbot2',
@@ -68,6 +64,8 @@ logger.on('error', (err, stream) => {
  * @param {string|number} id - Typically `message.id`
  * @returns {object}
  */
-logger.getLogTag = (id) => ({ req_id: id });
+export function getLogTag(id: string): LogTag {
+  return { req_id: id };
+}
 
-export default (logger as GDNLogger);
+export default logger;
