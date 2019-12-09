@@ -1,5 +1,13 @@
-const bunyan = require('bunyan');
-const bsyslog = require('bunyan-syslog');
+import bunyan from 'bunyan';
+import bsyslog from 'bunyan-syslog';
+
+interface LogTag {
+  req_id: string;
+}
+
+interface GDNLogger extends bunyan {
+  getLogTag: (id: string) => LogTag;
+}
 
 /**
  * A logger responsible for the following:
@@ -62,4 +70,4 @@ logger.on('error', (err, stream) => {
  */
 logger.getLogTag = (id) => ({ req_id: id });
 
-module.exports = logger;
+export default (logger as GDNLogger);

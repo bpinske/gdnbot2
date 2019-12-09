@@ -11,6 +11,7 @@
     "test:coverage": "npm test -- --coverage"
   },
   "dependencies": {
+    "@types/bunyan": "^1.8.6",
     "axios": "^0.18.1",
     "bunyan": "^1.8.12",
     "bunyan-syslog": "^0.3.3",
