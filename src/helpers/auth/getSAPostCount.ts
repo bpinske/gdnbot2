@@ -1,6 +1,11 @@
-const { oneLine } = require('common-tags');
+import { oneLine } from 'common-tags';
 
-const logger = require('../logger');
+import logger, { LogTag } from '../logger';
+
+interface SAPostCount {
+  count: number;
+  reason?: string;
+}
 
 const postCountRegEx = /been (\d+) posts/i;
 
@@ -19,7 +24,7 @@ const reasonNoPostCountFound = oneLine`
  * @param {CheerioElement} profile - The user's profile page HTML wrapped in Cheerio
  * @return {object} - { count, reason? }
  */
-async function getSAPostCount ({ tag, profile }) {
+export default async function getSAPostCount (tag: LogTag, profile: CheerioStatic): Promise<SAPostCount> {
   logger.info(tag, 'Retrieving post count from SA profile');
 
   // Prepare to parse it
@@ -40,7 +45,7 @@ async function getSAPostCount ({ tag, profile }) {
     logger.error(tag, 'No post count was found');
     return {
       count: -1,
-      reason: reasonNoPostCountFound
+      reason: reasonNoPostCountFound,
     };
   }
 
@@ -48,8 +53,6 @@ async function getSAPostCount ({ tag, profile }) {
 
   logger.info(tag, `Found post count: ${count}`);
   return {
-    count
+    count,
   };
 }
-
-module.exports = getSAPostCount;
