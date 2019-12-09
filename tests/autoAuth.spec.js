@@ -23,15 +23,15 @@ const channelID = '987';
 // Role and Channel
 const authRole = {
   id: roleID,
-  name: 'Auth Role'
+  name: 'Auth Role',
 };
 const logChannel = {
   id: channelID,
   name: 'Log Channel',
-  send: jest.fn()
+  send: jest.fn(),
 };
 const userDM = {
-  awaitMessages: jest.fn()
+  awaitMessages: jest.fn(),
 };
 
 // SomethingAwful user
@@ -39,42 +39,43 @@ const saUsername = 'TestGoon';
 const saID = 789;
 
 // An instance of a Guild
-let _guildRoles = [authRole];
-let _guildChannels = [logChannel];
-let guild = {
+const _guildRoles = [authRole];
+const _guildChannels = [logChannel];
+const guild = {
   id: guildID,
   name: 'Test Guild',
   roles: {
     get () { return _guildRoles; },
-    set (newRoles) {},
+    set () {},
     fetch: jest.fn().mockImplementation(
-      (_id) => Promise.resolve(_id === roleID ? _guildRoles[0] : null)
-    )
+      (_id) => Promise.resolve(_id === roleID ? _guildRoles[0] : null),
+    ),
   },
   channels: {
     get: jest.fn().mockImplementation(
-      (_id) => Promise.resolve(_id === channelID ? _guildChannels[0] : null)
-    )
-  }
+      (_id) => Promise.resolve(_id === channelID ? _guildChannels[0] : null),
+    ),
+  },
 };
 
 // An instance of a Member
-let member = {
+const member = {
   id: memberID,
   user: {
-    tag: 'foobar'
+    tag: 'foobar',
   },
   roles: [],
   edit: jest.fn(),
   send: jest.fn().mockImplementation(() => ({
     channel: userDM,
-    delete: jest.fn() })),
-  guild
+    delete: jest.fn(),
+  })),
+  guild,
 };
 
-let GDN_GUILD = `${axiosGDN.defaults.baseURL}${GDN_URLS.GUILDS}/${guildID}`;
-let GDN_MEMBER = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}/${memberID}`;
-let GDN_SA = `${axiosGDN.defaults.baseURL}${GDN_URLS.SA}/${saID}`;
+const GDN_GUILD = `${axiosGDN.defaults.baseURL}${GDN_URLS.GUILDS}/${guildID}`;
+const GDN_MEMBER = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}/${memberID}`;
+const GDN_SA = `${axiosGDN.defaults.baseURL}${GDN_URLS.SA}/${saID}`;
 
 test('[HAPPY PATH] add auth role to authed user when they join a GDN server', async () => {
   // Guild is enrolled in GDN
@@ -82,8 +83,8 @@ test('[HAPPY PATH] add auth role to authed user when they join a GDN server', as
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has authed before
@@ -91,16 +92,16 @@ test('[HAPPY PATH] add auth role to authed user when they join a GDN server', as
     status: 200,
     response: {
       sa_id: saID,
-      sa_username: saUsername
-    }
+      sa_username: saUsername,
+    },
   });
 
   // SA ID hasn't been blacklisted
   moxios.stubRequest(GDN_SA, {
     status: 200,
     response: {
-      blacklisted: false
-    }
+      blacklisted: false,
+    },
   });
 
   autoAuth({ member });
@@ -131,7 +132,7 @@ test('logs event noting "user joined" trigger', () => {
 test('does not proceed when guild is not enrolled', async () => {
   // Guild is enrolled in GDN
   moxios.stubRequest(GDN_GUILD, {
-    status: 404
+    status: 404,
   });
 
   autoAuth({ member });
@@ -149,13 +150,13 @@ test('does not proceed when user has not authed before', async () => {
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has not authed
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   autoAuth({ member });
@@ -173,13 +174,13 @@ test('does not proceed when error occurs while checking if user has authed befor
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has not authed
   moxios.stubRequest(GDN_MEMBER, {
-    status: 500
+    status: 500,
   });
 
   autoAuth({ member });
@@ -197,8 +198,8 @@ test('does not proceed when user is blacklisted', async () => {
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has authed before
@@ -206,16 +207,16 @@ test('does not proceed when user is blacklisted', async () => {
     status: 200,
     response: {
       sa_id: saID,
-      sa_username: saUsername
-    }
+      sa_username: saUsername,
+    },
   });
 
   // SA ID has been blacklisted
   moxios.stubRequest(GDN_SA, {
     status: 200,
     response: {
-      blacklisted: true
-    }
+      blacklisted: true,
+    },
   });
 
   autoAuth({ member });
@@ -233,8 +234,8 @@ test('does not proceed when an error occurs while checking if user is blackliste
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has authed before
@@ -242,13 +243,13 @@ test('does not proceed when an error occurs while checking if user is blackliste
     status: 200,
     response: {
       sa_id: saID,
-      sa_username: saUsername
-    }
+      sa_username: saUsername,
+    },
   });
 
   // Error occurs while checking if SA ID has been blacklisted
   moxios.stubRequest(GDN_SA, {
-    status: 500
+    status: 500,
   });
 
   autoAuth({ member });
