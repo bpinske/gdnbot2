@@ -12,8 +12,8 @@ interface AuthCheckDecision {
   reason?: string;
   alreadyAuthed?: boolean;
   saUsername?: string;
-  validatedRole: Role;
-  loggingChannel: Channel;
+  validatedRole?: Role;
+  loggingChannel?: Channel;
 }
 
 /**
