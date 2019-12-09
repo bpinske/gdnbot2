@@ -77,7 +77,7 @@ export default async function startAuthCheck (
   const {
     isValid: isValidRole,
     reason: roleReason,
-    guildRole,
+    guildRole: validatedRole,
   } = await isValidAuthRole(tag, guild, roleId);
 
   if (!isValidRole) {
@@ -100,7 +100,7 @@ export default async function startAuthCheck (
     canProceed: true,
     alreadyAuthed,
     saUsername,
-    validatedRole: guildRole,
+    validatedRole,
     validatedChannel,
   };
 }
