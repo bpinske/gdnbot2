@@ -22,12 +22,6 @@ function error50013 (member: GuildMember, role: Role): string {
 
 /**
  * Add the role to the user, and optionally log a successful auth message
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {Member} member - The role to give the member
- * @param {string} saUsername - The member's SA username
- * @param {Role} role - The role to give the member
- * @param {GuildChannel} channel - An optional channel to log the auth message to
  */
 export default async function addRoleAndLog (
   tag: LogTag,
