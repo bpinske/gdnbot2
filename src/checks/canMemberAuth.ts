@@ -1,7 +1,8 @@
+import { GuildMember } from 'discord.js';
+
 import logger, { LogTag } from '../helpers/logger';
 import isMemberBlacklisted from './isMemberBlacklisted';
 import hasUserAuthed from './hasUserAuthed';
-import { GuildMember } from 'discord.js';
 
 interface MemberAuth {
   canAuth: boolean;

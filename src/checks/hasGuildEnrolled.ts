@@ -1,8 +1,8 @@
 import { oneLine } from 'common-tags';
+import { Guild } from 'discord.js';
 
 import logger, { LogTag } from '../helpers/logger';
 import { axiosGDN, GDN_URLS, GuildByIdResponse } from '../helpers/axiosGDN';
-import { Guild } from 'discord.js';
 
 const reasonNotEnrolled = oneLine`
   This server is not enrolled in the Goon Discord Network. Please have an
