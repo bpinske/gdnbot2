@@ -16,11 +16,6 @@ interface ValidatedAuthRole {
 
 /**
  * Validate the server's authme role ID to make sure it references a valid role
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {Member} guild - The guild whose roles will be searched
- * @param {string} roleId - The auth role ID provided when auth was activated
- * @returns {object} - { isValid, reason?, validatedRole }
  */
 export default async function isValidAuthRole (tag: LogTag, guild: Guild, roleId: string): Promise<ValidatedAuthRole> {
   const id = String(roleId);

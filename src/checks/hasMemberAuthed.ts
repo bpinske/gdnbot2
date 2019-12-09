@@ -16,10 +16,7 @@ interface MemberAuthed {
 }
 
 /**
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {Member} member - The member that may have authed
- * @returns {object} - { hasAuthed, reason?, data? }
+ * Check to see if the Discord member has authed before
  */
 export default async function hasMemberAuthed (tag: LogTag, member: GuildMember): Promise<MemberAuthed> {
   logger.info(tag, 'Checking to see if Member has authed before');

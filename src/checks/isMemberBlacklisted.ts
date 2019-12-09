@@ -20,10 +20,6 @@ const reasonCatchError = oneLine`
 
 /**
  * Check if a given SA ID is blacklisted on any Discord accounts that it's been used with
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {string} saID - The user's SA ID
- * @returns {object} - { isBlacklisted, reason? }
  */
 export default async function isMemberBlacklisted (tag: LogTag, saID: string): Promise<MemberBlacklisted> {
   logger.info(tag, 'Checking if member is blacklisted by SA ID');
