@@ -13,7 +13,7 @@ import bsyslog from 'bunyan-syslog';
  *   bot commands (e.g. logger.info({ req_id: message.id }, 'Something happened'); )
  */
 
-interface LogTag {
+export interface LogTag {
   // eslint-disable-next-line camelcase
   req_id: string;
 }
