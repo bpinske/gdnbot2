@@ -1,20 +1,20 @@
-const { SnowflakeUtil } = require('discord.js');
+import { SnowflakeUtil, GuildMember } from 'discord.js';
 
-const logger = require('../helpers/logger');
+import logger, { getLogTag } from '../helpers/logger';
 
-const startAuthCheck = require('../helpers/auth/startAuthCheck');
-const addRoleAndLog = require('../helpers/auth/addRoleAndLog');
+import startAuthCheck from '../helpers/auth/startAuthCheck';
+import addRoleAndLog from '../helpers/auth/addRoleAndLog';
 
 /**
  * A handler for the "guildMemberAdd" event, when a member joins a server the bot is on
  */
-const autoAuth = ({ member }) => {
+export default function autoAuth (member: GuildMember) {
   const { guild } = member;
 
   // Generate a snowflake since we won't get one here from Discord
   const eventId = SnowflakeUtil.generate();
   // Generate a logging tag with the snowflake
-  const tag = logger.getLogTag(eventId);
+  const tag = getLogTag(eventId);
 
   logger.info(tag, `[EVENT: User joined ${guild.name}]`);
 
@@ -39,6 +39,4 @@ const autoAuth = ({ member }) => {
       logger.info(tag, 'Did not proceed with auto-auth');
     }
   }, 1000);
-};
-
-module.exports = autoAuth;
+}

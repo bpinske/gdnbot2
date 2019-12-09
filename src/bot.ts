@@ -86,9 +86,7 @@ bot.on('guildDelete', async () => {
 });
 
 // When a Member joins a Guild
-bot.on('guildMemberAdd', async (member) => {
-  await autoAuth({ member });
-});
+bot.on('guildMemberAdd', autoAuth);
 
 // Update server member counts on the GDN Homepage
 bot.setInterval(
