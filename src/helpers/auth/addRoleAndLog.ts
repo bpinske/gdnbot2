@@ -1,8 +1,13 @@
-const { oneLine, stripIndents } = require('common-tags');
+import { oneLine, stripIndents } from 'common-tags';
+import { GuildMember, Role, TextChannel } from 'discord.js';
 
-const logger = require('../logger');
+import logger, { LogTag } from '../logger';
 
-const error50013 = (member, role) => {
+/**
+ * The guild admin screwed up and didn't place the GDN role above the "authed" role. Prepare a nice
+ * message for the end user instructing them to harass the admin to rectify this situation.
+ */
+function error50013 (member: GuildMember, role: Role): string {
   const _role = `**${role.name}**`;
   const _username = `**${member.user.tag}**`;
 
@@ -13,7 +18,7 @@ const error50013 = (member, role) => {
 
     Afterwards you will need to manually apply the ${_role} role to ${_username}.
   `;
-};
+}
 
 /**
  * Add the role to the user, and optionally log a successful auth message
@@ -24,11 +29,17 @@ const error50013 = (member, role) => {
  * @param {Role} role - The role to give the member
  * @param {GuildChannel} channel - An optional channel to log the auth message to
  */
-const addRoleAndLog = async ({ tag, member, saUsername, role, channel }) => {
+export default async function addRoleAndLog (
+  tag: LogTag,
+  member: GuildMember,
+  saUsername: string,
+  role: Role,
+  channel: TextChannel,
+): Promise<void> {
   logger.info(tag, 'Adding role to member');
 
   try {
-    await member.edit({ roles: [role], reason: 'GDN: Successful Auth' });
+    await member.edit({ roles: [role] }, 'GDN: Successful Auth');
   } catch (err) {
     logger.error(
       { ...tag, err },
@@ -55,6 +66,4 @@ const addRoleAndLog = async ({ tag, member, saUsername, role, channel }) => {
 
   logger.info(tag, 'Informing user of successful auth');
   await member.send('You did it :getin:');
-};
-
-module.exports = addRoleAndLog;
+}
