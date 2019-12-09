@@ -14,28 +14,29 @@ import bsyslog from 'bunyan-syslog';
  */
 
 interface LogTag {
+  // eslint-disable-next-line camelcase
   req_id: string;
 }
 
 const logger = bunyan.createLogger({
   name: 'gdnbot2',
   serializers: {
-    err: bunyan.stdSerializers.err
+    err: bunyan.stdSerializers.err,
   },
   streams: [
     {
       type: 'stream',
       level: bunyan.INFO,
-      stream: process.stdout
+      stream: process.stdout,
     },
     {
       type: 'rotating-file',
       level: bunyan.DEBUG,
       path: `${process.env.PWD}/src/gdnbot2.log`,
       period: '1d',
-      count: 3
-    }
-  ]
+      count: 3,
+    },
+  ],
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -47,12 +48,12 @@ if (process.env.NODE_ENV === 'production') {
       type: 'udp',
       facility: bsyslog.local0,
       host: process.env.PAPERTRAIL_HOST,
-      port: parseInt(process.env.PAPERTRAIL_PORT, 10)
-    })
+      port: parseInt(process.env.PAPERTRAIL_PORT, 10),
+    }),
   });
 }
 
-logger.on('error', (err, stream) => {
+logger.on('error', (err) => {
   console.error('an error occurred in the logger:', err);
 });
 
@@ -64,7 +65,7 @@ logger.on('error', (err, stream) => {
  * @param {string|number} id - Typically `message.id`
  * @returns {object}
  */
-export function getLogTag(id: string): LogTag {
+export function getLogTag (id: string): LogTag {
   return { req_id: id };
 }
 
