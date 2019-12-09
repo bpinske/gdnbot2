@@ -14,21 +14,17 @@ const reasonCatchError = oneLine`
   been notified. Thank you for your patience while they get this fixed!
 `;
 
-interface GuildEnrolledReturn {
+export interface GuildEnrolled {
   isEnrolled: boolean;
-  reason?: string;
+  reason: string;
   roleId?: string;
   channelId?: string;
 }
 
 /**
  * Check to see if a guild is enrolled in Goon Discord Network
- *
- * @param {object} tag - The output from a call to logger.getLogTag()
- * @param {Guild} guild - The guild to verify enrollment in GDN
- * @returns {object} - { isEnrolled, reason, roleId, channelId }
  */
-export default async function hasGuildEnrolled (tag: LogTag, guild: Guild): Promise<GuildEnrolledReturn> {
+export default async function hasGuildEnrolled (tag: LogTag, guild: Guild): Promise<GuildEnrolled> {
   logger.info(tag, 'Checking if guild has enrolled in GDN');
 
   try {
@@ -39,6 +35,7 @@ export default async function hasGuildEnrolled (tag: LogTag, guild: Guild): Prom
 
     return {
       isEnrolled: true,
+      reason: 'OK',
       roleId: data.validated_role_id,
       channelId: data.logging_channel_id,
     };
