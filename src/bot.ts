@@ -6,13 +6,13 @@ import sqlite from 'sqlite';
 import path from 'path';
 
 import logger from './helpers/logger';
+
+// Event handlers
+import autoAuth from './eventHandlers/autoAuth';
+import updateServerCountActivity from './eventHandlers/updateServerCountActivity';
 import { updateHomepageMemberCounts, UPDATE_INTERVAL } from './eventHandlers/updateHomepageMemberCounts';
 
 dotenv.config();
-
-// Event handlers
-const autoAuth = require('./eventHandlers/autoAuth');
-const updateServerCountActivity = require('./eventHandlers/updateServerCountActivity');
 
 // Create the bot as a Commando client
 const bot = new CommandoClient({
