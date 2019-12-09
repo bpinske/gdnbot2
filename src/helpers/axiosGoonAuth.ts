@@ -1,22 +1,17 @@
-const axios = require('axios');
+import axios from 'axios';
 
 /**
  * An instance of Axios configured to speak with the GDN APIs over Docker's internal network
  */
-const axiosGoonAuth = axios.create({
+export const axiosGoonAuth = axios.create({
   baseURL: 'http://goonauth:8000/v1',
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json'
-  }
+    Accept: 'application/json',
+  },
 });
 
-const GOON_AUTH_URLS = {
+export const GOON_AUTH_URLS = {
   GET_HASH: 'generate_hash/',
-  CONFIRM_HASH: 'validate_user/'
-};
-
-module.exports = {
-  axiosGoonAuth,
-  GOON_AUTH_URLS
+  CONFIRM_HASH: 'validate_user/',
 };
