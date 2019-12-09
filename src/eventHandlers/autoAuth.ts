@@ -25,16 +25,16 @@ export default function autoAuth (member: GuildMember) {
       saUsername,
       validatedRole,
       validatedChannel,
-    } = await startAuthCheck({ tag, guild, member, isAuthMe: false });
+    } = await startAuthCheck(tag, guild, member, false);
 
     if (canProceed) {
-      await addRoleAndLog({
+      await addRoleAndLog(
         tag,
         member,
         saUsername,
-        role: validatedRole,
-        channel: validatedChannel,
-      });
+        validatedRole,
+        validatedChannel,
+      );
     } else {
       logger.info(tag, 'Did not proceed with auto-auth');
     }
