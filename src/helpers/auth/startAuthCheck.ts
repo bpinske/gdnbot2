@@ -1,9 +1,20 @@
-const logger = require('../logger');
+import { Guild, GuildMember, Role, Channel } from 'discord.js';
 
-const hasGuildEnrolled = require('../../checks/hasGuildEnrolled');
-const canMemberAuth = require('../../checks/canMemberAuth');
-const isValidAuthRole = require('../../checks/isValidAuthRole');
-const isValidLogChannel = require('../../checks/isValidLogChannel');
+import logger, { LogTag } from '../logger';
+
+import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
+import canMemberAuth from '../../checks/canMemberAuth';
+import isValidAuthRole from '../../checks/isValidAuthRole';
+import isValidLogChannel from '../../checks/isValidLogChannel';
+
+interface AuthCheckDecision {
+  canProceed: boolean;
+  reason?: string;
+  alreadyAuthed?: boolean;
+  saUsername?: string;
+  validatedRole: Role;
+  loggingChannel: Channel;
+}
 
 /**
  * A series of checks to perform any time an intent to authenticate is registered
@@ -19,10 +30,15 @@ const isValidLogChannel = require('../../checks/isValidLogChannel');
  * @param {boolean} isAuthMe - Whether this was invoked from !authme, or by the member joining
  * @returns {object} - { canProceed, reason?, alreadyAuthed?, saUsername?, validatedRole, loggingChannel }
  */
-const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
+export default async function startAuthCheck (
+  tag: LogTag,
+  guild: Guild,
+  member: GuildMember,
+  isAuthMe: boolean,
+): Promise<AuthCheckDecision> {
   logger.info(
     tag,
-    `Beginning auth checks for ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`
+    `Beginning auth checks for ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`,
   );
 
   /**
@@ -32,14 +48,14 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
     isEnrolled,
     reason: guildReason,
     roleId,
-    channelId
+    channelId,
   } = await hasGuildEnrolled({ tag, guild });
 
   if (!isEnrolled) {
     logger.info(tag, 'Guild is not enrolled, exiting');
     return {
       canProceed: false,
-      reason: guildReason
+      reason: guildReason,
     };
   }
 
@@ -50,14 +66,14 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
     canAuth,
     reason: memberAuthReason,
     alreadyAuthed,
-    saUsername
+    saUsername,
   } = await canMemberAuth({ tag, member, isAuthMe });
 
   if (!canAuth) {
     logger.info(tag, 'Member cannot proceed with auth, exiting');
     return {
       canProceed: false,
-      reason: memberAuthReason
+      reason: memberAuthReason,
     };
   }
 
@@ -67,14 +83,14 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
   const {
     isValid: isValidRole,
     reason: roleReason,
-    validatedRole
+    validatedRole,
   } = await isValidAuthRole({ tag, guild, roleId });
 
   if (!isValidRole) {
     logger.info(tag, 'Auth role is not valid, exiting');
     return {
       canProceed: false,
-      reason: roleReason
+      reason: roleReason,
     };
   }
 
@@ -82,7 +98,7 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
    * Check for (optional) logging channel and validate it
    */
   const {
-    validatedChannel
+    validatedChannel,
   } = await isValidLogChannel({ tag, guild, channelId });
 
   logger.info(tag, 'Auth checks passed, continuing');
@@ -91,8 +107,6 @@ const startAuthCheck = async ({ tag, guild, member, isAuthMe }) => {
     alreadyAuthed,
     saUsername,
     validatedRole,
-    validatedChannel
+    validatedChannel,
   };
-};
-
-module.exports = startAuthCheck;
+}
