@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+export interface APIConfirmHash {
+  validated: boolean;
+}
+
 /**
  * An instance of Axios configured to speak with the GDN APIs over Docker's internal network
  */
