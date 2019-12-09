@@ -4,17 +4,13 @@ import { CommandoClient } from 'discord.js-commando';
 import logger, { getLogTag } from '../helpers/logger';
 import { axiosGDN, GDN_URLS, GuildsResponse, APIGuild } from '../helpers/axiosGDN';
 
-interface Args {
-  bot: CommandoClient;
-}
-
 interface GuildsMap {
   [key: string]: APIGuild;
 }
 
 export const UPDATE_INTERVAL = 1000 * 60 * 60 * 24; // 24 Hours
 
-export const updateHomepageMemberCounts = async ({ bot }: Args) => {
+export async function updateHomepageMemberCounts (bot: CommandoClient) {
   // Generate a logger tag
   const eventId = SnowflakeUtil.generate();
   const tag = getLogTag(eventId);
@@ -73,4 +69,4 @@ export const updateHomepageMemberCounts = async ({ bot }: Args) => {
   } catch (err) {
     logger.error({ ...tag, err }, 'Error updating server member counts');
   }
-};
+}

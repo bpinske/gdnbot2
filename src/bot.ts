@@ -6,13 +6,13 @@ import sqlite from 'sqlite';
 import path from 'path';
 
 import logger from './helpers/logger';
+import { updateHomepageMemberCounts, UPDATE_INTERVAL } from './eventHandlers/updateHomepageMemberCounts';
 
 dotenv.config();
 
 // Event handlers
 const autoAuth = require('./eventHandlers/autoAuth');
 const updateServerCountActivity = require('./eventHandlers/updateServerCountActivity');
-const { updateHomepageMemberCounts, UPDATE_INTERVAL } = require('./eventHandlers/updateHomepageMemberCounts');
 
 // Create the bot as a Commando client
 const bot = new CommandoClient({
@@ -58,7 +58,7 @@ bot.once('ready', () => {
   // Update bot activity to reflect number of guilds
   updateServerCountActivity({ bot });
   // Update homepage server counts on boot
-  updateHomepageMemberCounts({ bot });
+  updateHomepageMemberCounts(bot);
 });
 
 // Handle errors
@@ -93,7 +93,7 @@ bot.on('guildMemberAdd', async (member) => {
 // Update server member counts on the GDN Homepage
 bot.setInterval(
   () => {
-    updateHomepageMemberCounts({ bot });
+    updateHomepageMemberCounts(bot);
   },
   UPDATE_INTERVAL,
 );
