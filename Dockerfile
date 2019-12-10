@@ -8,6 +8,7 @@ RUN npm install
 
 # Copy source files
 COPY . .
+RUN npm run build
 
 # Start the app
-CMD ["npm", "start"]
+CMD ["npm", "run", "host"]
