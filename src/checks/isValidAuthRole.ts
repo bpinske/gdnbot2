@@ -20,6 +20,14 @@ interface ValidatedAuthRole {
 export default async function isValidAuthRole (tag: LogTag, guild: Guild, roleId: string): Promise<ValidatedAuthRole> {
   logger.info(tag, `Validating auth role ID '${roleId}'`);
 
+  if (!roleId) {
+    logger.info(tag, 'No role ID specified, exiting');
+    return {
+      isValid: false,
+      reason: invalidRoleReason,
+    };
+  }
+
   const validatedRole = await guild.roles.fetch(roleId);
 
   if (!validatedRole) {
