@@ -1,5 +1,5 @@
 import moxios from 'moxios';
-import { oneLine } from 'common-tags';
+import { oneLine, stripIndents } from 'common-tags';
 
 import AuthmeCommand from '../src/commands/auth/authme';
 
@@ -9,7 +9,7 @@ import { axiosGDN, GDN_URLS } from '../src/helpers/axiosGDN';
 import { axiosGoonAuth, GOON_AUTH_URLS } from '../src/helpers/axiosGoonAuth';
 import { SA_URLS } from '../src/helpers/axiosSA';
 import { CommandoClient, CommandoMessage } from 'discord.js-commando';
-import { Role, TextChannel, GuildMember } from 'discord.js';
+import { Role, TextChannel, GuildMember, HTTPError } from 'discord.js';
 
 // Discord IDs
 const guildID = '123';
@@ -21,6 +21,9 @@ const channelID = '987';
 const authRole = {
   id: roleID,
   name: 'Auth Role',
+  guild: {
+    name: 'Test Guild',
+  },
 } as unknown as Role;
 const logChannel = {
   id: channelID,
@@ -868,4 +871,191 @@ test('logs error when error occurs while adding user to database', async () => {
   await authme.run(message, { username: saUsername });
 
   expect(logger.error).toHaveBeenCalledWith({ req_id: message.id, err: new Error('Request failed with status code 500') }, 'Error inserting user');
+});
+
+test('logs error 50013 error occurs while assigning role to authed user', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 200,
+    response: {
+      validated_role_id: roleID,
+      logging_channel_id: channelID,
+    },
+  });
+
+  // Member has never authed before
+  moxios.stubRequest(GDN_MEMBER, {
+    status: 404,
+  });
+
+  // GoonAuth generates hash for user
+  moxios.stubRequest(GAUTH_GET, {
+    status: 200,
+    response: {
+      hash: 'abc',
+    },
+  });
+
+  // User responds with "praise lowtax"
+  userDM.awaitMessages.mockResolvedValue([]);
+
+  // GoonAuth is able to find hash in SA profile
+  moxios.stubRequest(GAUTH_CONFIRM, {
+    status: 200,
+    response: {
+      validated: true,
+    },
+  });
+
+  // SA username returns a valid SA profile
+  moxios.stubRequest(SA_PROFILE, {
+    status: 200,
+    response: goodSAProfileHTML,
+  });
+
+  // SA ID hasn't been used by another account
+  moxios.stubRequest(GDN_SA, {
+    status: 404,
+  });
+
+  // DB accepts new user
+  moxios.stubRequest(GDN_DB, {
+    status: 200,
+  });
+
+  message.member.edit = jest.fn().mockImplementation(() => {
+    throw new HTTPError('API Error could not add role to user', 'Error', 50013, 'PUT', '/userroles');
+  });
+
+  await authme.run(message, { username: saUsername });
+
+  expect(logger.error).toHaveBeenCalledWith(
+    { req_id: message.id, err: new Error('API Error could not add role to user') },
+    `Error in guild ${authRole.guild.name} adding role ${authRole.name} to member ${member.user.tag} (${member.id})`,
+  );
+});
+
+test('reports misconfiguration in channel when 50013 error occurs while assigning role to authed user', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 200,
+    response: {
+      validated_role_id: roleID,
+      logging_channel_id: channelID,
+    },
+  });
+
+  // Member has never authed before
+  moxios.stubRequest(GDN_MEMBER, {
+    status: 404,
+  });
+
+  // GoonAuth generates hash for user
+  moxios.stubRequest(GAUTH_GET, {
+    status: 200,
+    response: {
+      hash: 'abc',
+    },
+  });
+
+  // User responds with "praise lowtax"
+  userDM.awaitMessages.mockResolvedValue([]);
+
+  // GoonAuth is able to find hash in SA profile
+  moxios.stubRequest(GAUTH_CONFIRM, {
+    status: 200,
+    response: {
+      validated: true,
+    },
+  });
+
+  // SA username returns a valid SA profile
+  moxios.stubRequest(SA_PROFILE, {
+    status: 200,
+    response: goodSAProfileHTML,
+  });
+
+  // SA ID hasn't been used by another account
+  moxios.stubRequest(GDN_SA, {
+    status: 404,
+  });
+
+  // DB accepts new user
+  moxios.stubRequest(GDN_DB, {
+    status: 200,
+  });
+
+  message.member.edit = jest.fn().mockImplementation(() => {
+    throw new HTTPError('API Error could not add role to user', 'Error', 50013, 'PUT', '/userroles');
+  });
+
+  await authme.run(message, { username: saUsername });
+
+  expect(logChannel.send).toHaveBeenCalledWith(stripIndents`@here GDNBot just now attempted to apply the **${authRole.name}** role to **${member.user.tag}**, but none of the bot's own roles are higher than the **${authRole.name}** role. Alternatively, if this member is an admin then they may be assigned a role that is positioned higher in the Roles hierarchy than the **GDN** role.
+
+  To fix this for future members, please apply a higher role to GDNBot, or go into **Server Settings > Roles** and click-and-drag the **GDN** role to _above_ the **${authRole.name}** role.
+
+  Afterwards you will need to manually apply the **${authRole.name}** role to **${member.user.tag}**.`);
+});
+
+test('logs error when 50013 error occurs while assigning role to authed user but no log channel specified', async () => {
+  // Guild is enrolled in GDN
+  moxios.stubRequest(GDN_GUILD, {
+    status: 200,
+    response: {
+      validated_role_id: roleID,
+      logging_channel_id: undefined,
+    },
+  });
+
+  // Member has never authed before
+  moxios.stubRequest(GDN_MEMBER, {
+    status: 404,
+  });
+
+  // GoonAuth generates hash for user
+  moxios.stubRequest(GAUTH_GET, {
+    status: 200,
+    response: {
+      hash: 'abc',
+    },
+  });
+
+  // User responds with "praise lowtax"
+  userDM.awaitMessages.mockResolvedValue([]);
+
+  // GoonAuth is able to find hash in SA profile
+  moxios.stubRequest(GAUTH_CONFIRM, {
+    status: 200,
+    response: {
+      validated: true,
+    },
+  });
+
+  // SA username returns a valid SA profile
+  moxios.stubRequest(SA_PROFILE, {
+    status: 200,
+    response: goodSAProfileHTML,
+  });
+
+  // SA ID hasn't been used by another account
+  moxios.stubRequest(GDN_SA, {
+    status: 404,
+  });
+
+  // DB accepts new user
+  moxios.stubRequest(GDN_DB, {
+    status: 200,
+  });
+
+  message.member.edit = jest.fn().mockImplementation(() => {
+    throw new HTTPError('API Error could not add role to user', 'Error', 50013, 'PUT', '/userroles');
+  });
+
+  await authme.run(message, { username: saUsername });
+
+  expect(logger.error).toHaveBeenCalledWith({ req_id: message.id }, oneLine`
+    Unable to send diagnostic message to Guild because no auth logging channel was
+    configured. Manual intervention will be required.
+  `);
 });
