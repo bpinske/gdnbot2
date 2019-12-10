@@ -28,6 +28,12 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
 
     // Go through each Guild and attempt to count the number of authed Members
     bot.guilds.each(async (guild) => {
+      // Don't do anything if this guild isn't enrolled in GDN
+      if (!guildsMap[guild.id]) {
+        logger.debug(tag, `${guild.name} not enrolled in GDN, ignoring`);
+        return;
+      }
+
       // Grab the auth role ID registered with the backend
       const authedRoleID = guildsMap[guild.id].validated_role_id;
 
