@@ -38,6 +38,6 @@ export default async function isValidLogChannel (
 
   return {
     isValid,
-    logChannel: logChannel,
+    logChannel,
   };
 }
