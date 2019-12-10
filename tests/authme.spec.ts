@@ -1,13 +1,15 @@
-const moxios = require('moxios');
-const { oneLine } = require('common-tags');
+import moxios from 'moxios';
+import { oneLine } from 'common-tags';
 
-const AuthmeCommand = require('../src/commands/auth/authme');
+import AuthmeCommand from '../src/commands/auth/authme';
 
 // jest.unmock('../src/helpers/logger');
-const logger = require('../src/helpers/logger');
-const { axiosGDN, GDN_URLS } = require('../src/helpers/axiosGDN');
-const { axiosGoonAuth, GOON_AUTH_URLS } = require('../src/helpers/axiosGoonAuth');
-const { SA_URLS } = require('../src/helpers/axiosSA');
+import logger from '../src/helpers/logger';
+import { axiosGDN, GDN_URLS } from '../src/helpers/axiosGDN';
+import { axiosGoonAuth, GOON_AUTH_URLS } from '../src/helpers/axiosGoonAuth';
+import { SA_URLS } from '../src/helpers/axiosSA';
+import { CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { Role, TextChannel, GuildMember } from 'discord.js';
 
 // Discord IDs
 const guildID = '123';
@@ -18,15 +20,16 @@ const channelID = '987';
 // Role and Channel
 const authRole = {
   id: roleID,
-  name: 'Auth Role'
-};
+  name: 'Auth Role',
+} as unknown as Role;
 const logChannel = {
   id: channelID,
   name: 'Log Channel',
-  send: jest.fn()
-};
+  send: jest.fn(),
+  type: 'text',
+} as unknown as TextChannel;
 const userDM = {
-  awaitMessages: jest.fn()
+  awaitMessages: jest.fn(),
 };
 
 // SomethingAwful user
@@ -34,45 +37,46 @@ const saUsername = 'TestGoon';
 const saID = 789;
 
 // An instance of a Member
-let member = {
+const member = {
   id: memberID,
   user: {
-    tag: 'foobar'
+    tag: 'foobar',
   },
   roles: [],
   edit: jest.fn(),
   send: jest.fn().mockImplementation(() => ({
     channel: userDM,
-    delete: jest.fn() }))
-};
+    delete: jest.fn(),
+  })),
+} as unknown as GuildMember;
 
 // An instance of a Guild
-let _guildRoles = [authRole];
-let _guildChannels = [logChannel];
-let guild = {
+const _guildRoles = [authRole];
+const _guildChannels = [logChannel];
+const guild = {
   id: guildID,
   name: 'Test Guild',
   roles: {
     get () { return _guildRoles; },
-    set (newRoles) {},
+    set () {},
     fetch: jest.fn().mockImplementation(
-      (_id) => Promise.resolve(_id === roleID ? _guildRoles[0] : null)
-    )
+      (_id) => Promise.resolve(_id === roleID ? _guildRoles[0] : null),
+    ),
   },
   channels: {
     get: jest.fn().mockImplementation(
-      (_id) => Promise.resolve(_id === channelID ? _guildChannels[0] : null)
-    )
-  }
+      (_id) => Promise.resolve(_id === channelID ? _guildChannels[0] : null),
+    ),
+  },
 };
 
 // An instance of a Message
-let message = {
+const message = {
   id: 'messageIdHere',
   guild,
   member,
-  say: jest.fn()
-};
+  say: jest.fn(),
+} as unknown as CommandoMessage;
 
 // Good Profile
 const goodSAProfileHTML = oneLine`
@@ -174,17 +178,17 @@ const badChangedMarkupSAProfileHTML = oneLine`
 </html>
 `;
 
-let GDN_GUILD = `${axiosGDN.defaults.baseURL}${GDN_URLS.GUILDS}/${guildID}`;
-let GDN_MEMBER = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}/${memberID}`;
-let GDN_SA = `${axiosGDN.defaults.baseURL}${GDN_URLS.SA}/${saID}`;
-let GDN_DB = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}`;
+const GDN_GUILD = `${axiosGDN.defaults.baseURL}${GDN_URLS.GUILDS}/${guildID}`;
+const GDN_MEMBER = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}/${memberID}`;
+const GDN_SA = `${axiosGDN.defaults.baseURL}${GDN_URLS.SA}/${saID}`;
+const GDN_DB = `${axiosGDN.defaults.baseURL}${GDN_URLS.MEMBERS}`;
 
-let GAUTH_GET = `${axiosGoonAuth.defaults.baseURL}/${GOON_AUTH_URLS.GET_HASH}`;
-let GAUTH_CONFIRM = `${axiosGoonAuth.defaults.baseURL}/${GOON_AUTH_URLS.CONFIRM_HASH}`;
+const GAUTH_GET = `${axiosGoonAuth.defaults.baseURL}/${GOON_AUTH_URLS.GET_HASH}`;
+const GAUTH_CONFIRM = `${axiosGoonAuth.defaults.baseURL}/${GOON_AUTH_URLS.CONFIRM_HASH}`;
 
-let SA_PROFILE = `${SA_URLS.PROFILE}${saUsername}`;
+const SA_PROFILE = `${SA_URLS.PROFILE}${saUsername}`;
 
-let authme = new AuthmeCommand({});
+const authme = new AuthmeCommand({} as unknown as CommandoClient);
 
 /**
  * Test cases testing the entire !authme command flow
@@ -195,21 +199,21 @@ test('[HAPPY PATH] adds role to user that has never authed before', async () => 
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -219,29 +223,29 @@ test('[HAPPY PATH] adds role to user that has never authed before', async () => 
   moxios.stubRequest(GAUTH_CONFIRM, {
     status: 200,
     response: {
-      validated: true
-    }
+      validated: true,
+    },
   });
 
   // SA username returns a valid SA profile
   moxios.stubRequest(SA_PROFILE, {
     status: 200,
-    response: goodSAProfileHTML
+    response: goodSAProfileHTML,
   });
 
   // SA ID hasn't been used by another account
   moxios.stubRequest(GDN_SA, {
-    status: 404
+    status: 404,
   });
 
   // DB accepts new user
   moxios.stubRequest(GDN_DB, {
-    status: 200
+    status: 200,
   });
 
   await authme.run(message, { username: saUsername });
 
-  expect(member.edit).toHaveBeenCalledWith({ roles: [authRole], reason: 'GDN: Successful Auth' });
+  expect(member.edit).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
   expect(logChannel.send).toHaveBeenCalledWith(`${member.user.tag} (SA: ${saUsername}) successfully authed`);
 });
 
@@ -251,36 +255,36 @@ test('skips hash check for user that has authed before and is not blacklisted', 
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has authed before
   moxios.stubRequest(GDN_MEMBER, {
     status: 200,
     response: {
-      sa_id: saID
-    }
+      sa_id: saID,
+    },
   });
 
   // SA ID is not blacklisted
   moxios.stubRequest(GDN_SA, {
     status: 200,
     response: {
-      blacklisted: false
-    }
+      blacklisted: false,
+    },
   });
 
   await authme.run(message, { username: saUsername });
 
-  expect(member.edit).toHaveBeenCalledWith({ roles: [authRole], reason: 'GDN: Successful Auth' });
+  expect(member.edit).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
   expect(logChannel.send).toHaveBeenCalledWith(`${member.user.tag} (SA: ${saUsername}) successfully authed`);
 });
 
 test('messages channel when Guild is not enrolled', async () => {
   // Guild is enrolled in GDN
   moxios.stubRequest(GDN_GUILD, {
-    status: 404
+    status: 404,
   });
 
   await authme.run(message, { username: saUsername });
@@ -291,7 +295,7 @@ test('messages channel when Guild is not enrolled', async () => {
 test('messages channel and logs error when error occurs when checking Guild enrollment', async () => {
   // Guild is enrolled in GDN
   moxios.stubRequest(GDN_GUILD, {
-    status: 500
+    status: 500,
   });
 
   await authme.run(message, { username: saUsername });
@@ -306,24 +310,24 @@ test('messages channel with blacklist rejection when user is blacklisted', async
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has authed before
   moxios.stubRequest(GDN_MEMBER, {
     status: 200,
     response: {
-      sa_id: saID
-    }
+      sa_id: saID,
+    },
   });
 
   // SA ID is blacklisted
   moxios.stubRequest(GDN_SA, {
     status: 200,
     response: {
-      blacklisted: true
-    }
+      blacklisted: true,
+    },
   });
 
   await authme.run(message, { username: saUsername });
@@ -337,24 +341,24 @@ test('messages channel with invalid role reason when role registered by admin is
     status: 200,
     response: {
       validated_role_id: 'badRoleID',
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has authed before
   moxios.stubRequest(GDN_MEMBER, {
     status: 200,
     response: {
-      sa_id: saID
-    }
+      sa_id: saID,
+    },
   });
 
   // SA ID is not blacklisted
   moxios.stubRequest(GDN_SA, {
     status: 200,
     response: {
-      blacklisted: false
-    }
+      blacklisted: false,
+    },
   });
 
   await authme.run(message, { username: saUsername });
@@ -368,24 +372,24 @@ test('logs message when no log channel is specified for auth success message', a
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: null
-    }
+      logging_channel_id: null,
+    },
   });
 
   // Member has authed before
   moxios.stubRequest(GDN_MEMBER, {
     status: 200,
     response: {
-      sa_id: saID
-    }
+      sa_id: saID,
+    },
   });
 
   // SA ID is blacklisted
   moxios.stubRequest(GDN_SA, {
     status: 200,
     response: {
-      blacklisted: false
-    }
+      blacklisted: false,
+    },
   });
 
   await authme.run(message, { username: saUsername });
@@ -399,29 +403,29 @@ test('logs message when an invalid log channel is specified for auth success mes
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: 'badChannelId'
-    }
+      logging_channel_id: 'badChannelId',
+    },
   });
 
   // Member has authed before
   moxios.stubRequest(GDN_MEMBER, {
     status: 200,
     response: {
-      sa_id: saID
-    }
+      sa_id: saID,
+    },
   });
 
   // SA ID is blacklisted
   moxios.stubRequest(GDN_SA, {
     status: 200,
     response: {
-      blacklisted: false
-    }
+      blacklisted: false,
+    },
   });
 
   await authme.run(message, { username: saUsername });
 
-  expect(logger.info).toHaveBeenCalledWith({ req_id: message.id }, 'No channel found by that ID');
+  expect(logger.info).toHaveBeenCalledWith({ req_id: message.id }, 'No text channel found by that ID');
 });
 
 test('messages user to try again when they fail to praise lowtax', async () => {
@@ -430,21 +434,21 @@ test('messages user to try again when they fail to praise lowtax', async () => {
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -461,21 +465,21 @@ test('messages user when hash could not be confirmed in their profile', async ()
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -485,8 +489,8 @@ test('messages user when hash could not be confirmed in their profile', async ()
   moxios.stubRequest(GAUTH_CONFIRM, {
     status: 200,
     response: {
-      validated: false
-    }
+      validated: false,
+    },
   });
 
   await authme.run(message, { username: saUsername });
@@ -500,18 +504,18 @@ test('messages user that an error occurred when an unexpected hash request respo
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth errors out while generating hash for user
   moxios.stubRequest(GAUTH_GET, {
-    status: 500
+    status: 500,
   });
 
   await authme.run(message, { username: saUsername });
@@ -525,21 +529,21 @@ test('messages user that an error occurred when an unexpected hash confirmation 
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -547,7 +551,7 @@ test('messages user that an error occurred when an unexpected hash confirmation 
 
   // GoonAuth is able to find hash in SA profile
   moxios.stubRequest(GAUTH_CONFIRM, {
-    status: 500
+    status: 500,
   });
 
   await authme.run(message, { username: saUsername });
@@ -561,21 +565,21 @@ test('messages user and logs error when an SA ID could not be retrieved for thei
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -585,20 +589,20 @@ test('messages user and logs error when an SA ID could not be retrieved for thei
   moxios.stubRequest(GAUTH_CONFIRM, {
     status: 200,
     response: {
-      validated: true
-    }
+      validated: true,
+    },
   });
 
   // SA username returns an unexpected SA profile page structure
   moxios.stubRequest(SA_PROFILE, {
     status: 200,
-    response: badUserIDSAProfileHTML
+    response: badUserIDSAProfileHTML,
   });
 
   await authme.run(message, { username: saUsername });
 
   expect(member.send).toHaveBeenLastCalledWith('I could not find an ID on the SA profile page for the username you provided. The bot owner has been notified. Thank you for your patience while they get this fixed!');
-  expect(logger.error).toHaveBeenCalledWith({ req_id: message.id }, `No user ID was found`);
+  expect(logger.error).toHaveBeenCalledWith({ req_id: message.id }, 'No user ID was found');
 });
 
 test('messages channel that member is blacklisted when their SA ID is linked to a blacklisted GDN account', async () => {
@@ -607,21 +611,21 @@ test('messages channel that member is blacklisted when their SA ID is linked to 
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -631,22 +635,22 @@ test('messages channel that member is blacklisted when their SA ID is linked to 
   moxios.stubRequest(GAUTH_CONFIRM, {
     status: 200,
     response: {
-      validated: true
-    }
+      validated: true,
+    },
   });
 
   // SA username returns a valid SA profile
   moxios.stubRequest(SA_PROFILE, {
     status: 200,
-    response: goodSAProfileHTML
+    response: goodSAProfileHTML,
   });
 
   // SA ID hasn't been used by another account
   moxios.stubRequest(GDN_SA, {
     status: 200,
     response: {
-      blacklisted: true
-    }
+      blacklisted: true,
+    },
   });
 
   await authme.run(message, { username: saUsername });
@@ -660,13 +664,13 @@ test('messages channel and logs error when an error occurs while checking if use
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 500
+    status: 500,
   });
 
   await authme.run(message, { username: saUsername });
@@ -681,21 +685,21 @@ test('messages channel when user post count is too low', async () => {
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -705,14 +709,14 @@ test('messages channel when user post count is too low', async () => {
   moxios.stubRequest(GAUTH_CONFIRM, {
     status: 200,
     response: {
-      validated: true
-    }
+      validated: true,
+    },
   });
 
   // SA username returns a valid SA profile
   moxios.stubRequest(SA_PROFILE, {
     status: 200,
-    response: badPostCountSAProfileHTML
+    response: badPostCountSAProfileHTML,
   });
 
   await authme.run(message, { username: saUsername });
@@ -726,21 +730,21 @@ test('messages user and logs error when an error occurs while retrieving SA prof
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -750,13 +754,13 @@ test('messages user and logs error when an error occurs while retrieving SA prof
   moxios.stubRequest(GAUTH_CONFIRM, {
     status: 200,
     response: {
-      validated: true
-    }
+      validated: true,
+    },
   });
 
   // Error occurs while checking retrieving SA profile
   moxios.stubRequest(SA_PROFILE, {
-    status: 500
+    status: 500,
   });
 
   await authme.run(message, { username: saUsername });
@@ -771,21 +775,21 @@ test('messages user when bot is unable to parse post count from profile', async 
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -795,14 +799,14 @@ test('messages user when bot is unable to parse post count from profile', async 
   moxios.stubRequest(GAUTH_CONFIRM, {
     status: 200,
     response: {
-      validated: true
-    }
+      validated: true,
+    },
   });
 
   // SA username returns a valid SA profile
   moxios.stubRequest(SA_PROFILE, {
     status: 200,
-    response: badChangedMarkupSAProfileHTML
+    response: badChangedMarkupSAProfileHTML,
   });
 
   await authme.run(message, { username: saUsername });
@@ -817,21 +821,21 @@ test('logs error when error occurs while adding user to database', async () => {
     status: 200,
     response: {
       validated_role_id: roleID,
-      logging_channel_id: channelID
-    }
+      logging_channel_id: channelID,
+    },
   });
 
   // Member has never authed before
   moxios.stubRequest(GDN_MEMBER, {
-    status: 404
+    status: 404,
   });
 
   // GoonAuth generates hash for user
   moxios.stubRequest(GAUTH_GET, {
     status: 200,
     response: {
-      hash: 'abc'
-    }
+      hash: 'abc',
+    },
   });
 
   // User responds with "praise lowtax"
@@ -841,24 +845,24 @@ test('logs error when error occurs while adding user to database', async () => {
   moxios.stubRequest(GAUTH_CONFIRM, {
     status: 200,
     response: {
-      validated: true
-    }
+      validated: true,
+    },
   });
 
   // SA username returns a valid SA profile
   moxios.stubRequest(SA_PROFILE, {
     status: 200,
-    response: goodSAProfileHTML
+    response: goodSAProfileHTML,
   });
 
   // SA ID hasn't been used by another account
   moxios.stubRequest(GDN_SA, {
-    status: 404
+    status: 404,
   });
 
   // DB accepts new user
   moxios.stubRequest(GDN_DB, {
-    status: 500
+    status: 500,
   });
 
   await authme.run(message, { username: saUsername });
