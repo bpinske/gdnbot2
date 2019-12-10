@@ -5,7 +5,7 @@ import logger, { getLogTag } from '../helpers/logger';
 import { axiosGDN, GDN_URLS, APIGuild } from '../helpers/axiosGDN';
 
 interface GuildsMap {
-  [key: string]: APIGuild;
+  [guildId: string]: APIGuild;
 }
 
 export const UPDATE_INTERVAL = 1000 * 60 * 60 * 24; // 24 Hours
@@ -18,9 +18,10 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
   logger.info(tag, '[Updating member counts]');
 
   try {
-    // Get the servers from the back end and map them by server ID
+    // Get the list of enrolled servers from the back end
     const resp = await axiosGDN.get<APIGuild[]>(GDN_URLS.GUILDS);
     const apiGuilds = resp.data;
+    // Map the servers by ID
     const guildsMap: GuildsMap = {};
     apiGuilds.forEach(guild => {
       guildsMap[guild.server_id] = guild;
