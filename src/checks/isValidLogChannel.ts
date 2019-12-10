@@ -25,8 +25,8 @@ export default async function isValidLogChannel (
     logger.info(tag, `Validating logging channel ID: '${id}'`);
     const textChannel = await guild.channels.get(id);
 
-    if (textChannel.type === 'text') {
-      logger.info(tag, `Found valid text channel: '#${logChannel.name}'`);
+    if (textChannel && textChannel.type === 'text') {
+      logger.info(tag, `Found valid text channel: '#${textChannel.name}'`);
       isValid = true;
       logChannel = (textChannel as TextChannel);
     } else {
