@@ -49,13 +49,15 @@ bot.registry
 
 // Announce the bot's readiness to serve
 bot.once('ready', () => {
+  /* eslint-disable no-useless-escape */
   logger.info('   __________  _   ______        __');
-  logger.info('  / ____/ __ \\/ | / / __ )____  / /_');
-  logger.info(' / / __/ / / /  |/ / __  / __ \\/ __/');
+  logger.info('  / ____/ __ \/ | / / __ )____  / /_');
+  logger.info(' / / __/ / / /  |/ / __  / __ \/ __/');
   logger.info('/ /_/ / /_/ / /|  / /_/ / /_/ / /_');
-  logger.info('\\____/_____/_/ |_/_____/\\____/\\__/');
+  logger.info('\____/_____/_/ |_/_____/\____/\__/');
   logger.info(`Logged in as ${bot.user.tag}`);
   logger.info('---:getin:---');
+  /* eslint-enable no-useless-escape */
 
   bot.user.setActivity('in the forge');
 
