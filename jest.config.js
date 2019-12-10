@@ -27,4 +27,10 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
+
+  // Ignore certain paths when determining what to test and mock
+  modulePathIgnorePatterns: [
+    // Tell Jest to ignore build output (fixes "duplicate manual mock found" warnings)
+    '<rootDir>/dist/',
+  ],
 };
