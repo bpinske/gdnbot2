@@ -13,12 +13,6 @@
     "lint": "eslint src/ --ext .ts"
   },
   "dependencies": {
-    "@types/bunyan": "^1.8.6",
-    "@types/capitalize": "^1.0.1",
-    "@types/cheerio": "^0.22.15",
-    "@types/common-tags": "^1.8.0",
-    "@types/moxios": "^0.4.9",
-    "@types/ws": "^6.0.4",
     "axios": "^0.18.1",
     "bunyan": "^1.8.12",
     "bunyan-syslog": "^0.3.3",
@@ -31,7 +25,13 @@
     "sqlite": "^3.0.3"
   },
   "devDependencies": {
+    "@types/bunyan": "^1.8.6",
+    "@types/capitalize": "^1.0.1",
+    "@types/cheerio": "^0.22.15",
+    "@types/common-tags": "^1.8.0",
     "@types/jest": "^24.0.23",
+    "@types/moxios": "^0.4.9",
+    "@types/ws": "^6.0.4",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
     "@typescript-eslint/parser": "^2.10.0",
     "eslint": "^6.7.2",
