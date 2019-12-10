@@ -28,7 +28,7 @@ interface AuthmeCommandArgs {
 
 const MIN_POST_COUNT = parseInt(process.env.MIN_POST_COUNT, 10);
 
-class AuthmeCommand extends Command {
+export default class AuthmeCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
       name: 'authme',
@@ -217,5 +217,3 @@ class AuthmeCommand extends Command {
     );
   }
 }
-
-module.exports = AuthmeCommand;
