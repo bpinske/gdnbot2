@@ -80,13 +80,13 @@ bot.on('error', (err) => {
  */
 
 // When the bot joins a Guild
-bot.on('guildCreate', async () => {
-  await updateServerCountActivity(bot);
+bot.on('guildCreate', () => {
+  updateServerCountActivity(bot);
 });
 
 // When the bot leaves a Guild
-bot.on('guildDelete', async () => {
-  await updateServerCountActivity(bot);
+bot.on('guildDelete', () => {
+  updateServerCountActivity(bot);
 });
 
 // When a Member joins a Guild
