@@ -17,6 +17,7 @@
     "@types/capitalize": "^1.0.1",
     "@types/cheerio": "^0.22.15",
     "@types/common-tags": "^1.8.0",
+    "@types/moxios": "^0.4.9",
     "@types/ws": "^6.0.4",
     "axios": "^0.18.1",
     "bunyan": "^1.8.12",
