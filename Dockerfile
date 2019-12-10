@@ -1,4 +1,4 @@
-FROM node:10.17.0
+FROM node:12.13.1
 
 WORKDIR /usr/src/app
 
@@ -8,6 +8,7 @@ RUN npm install
 
 # Copy source files
 COPY . .
+RUN npm run build
 
 # Start the app
-CMD ["npm", "start"]
+CMD ["npm", "run", "host"]
