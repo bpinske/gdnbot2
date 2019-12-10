@@ -41,7 +41,11 @@ bot.registry
     unknownCommand: false,
   })
   // Automatically load commands that exist in the commands/ directory
-  .registerCommandsIn(path.join(__dirname, 'commands'));
+  // A custom filter is specified so that the `require-all` library picks up .ts files during dev
+  .registerCommandsIn({
+    dirname: path.join(__dirname, 'commands'),
+    filter: /^([^.].*)\.[jt]s$/,
+  });
 
 // Announce the bot's readiness to serve
 bot.once('ready', () => {
