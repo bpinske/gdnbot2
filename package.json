@@ -6,7 +6,7 @@
   "scripts": {
     "start": "NODE_ENV=development nodemon src/bot.ts | bunyan",
     "build": "tsc",
-    "host": "NODE_ENV=production node dist/bot.js",
+    "host": "NODE_ENV=production node dist/src/bot.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "npm test -- --coverage",
