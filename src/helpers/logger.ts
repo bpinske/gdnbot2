@@ -40,6 +40,8 @@ const logger = bunyan.createLogger({
 });
 
 if (process.env.NODE_ENV === 'production') {
+  // Help Papertrail understand that this is the same system regardless of container ID
+  logger.fields.hostname = 'prod-gdnbot2';
   // Add a Papertrail stream
   logger.addStream({
     type: 'raw',
