@@ -30,7 +30,7 @@ const oneOfFormatted = oneOf.map(opt => `\`${opt}\``).join(', ');
 export default class ListCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
-      name: 'list',
+      name: 'gdn_list',
       group: 'gdn',
       memberName: 'list',
       description: 'List info about the server',
@@ -39,10 +39,14 @@ export default class ListCommand extends Command {
       args: [
         {
           key: 'option',
-          prompt: `What would you like a list of?\nOptions: ${oneOfFormatted}\n`,
+          prompt: `what would you like a list of?\nOptions: ${oneOfFormatted}\n`,
           type: 'string',
           oneOf,
         },
+      ],
+      examples: [
+        'gdn_list roles',
+        'gdn_list channels',
       ],
     });
   }
