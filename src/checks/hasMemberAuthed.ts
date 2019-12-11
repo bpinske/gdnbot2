@@ -34,7 +34,7 @@ export default async function hasMemberAuthed (tag: LogTag, member: GuildMember)
   } catch (err) {
     const { response } = err;
 
-    if (response && response.status === 404) {
+    if (response?.status === 404) {
       logger.warn(tag, 'Member has not authed before');
       return {
         hasAuthed: false,

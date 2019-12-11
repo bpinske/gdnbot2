@@ -7,7 +7,7 @@ This application runs using the ["GDNDev" bot](https://discordapp.com/developers
 ## Requirements
 
 - Docker + Compose
-- Node v10.15.3 (Optional)
+- Node v12.13.1 (Optional)
   - Install this if you want to install dependencies for editor autocomplete during development
 
 ## Development
@@ -101,9 +101,9 @@ ModCommands:
 ❌gdn_mute            Mute a user to block their messages (defer till next bot?)
 ❌gdn_unmute          Unmute a user so they can message again (defer till next bot?)
 ​No Category:
-  help                Shows this message.
-  list_extensions
-  reload
+✅help                Shows this message.
+✅list_extensions
+✅reload
 
 Type !help command for more info on a command.
 You can also type !help category for more info on a category.

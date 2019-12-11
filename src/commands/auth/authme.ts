@@ -40,17 +40,18 @@ export default class AuthmeCommand extends Command {
 
         1. Type **!authme SA-Username-Here** to begin (replace **SA-Username-Here** with your actual SA username; spaces are fine too).
 
-        Ex:
-        **!authme LeetLikeJeffK**
-        **!authme DickWad Johnson**
-
         2. After you paste the code on your profile, go back to the bot and **type 'Praise Lowtax'** to finish the auth process.
       `,
+      examples: [
+        'authme IAmKale',
+        'authme Tempus Thales',
+      ],
       guildOnly: true,
       args: [
         {
           key: 'username',
-          prompt: 'What is your SA username?',
+          label: 'SA Username',
+          prompt: 'what is your SA username?',
           type: 'string',
         },
       ],
