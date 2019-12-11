@@ -38,7 +38,5 @@ export default function autoAuth (member: GuildMember) {
     } else {
       logger.info(tag, 'Did not proceed with auto-auth');
     }
-
-    logger.info(tag, '[EVENT STOP]');
   }, 1000);
 }

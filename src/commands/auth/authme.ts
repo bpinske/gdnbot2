@@ -216,7 +216,5 @@ export default class AuthmeCommand extends Command {
       saID,
       username,
     );
-
-    logger.info(tag, '[EVENT STOP]');
   }
 }
