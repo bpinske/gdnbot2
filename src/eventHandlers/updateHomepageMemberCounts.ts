@@ -3,6 +3,7 @@ import { CommandoClient } from 'discord.js-commando';
 
 import logger, { getLogTag } from '../helpers/logger';
 import { axiosGDN, GDN_URLS, APIGuild } from '../helpers/axiosGDN';
+import roundDown from '../helpers/roundDown';
 
 interface GuildsMap {
   [guildId: string]: APIGuild;
@@ -56,11 +57,7 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
 
       // Patch the server count
       try {
-        let count = authedUsers.size;
-        // Round down to the nearest 10s place
-        if (count > 10) {
-          count = count - (count % 10);
-        }
+        const count = roundDown(authedUsers.size);
 
         logger.debug(tag, `Rounded user count: ${count}`);
 
