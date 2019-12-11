@@ -64,7 +64,7 @@ export default class AuthmeCommand extends Command {
     // Prepare a tag for logging
     const tag = getLogTag(message.id);
 
-    logger.info(tag, '[EVENT: !authme]');
+    logger.info(tag, `[EVENT START: !${this.name}]`);
 
     /**
      * PERFORMING AUTH CHECKS
@@ -216,5 +216,7 @@ export default class AuthmeCommand extends Command {
       saID,
       username,
     );
+
+    logger.info(tag, '[EVENT STOP]');
   }
 }
