@@ -41,7 +41,7 @@ export default async function isMemberBlacklisted (tag: LogTag, saID: string): P
   } catch (err) {
     const { response } = err;
 
-    if (response && response.status === 404) {
+    if (response?.status === 404) {
       logger.info(tag, 'SA ID is not associated with a blacklisted user');
       return {
         isBlacklisted: false,

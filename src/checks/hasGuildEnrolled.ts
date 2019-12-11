@@ -42,7 +42,7 @@ export default async function hasGuildEnrolled (tag: LogTag, guild: Guild): Prom
   } catch (err) {
     const { response } = err;
 
-    if (response && response.status === 404) {
+    if (response?.status === 404) {
       logger.info(tag, '...but no server info was found, exiting');
       return {
         isEnrolled: false,
