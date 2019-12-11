@@ -2,6 +2,7 @@ import { oneLine, stripIndents } from 'common-tags';
 import { GuildMember, Role, TextChannel } from 'discord.js';
 
 import logger, { LogTag } from '../logger';
+import { API_ERROR } from '../constants';
 
 /**
  * The guild admin screwed up and didn't place the GDN role above the "authed" role. Prepare a nice
@@ -41,7 +42,7 @@ export default async function addRoleAndLog (
         Error in guild ${role.guild.name} adding role ${role.name} to member ${member.user.tag}
         (${member.id})
       `);
-    if (err.code === 50013) {
+    if (err.code === API_ERROR.MISSING_PERMISSIONS) {
       if (channel) {
         await channel.send(error50013(member, role));
       } else {
