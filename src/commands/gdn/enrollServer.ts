@@ -5,6 +5,10 @@ import logger, { getLogTag } from '../../helpers/logger';
 import { API_ERROR } from '../../helpers/constants';
 import roundDown from '../../helpers/roundDown';
 
+import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
+import hasMemberAuthed from '../../checks/hasMemberAuthed';
+import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
+
 interface EnrollCommandArgs {
   description: string;
   inviteCode: string;
@@ -52,20 +56,49 @@ export default class ListCommand extends Command {
     const tag = getLogTag(message.id);
 
     logger.info(tag, `[EVENT START: !${this.name}]`);
-
     logger.debug(tag, `Called in ${name} (${id})`);
 
     // Give some feedback that the bot is doing something
     message.channel.startTyping();
 
-    logger.info(tag, 'Checking to see if the server is already enrolled');
-    // TODO
-    // checks/hasGuildEnrolled()
+    // Ensure that the server hasn't been authed before
+    const { isEnrolled } = await hasGuildEnrolled(tag, message.guild);
 
-    logger.info(tag, 'Checking to see if the user has authed and can interact with GDN');
-    // TODO
-    // checks/hasMemberAuthed()
-    // checks/isMemberBlacklisted()
+    if (isEnrolled) {
+      logger.info(tag, 'Server is already enrolled, exiting');
+
+      message.channel.stopTyping();
+      return message.reply(oneLine`
+        this server has already been enrolled. Please use the update commands instead.
+      `);
+    }
+
+    // Ensure the user has authed before
+    const { hasAuthed, memberData } = await hasMemberAuthed(tag, message.member);
+
+    if (!hasAuthed) {
+      logger.info(tag, 'User has not authed before, exiting');
+
+      message.channel.stopTyping();
+      return message.reply(stripIndents`
+        You must have previously authed with \`!authme\` to use this command.
+
+        ${oneLine`
+          You can complete your initial authentication from within another server enrolled in GDN,
+          or in the official GDN Discord server: ${this.client.options.invite}
+        `}
+      `);
+    }
+
+    // Ensure the authed user isn't blacklisted from GDN
+    const { isBlacklisted, reason } = await isMemberBlacklisted(tag, memberData.sa_id);
+
+    if (isBlacklisted) {
+      logger.info(tag, 'User is blacklisted from GDN, exiting');
+
+      message.channel.stopTyping();
+      return message.reply(reason);
+    }
 
     logger.info(tag, `Confirming invite code "${inviteCode}" is valid and won't expire`);
 
@@ -134,6 +167,10 @@ export default class ListCommand extends Command {
           **Num. Users:** ${details.user_count}
           **Invite URL:** ${details.invite_url}
 
+          ${oneLine`
+            **Please ensure that the invite URL will not expire!** If it expires, users will have
+            no way to join your server from the GDN homepage.
+          `}
         `,
         type: 'boolean',
       },
