@@ -47,6 +47,12 @@ export default class HelpCommand extends Command {
     if (command && !showAll) {
       // Display help for a specific command
       if (commands.length === 1) {
+        const [foundCommand] = commands;
+
+        if (!foundCommand.isUsable(message)) {
+          return message.reply(`The \`${foundCommand.name}\` command is forbidden knowledge to one such as you.`);
+        }
+
         const {
           name,
           description,
@@ -58,7 +64,7 @@ export default class HelpCommand extends Command {
           aliases,
           details,
           examples,
-        } = commands[0];
+        } = foundCommand;
 
         const title = `Help Menu for \`${prefix}${name}\``;
 
