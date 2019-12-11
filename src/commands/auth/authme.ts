@@ -43,7 +43,7 @@ export default class AuthmeCommand extends Command {
         2. After you paste the code on your profile, go back to the bot and **type 'Praise Lowtax'** to finish the auth process.
       `,
       examples: [
-        'authme LeetLikeJeffK',
+        'authme IAmKale',
         'authme Tempus Thales',
       ],
       guildOnly: true,
