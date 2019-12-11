@@ -1,9 +1,10 @@
+/* eslint-disable import/first */
 import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { stripIndents, oneLine } from 'common-tags';
 const { disambiguation } = require('discord.js-commando/src/util');
 
-/* eslint-disable-next-line import/first */
 import GDNEmbed from '../helpers/GDNEmbed';
+import prettifyPermission from '../helpers/prettifyPermission';
 
 interface HelpCommandArgs {
   command: string;
@@ -92,7 +93,7 @@ export default class HelpCommand extends Command {
         if (ownerOnly) {
           permsFormatted = 'Bot Owner';
         } else if (userPermissions?.length > 0) {
-          permsFormatted = userPermissions.join('\n');
+          permsFormatted = userPermissions.map(prettifyPermission).join('\n');
         }
 
         const embed = new GDNEmbed()
