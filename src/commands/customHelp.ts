@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { Command, CommandoClient, CommandoMessage, CommandGroup } from 'discord.js-commando';
 import { stripIndents, oneLine } from 'common-tags';
 const { disambiguation } = require('discord.js-commando/src/util');
 
@@ -127,32 +127,48 @@ export default class HelpCommand extends Command {
       );
     } else {
       // Return an overview of all available commands
-      return message.say({
-        embed: {
-          title: 'Help Menu',
-          description: stripIndents`
-          ${oneLine`
-            To run a command in ${message.guild ? message.guild.name : 'any server'},
-            use \`${Command.usage('command', message.guild ? message.guild.commandPrefix : null)}\`
-            For example, \`${Command.usage('ping', message.guild ? message.guild.commandPrefix : null)}\`
-          `}
+      const embed = new GDNEmbed()
+        .setTitle('GDN Bot Help')
+        .setDescription(stripIndents`
+          *Your server's interface to the Goon Discord Network (GDN) :bee:*
+          *Official GDN Discord Server: ${this.client.options.invite}*
 
-          Use ${this.usage('<command>', null, null)} to view detailed information about a specific command.
-          Use ${this.usage('all', null, null)} to view a list of *all* commands, not just available ones.
+          Use ${this.usage('<command>', prefix, null)} to view detailed information about a specific command.
 
           __**${showAll ? 'All commands' : `Available commands in ${message.guild || 'this DM'}`}**__
+        `);
 
-          ${(showAll ? groups : groups.filter(grp => grp.commands.some(cmd => cmd.isUsable(message.message))))
-              .map(grp => stripIndents`
-              **${grp.name}**
-              ${(showAll ? grp.commands : grp.commands.filter(cmd => cmd.isUsable(message.message)))
-                  .map(cmd => `\`${cmd.name}\` — ${cmd.description}${cmd.nsfw ? ' (NSFW)' : ''}`).join('\n')
-                }
-            `).join('\n\n')
-            }
-        `,
-        },
+      let groupsToShow = groups;
+      if (!showAll) {
+        groupsToShow = groupsToShow.filter(
+          (grp: CommandGroup) => grp.commands.some(cmd => {
+            const usable = cmd.isUsable(message);
+            return usable;
+          }),
+        );
+      }
+
+      groupsToShow.forEach((group) => {
+        let groupCommands = group.commands;
+        if (!showAll) {
+          groupCommands = groupCommands
+            .filter(cmd => {
+              const usable = cmd.isUsable(message);
+              return usable;
+            });
+        }
+
+        const commandsFormatted = groupCommands
+          .map((cmd) => `**${cmd.name}** - ${cmd.description}${cmd.nsfw ? ' (NSFW)' : ''}`)
+          .join('\n');
+
+        embed.addField(`${group.name}`, commandsFormatted);
       });
+
+      embed.setFooter(`Requested by ${message.author.username}`, message.author.displayAvatarURL());
+      embed.setTimestamp();
+
+      return message.embed(embed);
     }
   }
 }
