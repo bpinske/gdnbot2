@@ -4,6 +4,7 @@ import { stripIndents, oneLine } from 'common-tags';
 import logger, { getLogTag } from '../../helpers/logger';
 import { API_ERROR } from '../../helpers/constants';
 import roundDown from '../../helpers/roundDown';
+import { axiosGDN, GDN_URLS } from '../../helpers/axiosGDN';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
@@ -190,13 +191,18 @@ export default class ListCommand extends Command {
     message.channel.startTyping();
 
     logger.info({ ...tag, details }, 'Submitting server to GDN API');
-    // TODO
-    // helpers/axiosGDN.post(GDN_URLS.GUILDS, details);
+
+    try {
+      await axiosGDN.post(GDN_URLS.GUILDS, details);
+      logger.info(tag, 'Server was successfully added to database');
+    } catch (err) {
+      logger.error({ ...tag, err }, 'Error submitting guild data to GDN API');
+
+      message.channel.stopTyping();
+      return message.reply(`an error occurred while enrolling this server: ${err}`);
+    }
 
     message.channel.stopTyping();
-
-    logger.info(tag, '[EVENT STOP]');
-
     return message.reply(oneLine`
       welcome aboard! This server has been enrolled in GDN and is now discoverable at
       https://goondiscordnetwork.com :bee:
