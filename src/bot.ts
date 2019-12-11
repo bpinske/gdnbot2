@@ -39,6 +39,7 @@ bot.registry
   .registerDefaultGroups()
   .registerDefaultCommands({
     unknownCommand: false,
+    help: false,
   })
   // Automatically load commands that exist in the commands/ directory
   // A custom filter is specified so that the `require-all` library picks up .ts files during dev
