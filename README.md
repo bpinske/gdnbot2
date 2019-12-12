@@ -84,24 +84,24 @@ Common ones experienced so far:
 Current status of commands ported over from GDNBot v1:
 
 **Auth:**
-- ✅authme
+- ✅ authme (see `!authme`)
 
 **GDNServices:**
-- ✅gdn_enroll_server (see new `!gdn_enroll`)
-- ✅gdn_set_description (see new `!gdn_update`)
-- ✅gdn_set_invite_url (see `!gdn_update`)
-- ✅gdn_set_name (sync as part of `!gdn_update`)
-- 🛠gdn_activate_auth (see `!gdn_enable_authme`)
-- ✅gdn_update_counts (now automated, every 24 hours)
-- ✅list_channels
-- ✅list_roles
-- ❌list_server_info (check admin panel instead)
+- ✅ gdn_enroll_server (see new `!gdn_enroll`)
+- ✅ gdn_set_description (see new `!gdn_update`)
+- ✅ gdn_set_invite_url (see `!gdn_update`)
+- ✅ gdn_set_name (sync as part of `!gdn_update`)
+- 🛠 gdn_activate_auth (see `!gdn_enable_authme`)
+- ✅ gdn_update_counts (now automated, every 24 hours)
+- ✅ list_channels (see `!list_channels`)
+- ✅ list_roles (see `!list_roles`)
+- ❌ list_server_info (check admin panel instead)
 
 **ModCommands:**
-- ❌gdn_mute (defer till next bot?)
-- ❌gdn_unmute (defer till next bot?)
+- ❌ gdn_mute (defer till next bot?)
+- ❌ gdn_unmute (defer till next bot?)
 
 **​No Category:**
-- ✅help (added custom formatted help)
-- ✅list_extensions
-- ✅reload
+- ✅ help (added custom formatted `!help`)
+- ✅ list_extensions
+- ✅ reload
