@@ -44,6 +44,8 @@ export default async function startAuthCheck (
     guildData,
   } = await hasGuildEnrolled(tag, guild);
 
+  logger.debug({ ...tag, guildData }, 'Guild data from DB');
+
   if (!isEnrolled) {
     logger.info(tag, 'Guild is not enrolled, exiting');
     return {
