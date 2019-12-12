@@ -4,6 +4,8 @@ An experiment in using JavaScript for a Discord bot. This time, we'll use [Disco
 
 This application runs using the ["GDNDev" bot](https://discordapp.com/developers/applications/347212481367638027/bots) specified in the Discord Developer Portal.
 
+GDNDev invite link: https://discordapp.com/oauth2/authorize?&client_id=347212481367638027&scope=bot&permissions=268446720
+
 ## Requirements
 
 - Docker + Compose
