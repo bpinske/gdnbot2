@@ -81,30 +81,27 @@ Common ones experienced so far:
 
 ### Current GDNBot commands:
 
-```
-Your server's interface to the Goon Discord Network (GDN).
-Official GDN Discord Server: https://discord.gg/vH8uVUE
+Current status of commands ported over from GDNBot v1:
 
-Auth:
-✅authme              Authenticate your SA account
-GDNServices:
-✅gdn_enroll_server   Enroll this server in Goon Discord Network
-✅gdn_set_description Set the server's Directory description (see gdn_update)
-✅gdn_set_invite_url  Set the server's Instant Invite URL (see gdn_update)
-✅gdn_set_name        Set the server's name (force update on gdn_update)
-  gdn_activate_auth   Initialize `!authme` on this server
-✅gdn_update_counts   Update member counts for all GDN servers (now automated, every 24 hours)
-✅list_channels       List all text channels and IDs for this server
-✅list_roles          List all roles and IDs for this server
-❌list_server_info    DEBUG: List cached info on this server (check admin panel instead)
-ModCommands:
-❌gdn_mute            Mute a user to block their messages (defer till next bot?)
-❌gdn_unmute          Unmute a user so they can message again (defer till next bot?)
-​No Category:
-✅help                Shows this message.
-✅list_extensions
-✅reload
+**Auth:**
+- ✅authme
 
-Type !help command for more info on a command.
-You can also type !help category for more info on a category.
-```
+**GDNServices:**
+- ✅gdn_enroll_server
+- ✅gdn_set_description (see new `!gdn_update`)
+- ✅gdn_set_invite_url (see `!gdn_update`)
+- ✅gdn_set_name (sync as part of `!gdn_update`)
+- 🛠gdn_activate_auth (see `!gdn_enable_authme`)
+- ✅gdn_update_counts (now automated, every 24 hours)
+- ✅list_channels
+- ✅list_roles
+- ❌list_server_info (check admin panel instead)
+
+**ModCommands:**
+- ❌gdn_mute (defer till next bot?)
+- ❌gdn_unmute (defer till next bot?)
+
+**​No Category:**
+- ✅help (added custom formatted help)
+- ✅list_extensions
+- ✅reload
