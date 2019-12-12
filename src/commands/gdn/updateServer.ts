@@ -13,11 +13,15 @@ import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 export default class SetDescriptionCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
-      name: 'gdn_update_server',
-      aliases: ['gdn_update'],
+      name: 'gdn_update',
+      aliases: ['gdn_update_server'],
       group: 'gdn',
       memberName: 'update_server_info',
-      description: 'Update the server\'s description and/or invite code',
+      description: 'Update server info in Goon Discord Network',
+      details: oneLine`
+        Specify a new **description** and/or **invite code** for a server visible on
+        https://goondiscordnetwork.com :bee:
+      `,
       guildOnly: true,
       userPermissions: ['MANAGE_ROLES', 'MANAGE_CHANNELS'],
     });

@@ -20,11 +20,19 @@ interface ConfirmArgs {
 export default class ListCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
-      name: 'gdn_enroll_server',
-      aliases: ['gdn_enroll'],
+      name: 'gdn_enroll',
+      aliases: ['gdn_enroll_server'],
       group: 'gdn',
       memberName: 'enroll_server',
-      description: 'Enroll this server in Goon Discord Network',
+      description: 'Enroll server in Goon Discord Network',
+      details: stripIndents`
+        Enroll this server in Goon Discord Network to include it on https://goondiscordnetwork.com :bee:
+
+        ${oneLine`
+          Enrolled servers can also activate \`!authme\` (see \`!gdn_enable_authme\`) to help automate SA membership detection for
+          enhanced channel access control.
+        `}
+      `,
       guildOnly: true,
       userPermissions: ['MANAGE_ROLES', 'MANAGE_CHANNELS'],
     });
