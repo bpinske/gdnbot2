@@ -19,7 +19,7 @@ export default function getServerInfoCollector (tag: LogTag, client: CommandoCli
   return new ArgumentCollector(client, [
     {
       key: 'description',
-      prompt: 'enter a short description for this server (limit 300 chars):',
+      prompt: 'enter a short description for this server (limit 130 chars):',
       type: 'string',
       wait: 60,
       max: 130,
