@@ -17,6 +17,11 @@ export interface APIGuildUpdate {
   'invite_url'?: string;
 }
 
+export interface APIGuildAuthme {
+  'validated_role_id': string;
+  'logging_channel_id': string;
+}
+
 export interface APIMember {
   'discord_id': string;
   'sa_id': string;
