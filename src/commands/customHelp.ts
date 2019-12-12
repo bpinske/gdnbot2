@@ -4,7 +4,7 @@ import { stripIndents, oneLine } from 'common-tags';
 const { disambiguation } = require('discord.js-commando/src/util');
 
 import GDNEmbed from '../helpers/GDNEmbed';
-import prettifyPermission from '../helpers/prettifyPermission';
+import { prettifyPermission } from '../helpers/prettify';
 
 interface HelpCommandArgs {
   command: string;

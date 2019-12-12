@@ -16,7 +16,7 @@ export default function autoAuth (member: GuildMember) {
   // Generate a logging tag with the snowflake
   const tag = getLogTag(eventId);
 
-  logger.info(tag, `[EVENT: User joined ${guild.name}]`);
+  logger.info(tag, `[EVENT START: User joined ${guild.name}]`);
 
   // Wait a second before proceeding with auto-auth
   setTimeout(async () => {

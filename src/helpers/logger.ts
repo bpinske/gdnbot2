@@ -26,7 +26,7 @@ const logger = bunyan.createLogger({
   streams: [
     {
       type: 'stream',
-      level: bunyan.INFO,
+      level: bunyan.DEBUG,
       stream: process.stdout,
     },
     {
