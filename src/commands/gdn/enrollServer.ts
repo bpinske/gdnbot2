@@ -2,20 +2,15 @@ import { Command, CommandoClient, CommandoMessage, ArgumentCollector } from 'dis
 import { stripIndents, oneLine } from 'common-tags';
 
 import logger, { getLogTag } from '../../helpers/logger';
-import { API_ERROR } from '../../helpers/constants';
+
 import roundDown from '../../helpers/roundDown';
 import { axiosGDN, GDN_URLS, APIGuild } from '../../helpers/axiosGDN';
-import getServerInfoCollector from '../../helpers/gdn/getServerInfoCollector';
+import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getServerInfoCollector';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
-
-interface EnrollArgs {
-  description: string;
-  inviteCode: string;
-}
 
 interface ConfirmArgs {
   confirm: boolean;
@@ -98,74 +93,28 @@ export default class ListCommand extends Command {
      * Prompt the user for a server description and invite code
      */
     logger.info(tag, 'Prompting for a server description and invite code');
-    const serverInfoCollector = getServerInfoCollector(this.client);
+    const serverInfoCollector = getServerInfoCollector(tag, this.client);
 
     message.channel.stopTyping();
-    const infoResp = await serverInfoCollector.obtain(message);
-    const description = (infoResp.values as EnrollArgs)?.description;
-    const inviteCode = (infoResp.values as EnrollArgs)?.inviteCode;
 
-    if (!description || !inviteCode) {
+    const infoResp = await serverInfoCollector.obtain(message);
+    logger.debug({ ...tag, values: infoResp.values }, 'Collected values');
+
+    const description = (infoResp.values as ServerInfoArgs)?.description;
+    const inviteCode = (infoResp.values as ServerInfoArgs)?.inviteCode;
+
+    if (infoResp.cancelled) {
+      logger.info(tag, 'User cancelled enrollment, exiting');
+
+      return message.reply('enrollment cancelled, no action was taken.');
+    } else if (!description || !inviteCode) {
       logger.info(tag, 'Failed to collect description and/or invite code');
-      logger.debug({ ...tag, infoResp }, 'Collected values');
+
       return message.reply(oneLine`
         a server description and invite code are needed to complete enrollment. Please run
         ${this.usage()} to try again.
       `);
     }
-
-    /**
-     * See if the provided invite code is for an invite that'll expire
-     */
-    message.channel.startTyping();
-
-    logger.info(tag, `Confirming invite code "${inviteCode}" is valid and won't expire`);
-    let invite;
-    try {
-      invite = await this.client.fetchInvite(inviteCode);
-    } catch (err) {
-      message.channel.stopTyping();
-
-      if (err.code === API_ERROR.UNKNOWN_INVITE) {
-        logger.info(tag, 'Invalid invite code, exiting');
-
-        return message.reply(stripIndents`
-          "${inviteCode}" doesn't seem to be a valid invite code for this guild.
-
-          ${oneLine`
-            Please double-check your invites in **Server Settings > Invites** and then try
-            ${this.usage()} again with a **non-expiring** invite code.
-          `}
-        `);
-      }
-
-      logger.error({ ...tag, err }, 'Error retrieving invite');
-      throw err;
-    }
-
-    /**
-     * TODO: `invite.expiresAt` via `this.client.fetchInvite()` will _always_ be null. To fix this,
-     * the bot would need to be granted the MANAGE_GUILD/"Manage Server" permission, at which point
-     * we could use message.guild.fetchInvites(), .get() by `inviteCode`, and view that info...
-     */
-    // null = eternal, datetime = expires
-    if (invite.expiresAt !== null) {
-      logger.info(tag, 'User specified an expiring invite, exiting');
-
-      message.channel.stopTyping();
-
-      return message.reply(stripIndents`
-        The specified server invite will eventually expire, after which it will become impossible
-        for users to join this server from the GDN homepage.
-
-        ${oneLine`
-          Please double-check your invites in **Server Settings > Invites** and then try
-          ${this.usage()} again with a **non-expiring** invite code.
-        `}
-      `);
-    }
-
-    logger.info(tag, 'Invite code is valid for enrollment');
 
     // Prepare server details for submission
     const details: APIGuild = {
