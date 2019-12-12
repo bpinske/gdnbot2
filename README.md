@@ -87,7 +87,7 @@ Current status of commands ported over from GDNBot v1:
 - ✅authme
 
 **GDNServices:**
-- ✅gdn_enroll_server
+- ✅gdn_enroll_server (see new `!gdn_enroll`)
 - ✅gdn_set_description (see new `!gdn_update`)
 - ✅gdn_set_invite_url (see `!gdn_update`)
 - ✅gdn_set_name (sync as part of `!gdn_update`)
