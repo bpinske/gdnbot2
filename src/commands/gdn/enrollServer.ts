@@ -10,7 +10,7 @@ import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
 
-interface EnrollCommandArgs {
+interface EnrollArgs {
   description: string;
   inviteCode: string;
 }
@@ -29,24 +29,10 @@ export default class ListCommand extends Command {
       description: 'Enroll this server in Goon Discord Network',
       guildOnly: true,
       userPermissions: ['MANAGE_ROLES', 'MANAGE_CHANNELS'],
-      args: [
-        {
-          key: 'description',
-          prompt: 'enter a short description for this server (limit 300 chars):',
-          type: 'string',
-          wait: 60,
-        },
-        {
-          key: 'inviteCode',
-          prompt: 'enter a **non-expiring** Invite Code for this server:',
-          type: 'string',
-          wait: 60,
-        },
-      ],
     });
   }
 
-  async run (message: CommandoMessage, { description, inviteCode }: EnrollCommandArgs) {
+  async run (message: CommandoMessage) {
     const {
       id,
       name,
@@ -107,13 +93,51 @@ export default class ListCommand extends Command {
       return message.reply(reason);
     }
 
-    logger.info(tag, `Confirming invite code "${inviteCode}" is valid and won't expire`);
+    /**
+     * Prompt the user for a server description and invite code
+     */
+    logger.info(tag, 'Prompting for a server description and invite code');
+    const enrollCollector = new ArgumentCollector(this.client, [
+      {
+        key: 'description',
+        prompt: 'enter a short description for this server (limit 300 chars):',
+        type: 'string',
+        wait: 60,
+      },
+      {
+        key: 'inviteCode',
+        prompt: 'enter a **non-expiring** Invite Code for this server:',
+        type: 'string',
+        wait: 60,
+      },
+    ]);
 
-    // See if the provided invite code is for an invite that'll expire
+    message.channel.stopTyping();
+    const enrollResp = await enrollCollector.obtain(message);
+    const description = (enrollResp.values as EnrollArgs)?.description;
+    const inviteCode = (enrollResp.values as EnrollArgs)?.inviteCode;
+
+    if (!description || !inviteCode) {
+      logger.info(tag, 'Failed to collect description and/or invite code');
+      logger.debug({ ...tag, enrollResp }, 'Collected values');
+      return message.reply(oneLine`
+        a server description and invite code are needed to complete enrollment. Please run
+        ${this.usage()} to try again.
+      `);
+    }
+
+    /**
+     * See if the provided invite code is for an invite that'll expire
+     */
+    message.channel.startTyping();
+
+    logger.info(tag, `Confirming invite code "${inviteCode}" is valid and won't expire`);
     let invite;
     try {
       invite = await this.client.fetchInvite(inviteCode);
     } catch (err) {
+      message.channel.stopTyping();
+
       if (err.code === API_ERROR.UNKNOWN_INVITE) {
         logger.info(tag, 'Invalid invite code, exiting');
 
@@ -139,6 +163,8 @@ export default class ListCommand extends Command {
     // null = eternal, datetime = expires
     if (invite.expiresAt !== null) {
       logger.info(tag, 'User specified an expiring invite, exiting');
+
+      message.channel.stopTyping();
 
       return message.reply(stripIndents`
         The specified server invite will eventually expire, after which it will become impossible
@@ -188,11 +214,10 @@ export default class ListCommand extends Command {
 
     // Wait for the user to confirm details
     message.channel.stopTyping();
-    const resp = await confirmCollector.obtain(message);
+    const confirmResp = await confirmCollector.obtain(message);
+    const confirm = (confirmResp.values as ConfirmArg)?.confirm;
 
-    const values = (resp.values as ConfirmArg);
-
-    if (!values?.confirm) {
+    if (!confirm) {
       logger.info(tag, 'User did not confirm that values correct, exiting');
       return message.reply('the server was not enrolled. Feel free to try again, though!');
     }
