@@ -4,7 +4,7 @@ import { stripIndents, oneLine } from 'common-tags';
 import logger, { getLogTag } from '../../helpers/logger';
 import { API_ERROR } from '../../helpers/constants';
 import roundDown from '../../helpers/roundDown';
-import { axiosGDN, GDN_URLS } from '../../helpers/axiosGDN';
+import { axiosGDN, GDN_URLS, APIGuild } from '../../helpers/axiosGDN';
 import getServerInfoCollector from '../../helpers/gdn/getServerInfoCollector';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 
@@ -39,7 +39,6 @@ export default class ListCommand extends Command {
       id,
       name,
       memberCount,
-      iconURL,
     } = message.guild;
 
     const tag = getLogTag(message.id);
@@ -169,11 +168,10 @@ export default class ListCommand extends Command {
     logger.info(tag, 'Invite code is valid for enrollment');
 
     // Prepare server details for submission
-    const details = {
+    const details: APIGuild = {
       name,
       server_id: id,
       description: truncateServerDescription(description),
-      icon_url: iconURL,
       user_count: roundDown(memberCount),
       invite_url: `https://discord.gg/${inviteCode}`,
     };

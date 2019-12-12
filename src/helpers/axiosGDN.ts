@@ -6,6 +6,7 @@ export interface APIGuild {
   'description': string;
   'user_count': number;
   'invite_url': string;
+  'icon_url'?: string;
   'validated_role_id'?: string;
   'logging_channel_id'?: string;
 }
