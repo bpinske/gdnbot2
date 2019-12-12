@@ -8,6 +8,7 @@ import { axiosGDN, GDN_URLS, APIGuild } from '../../helpers/axiosGDN';
 import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getServerInfoCollector';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 import { inviteCodeToInviteURL } from '../../helpers/gdn/guildInvites';
+import COMMAND_NAMES from '../../helpers/commandNames';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
@@ -20,7 +21,7 @@ interface ConfirmArgs {
 export default class ListCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
-      name: 'gdn_enroll',
+      name: COMMAND_NAMES.GDN_ENROLL,
       aliases: ['gdn_enroll_server'],
       group: 'gdn',
       memberName: 'enroll_server',

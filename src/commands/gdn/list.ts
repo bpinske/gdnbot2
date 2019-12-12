@@ -5,6 +5,7 @@ import GDNEmbed from '../../helpers/GDNEmbed';
 
 import listTextChannels from '../../helpers/gdn/listTextChannels';
 import listRoles from '../../helpers/gdn/listRoles';
+import COMMAND_NAMES from '../../helpers/commandNames';
 
 interface ListCommandArgs {
   option: string;
@@ -30,7 +31,7 @@ const oneOfFormatted = oneOf.map(opt => `\`${opt}\``).join(', ');
 export default class ListCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
-      name: 'gdn_list',
+      name: COMMAND_NAMES.GDN_LIST,
       group: 'gdn',
       memberName: 'list',
       description: 'List info about the server',

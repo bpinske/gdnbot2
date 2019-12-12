@@ -5,6 +5,7 @@ import { stripIndents, oneLine } from 'common-tags';
 // Helpers
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
+import COMMAND_NAMES from '../../helpers/commandNames';
 
 // Checks
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
@@ -31,7 +32,7 @@ const MIN_POST_COUNT = parseInt(process.env.MIN_POST_COUNT, 10);
 export default class AuthmeCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
-      name: 'authme',
+      name: COMMAND_NAMES.AUTHME,
       group: 'auth',
       memberName: 'authme',
       description: 'Authenticate your SA account',
