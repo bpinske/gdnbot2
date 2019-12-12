@@ -11,7 +11,7 @@ interface ListCommandArgs {
   option: string;
 }
 
-const OPTIONS = {
+export const OPTIONS = {
   ROLES: 'roles',
   CHANNELS: 'channels',
 };
