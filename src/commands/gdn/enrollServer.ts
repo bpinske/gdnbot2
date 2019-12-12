@@ -15,7 +15,7 @@ interface EnrollArgs {
   inviteCode: string;
 }
 
-interface ConfirmArg {
+interface ConfirmArgs {
   confirm: boolean;
 }
 
@@ -215,7 +215,7 @@ export default class ListCommand extends Command {
     // Wait for the user to confirm details
     message.channel.stopTyping();
     const confirmResp = await confirmCollector.obtain(message);
-    const confirm = (confirmResp.values as ConfirmArg)?.confirm;
+    const confirm = (confirmResp.values as ConfirmArgs)?.confirm;
 
     if (!confirm) {
       logger.info(tag, 'User did not confirm that values correct, exiting');
