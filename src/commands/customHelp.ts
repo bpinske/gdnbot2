@@ -90,7 +90,7 @@ export default class HelpCommand extends Command {
           detailsFormatted = 'None Available';
         }
 
-        let examplesFormatted = 'None Available';
+        let examplesFormatted = `**${prefix}${name}**`;
         if (examples?.length > 0) {
           examplesFormatted = examples.map((ex: string) => `**${prefix}${ex}**`).join('\n');
         }
