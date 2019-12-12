@@ -71,6 +71,8 @@ export default class EnableAuthmeCommand extends Command {
     /**
      * Prompt for a "verified goon" role
      */
+    logger.info(tag, 'Prompting for a role ID');
+
     await this.client.registry.commands.get(COMMAND_NAMES.GDN_LIST).run(message, { option: OPTIONS.ROLES }, false);
 
     const roleCollector = getRoleCollector(
@@ -97,6 +99,8 @@ export default class EnableAuthmeCommand extends Command {
     /**
      * Prompt for a logging channel
      */
+    logger.info(tag, 'Prompting for a logging channel ID');
+
     await this.client.registry.commands.get(COMMAND_NAMES.GDN_LIST).run(message, { option: OPTIONS.CHANNELS }, false);
 
     const channelCollector = getChannelCollector(
