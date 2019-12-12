@@ -62,7 +62,9 @@ export default class ListCommand extends Command {
     // Give some feedback that the bot is doing something
     message.channel.startTyping();
 
-    // Ensure that the server hasn't been authed before
+    /**
+     * Ensure that the server hasn't been authed before
+     */
     const { isEnrolled } = await hasGuildEnrolled(tag, message.guild);
 
     if (isEnrolled) {
@@ -74,7 +76,9 @@ export default class ListCommand extends Command {
       `);
     }
 
-    // Ensure the user has authed before
+    /**
+     * Ensure the user has authed before
+     */
     const { hasAuthed, memberData } = await hasMemberAuthed(tag, message.member);
 
     if (!hasAuthed) {
@@ -91,7 +95,9 @@ export default class ListCommand extends Command {
       `);
     }
 
-    // Ensure the authed user isn't blacklisted from GDN
+    /**
+     * Ensure the authed user isn't blacklisted from GDN
+     */
     const { isBlacklisted, reason } = await isMemberBlacklisted(tag, memberData.sa_id);
 
     if (isBlacklisted) {
@@ -157,6 +163,9 @@ export default class ListCommand extends Command {
       invite_url: `https://discord.gg/${inviteCode}`,
     };
 
+    /**
+     * Confirm details with the user
+     */
     const confirmCollector = new ArgumentCollector(this.client, [
       {
         key: 'confirm',
@@ -188,6 +197,9 @@ export default class ListCommand extends Command {
       return message.reply('the server was not enrolled. Feel free to try again, though!');
     }
 
+    /**
+     * Submit details to API
+     */
     message.channel.startTyping();
 
     logger.info({ ...tag, details }, 'Submitting server to GDN API');
