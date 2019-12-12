@@ -5,6 +5,7 @@ import logger, { getLogTag } from '../../helpers/logger';
 import { API_ERROR } from '../../helpers/constants';
 import roundDown from '../../helpers/roundDown';
 import { axiosGDN, GDN_URLS } from '../../helpers/axiosGDN';
+import getServerInfoCollector from '../../helpers/gdn/getServerInfoCollector';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
@@ -97,29 +98,16 @@ export default class ListCommand extends Command {
      * Prompt the user for a server description and invite code
      */
     logger.info(tag, 'Prompting for a server description and invite code');
-    const enrollCollector = new ArgumentCollector(this.client, [
-      {
-        key: 'description',
-        prompt: 'enter a short description for this server (limit 300 chars):',
-        type: 'string',
-        wait: 60,
-      },
-      {
-        key: 'inviteCode',
-        prompt: 'enter a **non-expiring** Invite Code for this server:',
-        type: 'string',
-        wait: 60,
-      },
-    ]);
+    const serverInfoCollector = getServerInfoCollector(this.client);
 
     message.channel.stopTyping();
-    const enrollResp = await enrollCollector.obtain(message);
-    const description = (enrollResp.values as EnrollArgs)?.description;
-    const inviteCode = (enrollResp.values as EnrollArgs)?.inviteCode;
+    const infoResp = await serverInfoCollector.obtain(message);
+    const description = (infoResp.values as EnrollArgs)?.description;
+    const inviteCode = (infoResp.values as EnrollArgs)?.inviteCode;
 
     if (!description || !inviteCode) {
       logger.info(tag, 'Failed to collect description and/or invite code');
-      logger.debug({ ...tag, enrollResp }, 'Collected values');
+      logger.debug({ ...tag, infoResp }, 'Collected values');
       return message.reply(oneLine`
         a server description and invite code are needed to complete enrollment. Please run
         ${this.usage()} to try again.
