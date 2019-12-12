@@ -10,6 +10,12 @@ export interface APIGuild {
   'logging_channel_id'?: string;
 }
 
+export interface APIGuildUpdate {
+  'name'?: string;
+  'description'?: string;
+  'invite_url'?: string;
+}
+
 export interface APIMember {
   'discord_id': string;
   'sa_id': string;
