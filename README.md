@@ -89,9 +89,9 @@ Auth:
 ✅authme              Authenticate your SA account
 GDNServices:
 ✅gdn_enroll_server   Enroll this server in Goon Discord Network
-  gdn_set_description Set the server's Directory description
-  gdn_set_invite_url  Set the server's Instant Invite URL
-  gdn_set_name        Set the server's name
+✅gdn_set_description Set the server's Directory description (see gdn_update)
+✅gdn_set_invite_url  Set the server's Instant Invite URL (see gdn_update)
+✅gdn_set_name        Set the server's name (force update on gdn_update)
   gdn_activate_auth   Initialize `!authme` on this server
 ✅gdn_update_counts   Update member counts for all GDN servers (now automated, every 24 hours)
 ✅list_channels       List all text channels and IDs for this server
