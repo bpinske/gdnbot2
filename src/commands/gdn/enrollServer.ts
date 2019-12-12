@@ -6,6 +6,7 @@ import { API_ERROR } from '../../helpers/constants';
 import roundDown from '../../helpers/roundDown';
 import { axiosGDN, GDN_URLS } from '../../helpers/axiosGDN';
 import getServerInfoCollector from '../../helpers/gdn/getServerInfoCollector';
+import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
@@ -171,7 +172,7 @@ export default class ListCommand extends Command {
     const details = {
       name,
       server_id: id,
-      description: description.substr(0, 300),
+      description: truncateServerDescription(description),
       icon_url: iconURL,
       user_count: roundDown(memberCount),
       invite_url: `https://discord.gg/${inviteCode}`,
