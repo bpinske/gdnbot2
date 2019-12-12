@@ -64,9 +64,9 @@ export default async function addRoleAndLog (
 
   if (channel) {
     logger.info(tag, 'logging successful auth message to logging channel');
-    await channel.send(`${member.user.tag} (SA: ${saUsername}) successfully authed`);
+    await channel.send(`${member.user} (SA: ${saUsername}) successfully authed`);
   }
 
   logger.info(tag, 'Informing user of successful auth');
-  await member.send('You did it :getin:');
+  await member.send(`Welcome to ${role.guild.name}! You have been granted the **${role.name}** role :bee:`);
 }
