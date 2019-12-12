@@ -2,10 +2,11 @@ import { oneLine } from 'common-tags';
 import { Guild, Role } from 'discord.js';
 
 import logger, { LogTag } from '../helpers/logger';
+import COMMAND_NAMES from '../helpers/commandNames';
 
 const invalidRoleReason = oneLine`
-  \`!authme\` doesn't appear to be set up properly here. Please contact a guild admin and ask them
-  to "re-activate auth with an updated role ID".
+  \`!authme\` doesn't appear to be enabled here, or is misconfigured. Please contact a server admin
+  and ask them to run \`!${COMMAND_NAMES.GDN_ENABLE_AUTHME}\`.
 `;
 
 interface ValidatedAuthRole {
