@@ -36,10 +36,11 @@ export default class ListCommand extends Command {
       name,
       memberCount,
     } = message.guild;
+    const { commandPrefix: prefix } = this.client;
 
     const tag = getLogTag(message.id);
 
-    logger.info(tag, `[EVENT START: !${this.name}]`);
+    logger.info(tag, `[EVENT START: ${prefix}${this.name}]`);
     logger.debug(tag, `Called in ${name} (${id})`);
 
     // Give some feedback that the bot is doing something
