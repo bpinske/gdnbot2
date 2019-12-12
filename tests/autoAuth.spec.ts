@@ -30,6 +30,9 @@ const channelID = '987';
 const authRole = {
   id: roleID,
   name: 'Auth Role',
+  guild: {
+    name: 'Test Guild',
+  },
 };
 const logChannel = {
   id: channelID,
@@ -118,7 +121,7 @@ test('[HAPPY PATH] add auth role to authed user when they join a GDN server', as
   await timeoutFn();
 
   expect(member.edit).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
-  expect(logChannel.send).toHaveBeenCalledWith(`${member.user.tag} (SA: ${saUsername}) successfully authed`);
+  expect(logChannel.send).toHaveBeenCalledWith(`${member.user} (SA: ${saUsername}) successfully authed`);
 });
 
 test('delays auto-auth by 1 second from when the member joins', () => {
@@ -133,7 +136,7 @@ test('logs event noting "user joined" trigger', () => {
 
   const logMessage = (logger as jest.Mocked<typeof logger>).info.mock.calls[0][1];
 
-  expect(logMessage).toMatch(/EVENT: User joined/i);
+  expect(logMessage).toMatch(/EVENT START: User joined/i);
 });
 
 test('does not proceed when guild is not enrolled', async () => {

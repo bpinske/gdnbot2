@@ -249,7 +249,7 @@ test('[HAPPY PATH] adds role to user that has never authed before', async () => 
   await authme.run(message, { username: saUsername });
 
   expect(member.edit).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
-  expect(logChannel.send).toHaveBeenCalledWith(`${member.user.tag} (SA: ${saUsername}) successfully authed`);
+  expect(logChannel.send).toHaveBeenCalledWith(`${member.user} (SA: ${saUsername}) successfully authed`);
 });
 
 test('skips hash check for user that has authed before and is not blacklisted', async () => {
@@ -281,7 +281,7 @@ test('skips hash check for user that has authed before and is not blacklisted', 
   await authme.run(message, { username: saUsername });
 
   expect(member.edit).toHaveBeenCalledWith({ roles: [authRole] }, 'GDN: Successful Auth');
-  expect(logChannel.send).toHaveBeenCalledWith(`${member.user.tag} (SA: ${saUsername}) successfully authed`);
+  expect(logChannel.send).toHaveBeenCalledWith(`${member.user} (SA: ${saUsername}) successfully authed`);
 });
 
 test('messages channel when Guild is not enrolled', async () => {
@@ -366,7 +366,7 @@ test('messages channel with invalid role reason when role registered by admin is
 
   await authme.run(message, { username: saUsername });
 
-  expect(message.say).toHaveBeenCalledWith("`!authme` doesn't appear to be set up properly here. Please contact a guild admin and ask them to \"re-activate auth with an updated role ID\".");
+  expect(message.say).toHaveBeenCalledWith("`!authme` doesn't appear to be enabled here, or is misconfigured. Please contact a server admin and ask them to run `!gdn_enable_authme`.");
 });
 
 test('logs message when no log channel is specified for auth success message', async () => {
@@ -991,11 +991,13 @@ test('reports misconfiguration in channel when 50013 error occurs while assignin
 
   await authme.run(message, { username: saUsername });
 
-  expect(logChannel.send).toHaveBeenCalledWith(stripIndents`@here GDNBot just now attempted to apply the **${authRole.name}** role to **${member.user.tag}**, but none of the bot's own roles are higher than the **${authRole.name}** role. Alternatively, if this member is an admin then they may be assigned a role that is positioned higher in the Roles hierarchy than the **GDN** role.
+  expect(logChannel.send).toHaveBeenCalledWith(stripIndents`
+    @here GDNBot just now attempted to apply the **${authRole.name}** role to ${member.user}, but none of the bot's own roles are higher than the **${authRole.name}** role. Alternatively, if this member is an admin then they may be assigned a role that is positioned higher in the Roles hierarchy than any of the bot's roles.
 
-  To fix this for future members, please apply a higher role to GDNBot, or go into **Server Settings > Roles** and click-and-drag the **GDN** role to _above_ the **${authRole.name}** role.
+    To fix this for future members, please go into **Server Settings > Roles** and apply a role to GDNBot that is _above_ the **${authRole.name}** role.
 
-  Afterwards you will need to manually apply the **${authRole.name}** role to **${member.user.tag}**.`);
+    Afterwards you will need to manually apply the **${authRole.name}** role to ${member.user}.
+  `);
 });
 
 test('logs error when 50013 error occurs while assigning role to authed user but no log channel specified', async () => {
