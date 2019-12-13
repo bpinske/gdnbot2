@@ -133,8 +133,10 @@ export default class EnableAuthmeCommand extends GDNCommand {
       `);
     }
 
-    const role = guild.roles.get(roleID);
-    const channel = guild.channels.get(channelID);
+    // The argCollector took care of validating roleID and channelID so we can force these to not
+    // be undefined
+    const role = guild.roles.get(roleID)!;
+    const channel = guild.channels.get(channelID)!;
 
     /**
      * Update guild with role and channel IDs
