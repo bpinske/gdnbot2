@@ -13,7 +13,7 @@ interface ValidatedLogChannel {
 export default async function isValidLogChannel (
   tag: LogTag,
   guild: Guild,
-  channelId: string,
+  channelId?: string,
 ): Promise<ValidatedLogChannel> {
   let logChannel: TextChannel;
   let isValid = false;

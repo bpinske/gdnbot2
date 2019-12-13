@@ -21,7 +21,7 @@ interface ValidatedAuthRole {
 export default async function isValidAuthRole (
   tag: LogTag,
   guild: Guild,
-  roleId: string,
+  roleId?: string,
 ): Promise<ValidatedAuthRole> {
   logger.info(tag, `Validating auth role ID '${roleId}'`);
 
