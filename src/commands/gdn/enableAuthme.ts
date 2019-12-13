@@ -74,7 +74,11 @@ export default class EnableAuthmeCommand extends GDNCommand {
      */
     logger.info(tag, 'Prompting for a role ID');
 
-    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST).run(message, { option: OPTIONS.ROLES }, false);
+    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST)?.run(
+      message,
+      { option: OPTIONS.ROLES },
+      false,
+    );
 
     const roleCollector = getRoleCollector(
       tag,
@@ -102,7 +106,11 @@ export default class EnableAuthmeCommand extends GDNCommand {
      */
     logger.info(tag, 'Prompting for a logging channel ID');
 
-    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST).run(message, { option: OPTIONS.CHANNELS }, false);
+    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST)?.run(
+      message,
+      { option: OPTIONS.CHANNELS },
+      false,
+    );
 
     const channelCollector = getChannelCollector(
       tag,
