@@ -40,9 +40,15 @@ export default class AuthmeCommand extends GDNCommand {
       details: stripIndents`
         To authenticate your SA account, follow these simple instructions:
 
-        1. Type **!authme SA-Username-Here** to begin (replace **SA-Username-Here** with your actual SA username; spaces are fine too).
+        ${oneLine`
+          1. Type **!authme SA-Username-Here** to begin (replace **SA-Username-Here** with your
+            actual SA username; spaces are fine too).
+        `}
 
-        2. After you paste the code on your profile, go back to the bot and **type 'Praise Lowtax'** to finish the auth process.
+        ${oneLine`
+          2. After you paste the code on your profile, go back to the bot and
+          **type 'Praise Lowtax'** to finish the auth process.
+        `}
       `,
       examples: [
         'authme IAmKale',
@@ -116,11 +122,18 @@ export default class AuthmeCommand extends GDNCommand {
     logger.info(tag, 'Sending hash + instructions to member');
 
     const hashMessage = await member.send(stripIndents`
-      You want access? You have **five minutes** to get this string into your SA profile (anywhere in the **Additional Information** section here https://forums.somethingawful.com/member.php?action=editprofile):
+      ${oneLine`
+        You want access? You have **five minutes** to get this string into your SA profile
+        (anywhere in the **Additional Information** section here
+        https://forums.somethingawful.com/member.php?action=editprofile):
+      `}
 
       **${hash}**
 
-      After you've completed this, return **here** and respond with **Praise Lowtax** to verify your SA membership.
+      ${oneLine`
+        After you've completed this, return **here** and respond with **Praise Lowtax** to verify
+        your SA membership.
+      `}
     `);
 
     /**
