@@ -13,11 +13,6 @@ const reasonBlacklisted = oneLine`
   https://discord.gg/vH8uVUE
 `;
 
-const reasonCatchError = oneLine`
-  A system error occurred while attempting to verify whether you are blacklisted from GDN. The bot
-  owner has been notified. Thank you for your patience while they get this fixed!
-`;
-
 /**
  * Check if a given SA ID is blacklisted on any Discord accounts that it's been used with
  */
@@ -52,9 +47,6 @@ export default async function isMemberBlacklisted (
     }
 
     logger.error({ ...tag, err }, 'Error checking if member is blacklisted');
-    return {
-      isBlacklisted: true,
-      reason: reasonCatchError,
-    };
+    throw err;
   }
 }

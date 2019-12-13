@@ -6,12 +6,7 @@ import { axiosGDN, GDN_URLS, APIGuild } from '../helpers/axiosGDN';
 
 const reasonNotEnrolled = oneLine`
   This server is not enrolled in the Goon Discord Network. Please have an
-  admin enroll the server and then activate auth.
-`;
-
-const reasonCatchError = oneLine`
-  A system error occurred while attempting to verify guild enrollment in GDN. The bot owner has
-  been notified. Thank you for your patience while they get this fixed!
+  admin enroll the server and then enable auth.
 `;
 
 export interface GuildEnrolled {
@@ -48,10 +43,7 @@ export default async function hasGuildEnrolled (tag: LogTag, guild: Guild): Prom
       };
     } else {
       logger.error({ ...tag, err }, 'Error checking for server info, exiting');
-      return {
-        isEnrolled: false,
-        reason: reasonCatchError,
-      };
+      throw err;
     }
   }
 }
