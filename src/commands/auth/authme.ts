@@ -28,7 +28,9 @@ interface AuthmeCommandArgs {
   username: string;
 }
 
-const MIN_POST_COUNT = parseInt(process.env.MIN_POST_COUNT, 10);
+// Default to requiring the user to have posted at least 50 times (a deterrent to creating new SA
+// accounts to bypass a blacklist)
+const MIN_POST_COUNT = Number(process.env.MIN_POST_COUNT) || 50;
 
 export default class AuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {
