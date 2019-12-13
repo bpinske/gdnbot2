@@ -106,6 +106,7 @@ export default class AuthmeCommand extends GDNCommand {
         // Role will be valid by the time we get here
         validatedRole!,
         validatedChannel,
+        message,
       );
 
       return null;
@@ -225,6 +226,7 @@ export default class AuthmeCommand extends GDNCommand {
       // Role will be valid by the time we get here
       validatedRole!,
       validatedChannel,
+      message,
     );
 
     /**
