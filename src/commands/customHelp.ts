@@ -1,8 +1,9 @@
 /* eslint-disable import/first */
-import { Command, CommandoClient, CommandoMessage, CommandGroup } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage, CommandGroup } from 'discord.js-commando';
 import { stripIndents, oneLine } from 'common-tags';
 const { disambiguation } = require('discord.js-commando/src/util');
 
+import GDNCommand from '../helpers/GDNCommand';
 import GDNEmbed from '../helpers/GDNEmbed';
 import { prettifyPermission } from '../helpers/prettify';
 
@@ -10,7 +11,7 @@ interface HelpCommandArgs {
   command: string;
 }
 
-export default class HelpCommand extends Command {
+export default class HelpCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: 'help',

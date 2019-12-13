@@ -1,6 +1,7 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { oneLine, stripIndents } from 'common-tags';
 
+import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import { CMD_NAMES } from '../../helpers/constants';
 import getRoleCollector, { RoleArgs } from '../../helpers/gdn/getRoleCollector';
@@ -11,7 +12,7 @@ import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
 import { OPTIONS } from './list';
 
-export default class EnableAuthmeCommand extends Command {
+export default class EnableAuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_ENABLE_AUTHME,

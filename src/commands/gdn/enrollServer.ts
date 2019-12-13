@@ -1,8 +1,9 @@
-import { Command, CommandoClient, CommandoMessage, ArgumentCollector } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage, ArgumentCollector } from 'discord.js-commando';
 import { stripIndents, oneLine } from 'common-tags';
 
 import logger, { getLogTag } from '../../helpers/logger';
 
+import GDNCommand from '../../helpers/GDNCommand';
 import roundDown from '../../helpers/roundDown';
 import { axiosGDN, GDN_URLS, APIGuild } from '../../helpers/axiosGDN';
 import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getServerInfoCollector';
@@ -18,7 +19,7 @@ interface ConfirmArgs {
   confirm: boolean;
 }
 
-export default class ListCommand extends Command {
+export default class ListCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_ENROLL,

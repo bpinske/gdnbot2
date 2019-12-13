@@ -1,8 +1,9 @@
 import { DMChannel } from 'discord.js';
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { stripIndents, oneLine } from 'common-tags';
 
 // Helpers
+import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
 import { CMD_NAMES } from '../../helpers/constants';
@@ -29,7 +30,7 @@ interface AuthmeCommandArgs {
 
 const MIN_POST_COUNT = parseInt(process.env.MIN_POST_COUNT, 10);
 
-export default class AuthmeCommand extends Command {
+export default class AuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.AUTHME,

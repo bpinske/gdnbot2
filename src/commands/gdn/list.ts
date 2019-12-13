@@ -1,8 +1,8 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import capitalize from 'capitalize';
 
 import GDNEmbed from '../../helpers/GDNEmbed';
-
+import GDNCommand from '../../helpers/GDNCommand';
 import listTextChannels from '../../helpers/gdn/listTextChannels';
 import listRoles from '../../helpers/gdn/listRoles';
 import { CMD_NAMES } from '../../helpers/constants';
@@ -28,7 +28,7 @@ const oneOfFormatted = oneOf.map(opt => `\`${opt}\``).join(', ');
  * Can be used to display a list of roles, channels, etc... (see `options` above) for whatever
  * server the command is run in
  */
-export default class ListCommand extends Command {
+export default class ListCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_LIST,
