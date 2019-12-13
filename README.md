@@ -6,6 +6,8 @@ This application runs using the ["GDNDev" bot](https://discordapp.com/developers
 
 GDNDev invite link: https://discordapp.com/oauth2/authorize?&client_id=347212481367638027&scope=bot&permissions=268446720
 
+GDNStg invite link: https://discordapp.com/oauth2/authorize?&client_id=655174997987295302&scope=bot&permissions=268446720
+
 ## Requirements
 
 - Docker + Compose
