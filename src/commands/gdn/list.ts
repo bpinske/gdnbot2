@@ -34,7 +34,7 @@ export default class ListCommand extends GDNCommand {
       name: CMD_NAMES.GDN_LIST,
       group: 'gdn',
       memberName: 'list',
-      description: 'List info about the server',
+      description: 'View server roles or channels',
       guildOnly: true,
       userPermissions: ['MANAGE_ROLES', 'MANAGE_CHANNELS'],
       args: [

@@ -93,7 +93,7 @@ export default class AuthmeCommand extends GDNCommand {
     );
 
     if (!canProceed) {
-      return message.say(checkReason);
+      return message.reply(checkReason);
     }
 
     if (alreadyAuthed) {
