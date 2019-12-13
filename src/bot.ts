@@ -1,7 +1,7 @@
 // Load files from the .env file
 import dotenv from 'dotenv';
 
-import { CommandoClient, SQLiteProvider } from 'discord.js-commando';
+import { CommandoClient, SQLiteProvider, Command, CommandoMessage } from 'discord.js-commando';
 import sqlite from 'sqlite';
 import path from 'path';
 
@@ -96,6 +96,10 @@ bot.on('guildDelete', () => {
 
 // When a Member joins a Guild
 bot.on('guildMemberAdd', autoAuth);
+
+bot.on('commandError', async (command: Command, err: Error, message: CommandoMessage) => {
+  message.channel.stopTyping();
+});
 
 // Update server member counts on the GDN Homepage
 bot.setInterval(
