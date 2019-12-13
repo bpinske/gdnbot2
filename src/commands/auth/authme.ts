@@ -106,7 +106,8 @@ export default class AuthmeCommand extends GDNCommand {
         validatedRole,
         validatedChannel,
       );
-      return;
+
+      return null;
     }
 
     /**
