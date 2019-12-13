@@ -11,7 +11,10 @@ import { CMD_PREFIX } from './helpers/constants';
 // Event handlers
 import autoAuth from './eventHandlers/autoAuth';
 import updateServerCountActivity from './eventHandlers/updateServerCountActivity';
-import { updateHomepageMemberCounts, UPDATE_INTERVAL } from './eventHandlers/updateHomepageMemberCounts';
+import {
+  updateHomepageMemberCounts,
+  UPDATE_INTERVAL,
+} from './eventHandlers/updateHomepageMemberCounts';
 
 dotenv.config();
 
