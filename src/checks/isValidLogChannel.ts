@@ -35,6 +35,7 @@ export default async function isValidLogChannel (
 
   return {
     isValid,
+    // @ts-ignore 2454
     logChannel,
   };
 }
