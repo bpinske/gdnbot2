@@ -57,7 +57,7 @@ export default async function addRoleAndLog (
   member: GuildMember,
   saUsername: string,
   role: Role,
-  channel: TextChannel,
+  channel?: TextChannel,
   message?: CommandoMessage,
 ): Promise<void> {
   logger.info(tag, 'Adding role to member');
@@ -95,6 +95,8 @@ export default async function addRoleAndLog (
         await message.say(error50001(channel));
       }
     }
+  } else {
+    logger.info(tag, 'No logging channel configured, continuing');
   }
 
   logger.info(tag, 'Informing user of successful auth');

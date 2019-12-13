@@ -17,7 +17,11 @@ const errorNoHash = oneLine`
 /**
  * Get a hash from GoonAuth for the user to place in their SA profile
  */
-export default async function getHash (tag: LogTag, member: GuildMember, username: string): Promise<Hash> {
+export default async function getHash (
+  tag: LogTag,
+  member: GuildMember,
+  username: string,
+): Promise<Hash> {
   try {
     logger.info(tag, `Requesting hash for SA user: ${username}`);
     const { data } = await axiosGoonAuth.post(GOON_AUTH_URLS.GET_HASH, { username });
@@ -27,7 +31,7 @@ export default async function getHash (tag: LogTag, member: GuildMember, usernam
   } catch (err) {
     logger.error({ ...tag, err }, 'Error requesting hash');
     return {
-      hash: null,
+      hash: undefined,
       reason: errorNoHash,
     };
   }

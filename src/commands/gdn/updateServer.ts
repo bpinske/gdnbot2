@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { oneLine } from 'common-tags';
 
@@ -53,10 +54,16 @@ export default class SetDescriptionCommand extends GDNCommand {
       `);
     }
 
+    if (!guildData) {
+      logger.error({ ...tag, guildData }, 'Server is enrolled, but no guild data??? IMPOSSIBLE');
+      throw new Error('Server is enrolled, but no server data is available');
+    }
+
     const currentInfoEmbed = new GDNEmbed()
       .setTitle(`Current GDN Values for ${guild.name}`)
       .addField('Description', guildData.description)
-      .addField('Invite Code', inviteURLToInviteCode(guildData.invite_url));
+      .addField('Invite Code', inviteURLToInviteCode(guildData.invite_url),
+      );
 
     await message.embed(currentInfoEmbed);
 

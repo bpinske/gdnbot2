@@ -31,8 +31,9 @@ export default function autoAuth (member: GuildMember) {
       await addRoleAndLog(
         tag,
         member,
-        saUsername,
-        validatedRole,
+        // These values will always be defined by this point
+        saUsername!,
+        validatedRole!,
         validatedChannel,
       );
     } else {

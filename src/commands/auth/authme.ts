@@ -103,7 +103,8 @@ export default class AuthmeCommand extends GDNCommand {
         tag,
         member,
         username,
-        validatedRole,
+        // Role will be valid by the time we get here
+        validatedRole!,
         validatedChannel,
       );
 
@@ -221,7 +222,8 @@ export default class AuthmeCommand extends GDNCommand {
       tag,
       member,
       username,
-      validatedRole,
+      // Role will be valid by the time we get here
+      validatedRole!,
       validatedChannel,
     );
 
