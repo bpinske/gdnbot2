@@ -50,7 +50,7 @@ if (process.env.NODE_ENV === 'production') {
       type: 'udp',
       facility: bsyslog.local0,
       host: process.env.PAPERTRAIL_HOST,
-      port: parseInt(process.env.PAPERTRAIL_PORT, 10),
+      port: Number(process.env.PAPERTRAIL_PORT) || -1,
     }),
   });
 }

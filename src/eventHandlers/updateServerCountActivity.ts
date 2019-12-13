@@ -12,7 +12,7 @@ const updateServerCountActivity = async (bot: CommandoClient) => {
 
   logger.info(`setting activity to "${activity}"`);
 
-  await bot.user.setActivity(activity);
+  await bot.user?.setActivity(activity);
 };
 
 export default updateServerCountActivity;

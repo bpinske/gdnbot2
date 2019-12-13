@@ -54,6 +54,11 @@ export default async function startAuthCheck (
     };
   }
 
+  if (!guildData) {
+    logger.error(tag, 'Server is enrolled, but there\'s no guild data???');
+    throw new Error('Server is enrolled, but no guild data available');
+  }
+
   /**
    * Check that member can proceed with authentication
    */

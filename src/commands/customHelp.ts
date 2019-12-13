@@ -1,8 +1,9 @@
 /* eslint-disable import/first */
-import { Command, CommandoClient, CommandoMessage, CommandGroup } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage, CommandGroup } from 'discord.js-commando';
 import { stripIndents, oneLine } from 'common-tags';
 const { disambiguation } = require('discord.js-commando/src/util');
 
+import GDNCommand from '../helpers/GDNCommand';
 import GDNEmbed from '../helpers/GDNEmbed';
 import { prettifyPermission } from '../helpers/prettify';
 
@@ -10,14 +11,16 @@ interface HelpCommandArgs {
   command: string;
 }
 
-export default class HelpCommand extends Command {
+export default class HelpCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: 'help',
       group: 'util',
       memberName: 'help',
       aliases: ['commands'],
-      description: 'Displays a list of available commands, or detailed information for a specified command.',
+      description: oneLine`
+        Displays a list of available commands, or detailed information for a specified command.
+      `,
       details: oneLine`
         The command may be part of a command name or a whole command name.
         If it isn't specified, all available commands will be listed.
@@ -50,7 +53,9 @@ export default class HelpCommand extends Command {
         const [foundCommand] = commands;
 
         if (!foundCommand.isUsable(message)) {
-          return message.reply(`The \`${foundCommand.name}\` command is forbidden knowledge to one such as you.`);
+          return message.reply(oneLine`
+            The \`${foundCommand.name}\` command is forbidden knowledge to one such as you.
+          `);
         }
 
         const {
@@ -133,15 +138,20 @@ export default class HelpCommand extends Command {
       );
     } else {
       // Return an overview of all available commands
+      let subTitle = 'All commands';
+      if (!showAll) {
+        subTitle = `Available commands in ${message.guild || 'this DM'}`;
+      }
+
       const embed = new GDNEmbed()
         .setTitle('GDN Bot Help')
         .setDescription(stripIndents`
           *Your server's interface to the Goon Discord Network (GDN) :bee:*
           *Official GDN Discord Server: ${this.client.options.invite}*
 
-          Use ${this.usage('<command>', prefix, null)} to view detailed information about a specific command.
+          Use ${this.usage('<command>')} to view detailed information about a specific command.
 
-          __**${showAll ? 'All commands' : `Available commands in ${message.guild || 'this DM'}`}**__
+          __**${subTitle}**__
         `);
 
       let groupsToShow = groups;

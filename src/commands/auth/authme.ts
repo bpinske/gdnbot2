@@ -1,8 +1,9 @@
 import { DMChannel } from 'discord.js';
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { stripIndents, oneLine } from 'common-tags';
 
 // Helpers
+import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
 import { CMD_NAMES } from '../../helpers/constants';
@@ -27,9 +28,11 @@ interface AuthmeCommandArgs {
   username: string;
 }
 
-const MIN_POST_COUNT = parseInt(process.env.MIN_POST_COUNT, 10);
+// Default to requiring the user to have posted at least 50 times (a deterrent to creating new SA
+// accounts to bypass a blacklist)
+const MIN_POST_COUNT = Number(process.env.MIN_POST_COUNT) || 50;
 
-export default class AuthmeCommand extends Command {
+export default class AuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.AUTHME,
@@ -39,9 +42,15 @@ export default class AuthmeCommand extends Command {
       details: stripIndents`
         To authenticate your SA account, follow these simple instructions:
 
-        1. Type **!authme SA-Username-Here** to begin (replace **SA-Username-Here** with your actual SA username; spaces are fine too).
+        ${oneLine`
+          1. Type **!authme SA-Username-Here** to begin (replace **SA-Username-Here** with your
+            actual SA username; spaces are fine too).
+        `}
 
-        2. After you paste the code on your profile, go back to the bot and **type 'Praise Lowtax'** to finish the auth process.
+        ${oneLine`
+          2. After you paste the code on your profile, go back to the bot and
+          **type 'Praise Lowtax'** to finish the auth process.
+        `}
       `,
       examples: [
         'authme IAmKale',
@@ -84,7 +93,7 @@ export default class AuthmeCommand extends Command {
     );
 
     if (!canProceed) {
-      return message.say(checkReason);
+      return message.reply(checkReason);
     }
 
     if (alreadyAuthed) {
@@ -94,10 +103,12 @@ export default class AuthmeCommand extends Command {
         tag,
         member,
         username,
-        validatedRole,
+        // Role will be valid by the time we get here
+        validatedRole!,
         validatedChannel,
       );
-      return;
+
+      return null;
     }
 
     /**
@@ -115,11 +126,18 @@ export default class AuthmeCommand extends Command {
     logger.info(tag, 'Sending hash + instructions to member');
 
     const hashMessage = await member.send(stripIndents`
-      You want access? You have **five minutes** to get this string into your SA profile (anywhere in the **Additional Information** section here https://forums.somethingawful.com/member.php?action=editprofile):
+      ${oneLine`
+        You want access? You have **five minutes** to get this string into your SA profile
+        (anywhere in the **Additional Information** section here
+        https://forums.somethingawful.com/member.php?action=editprofile):
+      `}
 
       **${hash}**
 
-      After you've completed this, return **here** and respond with **Praise Lowtax** to verify your SA membership.
+      ${oneLine`
+        After you've completed this, return **here** and respond with **Praise Lowtax** to verify
+        your SA membership.
+      `}
     `);
 
     /**
@@ -204,7 +222,8 @@ export default class AuthmeCommand extends Command {
       tag,
       member,
       username,
-      validatedRole,
+      // Role will be valid by the time we get here
+      validatedRole!,
       validatedChannel,
     );
 
@@ -217,5 +236,7 @@ export default class AuthmeCommand extends Command {
       saID,
       username,
     );
+
+    return null;
   }
 }

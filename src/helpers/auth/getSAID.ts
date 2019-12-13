@@ -36,7 +36,7 @@ export default async function getSAID (tag: LogTag, profile: CheerioStatic): Pro
   if (!id) {
     logger.error(tag, 'No user ID was found');
     return {
-      id: null,
+      id: undefined,
       reason: reasonNoIDFound,
     };
   }

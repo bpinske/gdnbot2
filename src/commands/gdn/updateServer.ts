@@ -1,6 +1,8 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+/* eslint-disable camelcase */
+import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { oneLine } from 'common-tags';
 
+import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getServerInfoCollector';
 import { inviteCodeToInviteURL, inviteURLToInviteCode } from '../../helpers/gdn/guildInvites';
@@ -11,7 +13,7 @@ import { CMD_NAMES } from '../../helpers/constants';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
-export default class SetDescriptionCommand extends Command {
+export default class SetDescriptionCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_UPDATE,
@@ -52,10 +54,16 @@ export default class SetDescriptionCommand extends Command {
       `);
     }
 
+    if (!guildData) {
+      logger.error({ ...tag, guildData }, 'Server is enrolled, but no guild data??? IMPOSSIBLE');
+      throw new Error('Server is enrolled, but no server data is available');
+    }
+
     const currentInfoEmbed = new GDNEmbed()
       .setTitle(`Current GDN Values for ${guild.name}`)
       .addField('Description', guildData.description)
-      .addField('Invite Code', inviteURLToInviteCode(guildData.invite_url));
+      .addField('Invite Code', inviteURLToInviteCode(guildData.invite_url),
+      );
 
     await message.embed(currentInfoEmbed);
 

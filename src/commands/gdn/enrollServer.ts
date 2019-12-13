@@ -1,8 +1,9 @@
-import { Command, CommandoClient, CommandoMessage, ArgumentCollector } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage, ArgumentCollector } from 'discord.js-commando';
 import { stripIndents, oneLine } from 'common-tags';
 
 import logger, { getLogTag } from '../../helpers/logger';
 
+import GDNCommand from '../../helpers/GDNCommand';
 import roundDown from '../../helpers/roundDown';
 import { axiosGDN, GDN_URLS, APIGuild } from '../../helpers/axiosGDN';
 import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getServerInfoCollector';
@@ -18,7 +19,7 @@ interface ConfirmArgs {
   confirm: boolean;
 }
 
-export default class ListCommand extends Command {
+export default class ListCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_ENROLL,
@@ -27,11 +28,14 @@ export default class ListCommand extends Command {
       memberName: 'enroll_server',
       description: 'Enroll server in Goon Discord Network',
       details: stripIndents`
-        Enroll this server in Goon Discord Network to include it on https://goondiscordnetwork.com :bee:
+        ${oneLine`
+          Enroll this server in Goon Discord Network to include it on
+          https://goondiscordnetwork.com :bee:
+        `}
 
         ${oneLine`
-          Enrolled servers can also activate \`!authme\` (see \`!gdn_enable_authme\`) to help automate SA membership detection for
-          enhanced channel access control.
+          Enrolled servers can also activate \`!authme\` (see \`!gdn_enable_authme\`) to help
+          automate SA membership detection for enhanced channel access control.
         `}
       `,
       guildOnly: true,
@@ -86,6 +90,11 @@ export default class ListCommand extends Command {
           or in the official GDN Discord server: ${this.client.options.invite}
         `}
       `);
+    }
+
+    if (!memberData) {
+      logger.error({ ...tag, memberData }, 'Member has authed but memberData from API is falsey');
+      throw new Error('Member has authed but no member data available');
     }
 
     /**

@@ -68,7 +68,7 @@ const guild = {
   },
   channels: {
     get: jest.fn().mockImplementation(
-      (_id) => Promise.resolve(_id === channelID ? _guildChannels[0] : null),
+      (_id) => _id === channelID ? _guildChannels[0] : null,
     ),
   },
 };
@@ -79,6 +79,7 @@ const message = {
   guild,
   member,
   say: jest.fn(),
+  reply: jest.fn(),
 } as unknown as CommandoMessage;
 
 // Good Profile
@@ -292,7 +293,7 @@ test('messages channel when Guild is not enrolled', async () => {
 
   await authme.run(message, { username: saUsername });
 
-  expect(message.say).toHaveBeenCalledWith('This server is not enrolled in the Goon Discord Network. Please have an admin enroll the server and then activate auth.');
+  expect(message.reply).toHaveBeenCalledWith('This server is not enrolled in the Goon Discord Network. Please have an admin enroll the server and then enable auth.');
 });
 
 test('messages channel and logs error when error occurs when checking Guild enrollment', async () => {

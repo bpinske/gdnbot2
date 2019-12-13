@@ -13,15 +13,13 @@ const reasonBlacklisted = oneLine`
   https://discord.gg/vH8uVUE
 `;
 
-const reasonCatchError = oneLine`
-  A system error occurred while attempting to verify whether you are blacklisted from GDN. The bot
-  owner has been notified. Thank you for your patience while they get this fixed!
-`;
-
 /**
  * Check if a given SA ID is blacklisted on any Discord accounts that it's been used with
  */
-export default async function isMemberBlacklisted (tag: LogTag, saID: string): Promise<MemberBlacklisted> {
+export default async function isMemberBlacklisted (
+  tag: LogTag,
+  saID: string,
+): Promise<MemberBlacklisted> {
   logger.info(tag, `Checking if member SA ID is blacklisted: ${saID}`);
   try {
     const { data } = await axiosGDN.get<APIMember>(`${GDN_URLS.SA}/${saID}`);
@@ -49,9 +47,6 @@ export default async function isMemberBlacklisted (tag: LogTag, saID: string): P
     }
 
     logger.error({ ...tag, err }, 'Error checking if member is blacklisted');
-    return {
-      isBlacklisted: true,
-      reason: reasonCatchError,
-    };
+    throw err;
   }
 }

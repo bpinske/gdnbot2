@@ -1,5 +1,6 @@
 import { oneLine, stripIndents } from 'common-tags';
 import { GuildMember, Role, TextChannel } from 'discord.js';
+import { CommandoMessage } from 'discord.js-commando';
 
 import logger, { LogTag } from '../logger';
 import { CMD_PREFIX, CMD_NAMES, API_ERROR } from '../constants';
@@ -56,7 +57,8 @@ export default async function addRoleAndLog (
   member: GuildMember,
   saUsername: string,
   role: Role,
-  channel: TextChannel,
+  channel?: TextChannel,
+  message?: CommandoMessage,
 ): Promise<void> {
   logger.info(tag, 'Adding role to member');
 
@@ -89,12 +91,16 @@ export default async function addRoleAndLog (
         Error in guild ${role.guild.name} logging message to channel ${channel.name} (${channel.id})
       `);
 
-      if (err.code === API_ERROR.MISSING_ACCESS) {
-        await channel.send(error50001(channel));
+      if (err.code === API_ERROR.MISSING_ACCESS && message) {
+        await message.say(error50001(channel));
       }
     }
+  } else {
+    logger.info(tag, 'No logging channel configured, continuing');
   }
 
   logger.info(tag, 'Informing user of successful auth');
-  await member.send(`Welcome to ${role.guild.name}! You have been granted the **${role.name}** role :bee:`);
+  await member.send(
+    `Welcome to ${role.guild.name}! You have been granted the **${role.name}** role :bee:`,
+  );
 }

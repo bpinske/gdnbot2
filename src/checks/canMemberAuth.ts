@@ -26,17 +26,8 @@ export default async function canMemberAuth (
    */
   const {
     hasAuthed,
-    reason: hasAuthedReason,
     memberData,
   } = await hasMemberAuthed(tag, member);
-
-  // An error reason was returned
-  if (hasAuthedReason) {
-    return {
-      canAuth: false,
-      reason: hasAuthedReason,
-    };
-  }
 
   if (!hasAuthed) {
     if (isAuthMe) {
@@ -54,6 +45,11 @@ export default async function canMemberAuth (
   }
 
   alreadyAuthed = true;
+
+  if (!memberData) {
+    logger.error({ ...tag, memberData }, 'No member data returned from hasMemberAuthed');
+    throw new Error('Error retrieving member data');
+  }
 
   /**
    * CHECK IF AUTHED USER IS BLACKLISTED

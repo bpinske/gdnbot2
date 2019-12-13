@@ -1,6 +1,7 @@
-import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
+import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { oneLine, stripIndents } from 'common-tags';
 
+import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import { CMD_NAMES } from '../../helpers/constants';
 import getRoleCollector, { RoleArgs } from '../../helpers/gdn/getRoleCollector';
@@ -11,7 +12,7 @@ import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
 import { OPTIONS } from './list';
 
-export default class EnableAuthmeCommand extends Command {
+export default class EnableAuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_ENABLE_AUTHME,
@@ -73,7 +74,11 @@ export default class EnableAuthmeCommand extends Command {
      */
     logger.info(tag, 'Prompting for a role ID');
 
-    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST).run(message, { option: OPTIONS.ROLES }, false);
+    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST)?.run(
+      message,
+      { option: OPTIONS.ROLES },
+      false,
+    );
 
     const roleCollector = getRoleCollector(
       tag,
@@ -101,7 +106,11 @@ export default class EnableAuthmeCommand extends Command {
      */
     logger.info(tag, 'Prompting for a logging channel ID');
 
-    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST).run(message, { option: OPTIONS.CHANNELS }, false);
+    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST)?.run(
+      message,
+      { option: OPTIONS.CHANNELS },
+      false,
+    );
 
     const channelCollector = getChannelCollector(
       tag,
@@ -124,8 +133,10 @@ export default class EnableAuthmeCommand extends Command {
       `);
     }
 
-    const role = guild.roles.get(roleID);
-    const channel = guild.channels.get(channelID);
+    // The argCollector took care of validating roleID and channelID so we can force these to not
+    // be undefined
+    const role = guild.roles.get(roleID)!;
+    const channel = guild.channels.get(channelID)!;
 
     /**
      * Update guild with role and channel IDs
@@ -141,9 +152,7 @@ export default class EnableAuthmeCommand extends Command {
       await axiosGDN.patch(`${GDN_URLS.GUILDS}/${guild.id}`, details);
     } catch (err) {
       logger.error({ ...tag, err }, 'Error submitting guild data to GDN API');
-
-      message.channel.stopTyping();
-      return message.reply(`an error occurred while enrolling this server: ${err}`);
+      throw err;
     }
 
     return message.reply(stripIndents`
