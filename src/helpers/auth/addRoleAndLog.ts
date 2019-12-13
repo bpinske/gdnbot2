@@ -92,6 +92,7 @@ export default async function addRoleAndLog (
       `);
 
       if (err.code === API_ERROR.MISSING_ACCESS && message) {
+        logger.info(tag, 'Communicating channel misconfiguration to channel');
         await message.say(error50001(channel));
       }
     }
