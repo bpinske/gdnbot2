@@ -152,9 +152,7 @@ export default class EnableAuthmeCommand extends GDNCommand {
       await axiosGDN.patch(`${GDN_URLS.GUILDS}/${guild.id}`, details);
     } catch (err) {
       logger.error({ ...tag, err }, 'Error submitting guild data to GDN API');
-
-      message.channel.stopTyping();
-      return message.reply(`an error occurred while enrolling this server: ${err}`);
+      throw err;
     }
 
     return message.reply(stripIndents`
