@@ -16,5 +16,8 @@
     "semi": "error",
     "comma-dangle": ["error", "always-multiline"],
     "max-len": ["error", 100]
-  }
+  },
+  "ignorePatterns": [
+    "*.spec.ts"
+  ]
 }
