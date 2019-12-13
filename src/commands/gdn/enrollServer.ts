@@ -92,6 +92,11 @@ export default class ListCommand extends GDNCommand {
       `);
     }
 
+    if (!memberData) {
+      logger.error({ ...tag, memberData }, 'Member has authed but memberData from API is falsey');
+      throw new Error('Member has authed but no member data available');
+    }
+
     /**
      * Ensure the authed user isn't blacklisted from GDN
      */
