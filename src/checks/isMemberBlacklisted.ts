@@ -21,7 +21,10 @@ const reasonCatchError = oneLine`
 /**
  * Check if a given SA ID is blacklisted on any Discord accounts that it's been used with
  */
-export default async function isMemberBlacklisted (tag: LogTag, saID: string): Promise<MemberBlacklisted> {
+export default async function isMemberBlacklisted (
+  tag: LogTag,
+  saID: string,
+): Promise<MemberBlacklisted> {
   logger.info(tag, `Checking if member SA ID is blacklisted: ${saID}`);
   try {
     const { data } = await axiosGDN.get<APIMember>(`${GDN_URLS.SA}/${saID}`);

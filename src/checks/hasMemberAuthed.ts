@@ -18,7 +18,10 @@ interface MemberAuthed {
 /**
  * Check to see if the Discord member has authed before
  */
-export default async function hasMemberAuthed (tag: LogTag, member: GuildMember): Promise<MemberAuthed> {
+export default async function hasMemberAuthed (
+  tag: LogTag,
+  member: GuildMember,
+): Promise<MemberAuthed> {
   logger.info(tag, 'Checking to see if Member has authed before');
 
   const { id } = member;

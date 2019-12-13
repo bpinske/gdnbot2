@@ -18,7 +18,11 @@ interface ValidatedAuthRole {
 /**
  * Validate the server's authme role ID to make sure it references a valid role
  */
-export default async function isValidAuthRole (tag: LogTag, guild: Guild, roleId: string): Promise<ValidatedAuthRole> {
+export default async function isValidAuthRole (
+  tag: LogTag,
+  guild: Guild,
+  roleId: string,
+): Promise<ValidatedAuthRole> {
   logger.info(tag, `Validating auth role ID '${roleId}'`);
 
   if (!roleId) {
