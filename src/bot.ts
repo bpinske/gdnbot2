@@ -56,6 +56,11 @@ bot.registry
 
 // Announce the bot's readiness to serve
 bot.once('ready', () => {
+  if (!bot.user) {
+    logger.error('Bot initialized but has no user, how did this happen?');
+    throw new Error('Bot initialized but has no user, how did this happen?');
+  }
+
   /* eslint-disable no-useless-escape */
   logger.info(stripIndents`
        __________  _   ______        __
