@@ -17,7 +17,7 @@ const bot = {
 test('set bot activity to reflect current number of joined guilds', async () => {
   await updateServerCountActivity(bot);
 
-  expect(bot.user.setActivity).toHaveBeenCalledWith(`in ${bot.guilds.size} servers`);
+  expect(bot.user?.setActivity).toHaveBeenCalledWith(`in ${bot.guilds.size} servers`);
 });
 
 test('logs updated activity string', async () => {
