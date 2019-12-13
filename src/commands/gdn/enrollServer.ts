@@ -28,11 +28,14 @@ export default class ListCommand extends GDNCommand {
       memberName: 'enroll_server',
       description: 'Enroll server in Goon Discord Network',
       details: stripIndents`
-        Enroll this server in Goon Discord Network to include it on https://goondiscordnetwork.com :bee:
+        ${oneLine`
+          Enroll this server in Goon Discord Network to include it on
+          https://goondiscordnetwork.com :bee:
+        `}
 
         ${oneLine`
-          Enrolled servers can also activate \`!authme\` (see \`!gdn_enable_authme\`) to help automate SA membership detection for
-          enhanced channel access control.
+          Enrolled servers can also activate \`!authme\` (see \`!gdn_enable_authme\`) to help
+          automate SA membership detection for enhanced channel access control.
         `}
       `,
       guildOnly: true,
