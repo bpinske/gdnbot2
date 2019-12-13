@@ -6,6 +6,7 @@ import sqlite from 'sqlite';
 import path from 'path';
 
 import logger from './helpers/logger';
+import { CMD_PREFIX } from './helpers/constants';
 
 // Event handlers
 import autoAuth from './eventHandlers/autoAuth';
@@ -16,7 +17,7 @@ dotenv.config();
 
 // Create the bot as a Commando client
 const bot = new CommandoClient({
-  commandPrefix: '!',
+  commandPrefix: CMD_PREFIX,
   owner: '148474055949942787',
   invite: 'https://discord.gg/vH8uVUE',
   disabledEvents: [

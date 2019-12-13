@@ -1,3 +1,5 @@
+export const CMD_PREFIX = '!';
+
 /**
  * Discord API error codes
  *
