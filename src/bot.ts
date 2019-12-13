@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { CommandoClient, SQLiteProvider, Command, CommandoMessage } from 'discord.js-commando';
 import sqlite from 'sqlite';
 import path from 'path';
+import { stripIndents } from 'common-tags';
 
 import logger from './helpers/logger';
 import { CMD_PREFIX } from './helpers/constants';
@@ -56,11 +57,13 @@ bot.registry
 // Announce the bot's readiness to serve
 bot.once('ready', () => {
   /* eslint-disable no-useless-escape */
-  logger.info('   __________  _   ______        __');
-  logger.info('  / ____/ __ \/ | / / __ )____  / /_');
-  logger.info(' / / __/ / / /  |/ / __  / __ \/ __/');
-  logger.info('/ /_/ / /_/ / /|  / /_/ / /_/ / /_');
-  logger.info('\____/_____/_/ |_/_____/\____/\__/');
+  logger.info(stripIndents`
+       __________  _   ______        __
+      / ____/ __ \/ | / / __ )____  / /_
+     / / __/ / / /  |/ / __  / __ \/ __/
+    / /_/ / /_/ / /|  / /_/ / /_/ / /_
+    \____/_____/_/ |_/_____/\____/\__/
+  `);
   logger.info(`Logged in as ${bot.user.tag}`);
   logger.info('---:getin:---');
   /* eslint-enable no-useless-escape */
