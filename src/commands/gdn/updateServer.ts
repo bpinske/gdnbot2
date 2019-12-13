@@ -7,14 +7,14 @@ import { inviteCodeToInviteURL, inviteURLToInviteCode } from '../../helpers/gdn/
 import { axiosGDN, APIGuildUpdate, GDN_URLS } from '../../helpers/axiosGDN';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 import GDNEmbed from '../../helpers/GDNEmbed';
-import COMMAND_NAMES from '../../helpers/commandNames';
+import { CMD_NAMES } from '../../helpers/constants';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
 export default class SetDescriptionCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
-      name: COMMAND_NAMES.GDN_UPDATE,
+      name: CMD_NAMES.GDN_UPDATE,
       aliases: ['gdn_update_server'],
       group: 'gdn',
       memberName: 'update_server_info',

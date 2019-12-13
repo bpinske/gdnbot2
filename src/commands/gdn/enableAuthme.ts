@@ -2,7 +2,7 @@ import { Command, CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { oneLine, stripIndents } from 'common-tags';
 
 import logger, { getLogTag } from '../../helpers/logger';
-import COMMAND_NAMES from '../../helpers/commandNames';
+import { CMD_NAMES } from '../../helpers/constants';
 import getRoleCollector, { RoleArgs } from '../../helpers/gdn/getRoleCollector';
 import getChannelCollector, { ChannelArgs } from '../../helpers/gdn/getChannelCollector';
 import { axiosGDN, GDN_URLS, APIGuildAuthme } from '../../helpers/axiosGDN';
@@ -14,7 +14,7 @@ import { OPTIONS } from './list';
 export default class EnableAuthmeCommand extends Command {
   constructor (client: CommandoClient) {
     super(client, {
-      name: COMMAND_NAMES.GDN_ENABLE_AUTHME,
+      name: CMD_NAMES.GDN_ENABLE_AUTHME,
       group: 'gdn',
       memberName: 'enable_authme',
       description: 'Enable `!authme`',
@@ -73,7 +73,7 @@ export default class EnableAuthmeCommand extends Command {
      */
     logger.info(tag, 'Prompting for a role ID');
 
-    await this.client.registry.commands.get(COMMAND_NAMES.GDN_LIST).run(message, { option: OPTIONS.ROLES }, false);
+    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST).run(message, { option: OPTIONS.ROLES }, false);
 
     const roleCollector = getRoleCollector(
       tag,
@@ -101,7 +101,7 @@ export default class EnableAuthmeCommand extends Command {
      */
     logger.info(tag, 'Prompting for a logging channel ID');
 
-    await this.client.registry.commands.get(COMMAND_NAMES.GDN_LIST).run(message, { option: OPTIONS.CHANNELS }, false);
+    await this.client.registry.commands.get(CMD_NAMES.GDN_LIST).run(message, { option: OPTIONS.CHANNELS }, false);
 
     const channelCollector = getChannelCollector(
       tag,
