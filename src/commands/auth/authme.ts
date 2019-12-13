@@ -233,5 +233,7 @@ export default class AuthmeCommand extends GDNCommand {
       saID,
       username,
     );
+
+    return null;
   }
 }
