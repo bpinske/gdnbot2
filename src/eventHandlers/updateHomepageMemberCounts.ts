@@ -30,9 +30,10 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
 
     // Go through each Guild and attempt to count the number of authed Members
     bot.guilds.each(async (guild) => {
+      const subTag = { ...tag, guildID: guild.id };
       // Don't do anything if this guild isn't enrolled in GDN
       if (!guildsMap[guild.id]) {
-        logger.debug(tag, `${guild.name} not enrolled in GDN, ignoring`);
+        logger.debug(subTag, `${guild.name} not enrolled in GDN, ignoring`);
         return;
       }
 
@@ -44,30 +45,30 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
       if (!authedRoleID) {
         // Auth wasn't set up here, so just return the total number of Members
         authedUsers = guild.members;
-        message = `Updating total member count for ${guild.name} (${guild.id}): ${authedUsers.size}`;
+        message = `Updating total member count for ${guild.name}: ${authedUsers.size}`;
       } else {
         // Go through each Member and filter for ones that have the Guild's auth role
         authedUsers = guild.members.filter(
           member => member.roles.some(role => role.id === authedRoleID),
         );
-        message = `Updating authed member count for ${guild.name} (${guild.id}): ${authedUsers.size}`;
+        message = `Updating authed member count for ${guild.name}: ${authedUsers.size}`;
       }
 
-      logger.info(tag, message);
+      logger.info(subTag, message);
 
       // Patch the server count
       try {
         const count = roundDown(authedUsers.size);
 
-        logger.debug(tag, `Rounded user count: ${count}`);
+        logger.debug(subTag, `Rounded user count: ${count}`);
 
         await axiosGDN.patch(`${GDN_URLS.GUILDS}/${guild.id}`, {
           user_count: count,
         });
 
-        logger.info(tag, 'Successfully updated guild member count on server');
+        logger.info(subTag, 'Successfully updated member count');
       } catch (err) {
-        logger.error({ ...tag, err }, 'Error sending updated count to server');
+        logger.error({ ...subTag, err }, 'Error sending updated count to server');
       }
     });
   } catch (err) {
