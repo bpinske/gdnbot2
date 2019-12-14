@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import { Role } from 'discord.js';
 import { CommandoClient, CommandoMessage } from 'discord.js-commando';
-import { oneLine } from 'common-tags';
+import { oneLine, stripIndents } from 'common-tags';
 
 import GDNCommand from '../../helpers/GDNCommand';
 import { CMD_NAMES, API_ERROR } from '../../helpers/constants';
@@ -20,8 +20,23 @@ export default class SetDescriptionCommand extends GDNCommand {
       group: 'public',
       memberName: 'toggle_role',
       description: 'Toggle a server role on yourself',
-      details: '',
+      details: stripIndents`
+        The rules for toggling are straight-forward:
+
+        - If you specify the name of a role you __don't__ have, the role will be __added__ to you
+        - If you specify the name of a role you __do__ have, the role will be __removed__ from you
+
+        ${oneLine`
+          If a role can't be toggled, it's probably because the role would grant you more
+          permissions than you currently have. This bot's pretty capable, but not _that_
+          capable :wink:
+        `}
+      `,
       guildOnly: true,
+      examples: [
+        `${CMD_NAMES.PUBLIC_TOGGLE_ROLE} LLJK`,
+        `${CMD_NAMES.PUBLIC_TOGGLE_ROLE} Pusher Bot`,
+      ],
       args: [
         {
           key: 'role',
