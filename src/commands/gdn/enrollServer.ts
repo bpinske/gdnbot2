@@ -23,7 +23,6 @@ export default class ListCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_ENROLL,
-      aliases: ['gdn_enroll_server'],
       group: 'gdn',
       memberName: 'enroll_server',
       description: 'Enroll server in Goon Discord Network',
@@ -34,7 +33,8 @@ export default class ListCommand extends GDNCommand {
         `}
 
         ${oneLine`
-          Enrolled servers can also activate \`!authme\` (see \`!gdn_enable_authme\`) to help
+          Enrolled servers can also activate \`!authme\`
+          (see \`${CMD_PREFIX}${CMD_NAMES.GDN_ENABLE_AUTHME}\`) to help
           automate SA membership detection for enhanced channel access control.
         `}
       `,

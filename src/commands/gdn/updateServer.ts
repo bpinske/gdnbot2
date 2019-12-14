@@ -17,7 +17,6 @@ export default class SetDescriptionCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_UPDATE,
-      aliases: ['gdn_update_server'],
       group: 'gdn',
       memberName: 'update_server_info',
       description: 'Update server info in Goon Discord Network',
