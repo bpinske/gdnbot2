@@ -31,6 +31,10 @@ export default class SetDescriptionCommand extends GDNCommand {
             const { id } = message;
             const tag = getLogTag(id);
 
+            const { commandPrefix: prefix } = this.client;
+
+            logger.info(tag, `[EVENT START: ${prefix}${this.name}]`);
+
             logger.info(tag, `Validating role name "${roleName}"`);
 
             const toFind = `${roleName.toLowerCase()}`;
@@ -63,9 +67,6 @@ export default class SetDescriptionCommand extends GDNCommand {
   async run (message: CommandoMessage, { role }: RoleArgs) {
     const { id, guild, member } = message;
     const tag = getLogTag(id);
-    const { commandPrefix: prefix } = this.client;
-
-    logger.info(tag, `[EVENT START: ${prefix}${this.name}]`);
 
     logger.info(
       tag,
