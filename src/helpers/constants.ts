@@ -6,6 +6,7 @@ export enum CMD_NAMES {
   GDN_ENROLL = 'gdn-enroll',
   GDN_UPDATE = 'gdn-update',
   GDN_ENABLE_AUTHME = 'gdn-enable-authme',
+  PUBLIC_TOGGLE_ROLE = 'toggle-role',
 }
 
 /**
