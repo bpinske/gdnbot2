@@ -85,9 +85,12 @@ export default class SetDescriptionCommand extends GDNCommand {
       const gdnRole = guild.roles.get(guildData.validated_role_id);
 
       if (gdnRole && gdnRole.id === role.id) {
+        logger.info(tag, 'User tried to toggle authme role, exiting');
         return message.reply(oneLine`
           that role cannot be toggled, please try again.
         `);
+      } else {
+        logger.info(tag, 'Role is not authme role and is safe to toggle');
       }
     }
 
@@ -96,11 +99,11 @@ export default class SetDescriptionCommand extends GDNCommand {
     try {
       let reply;
       if (hasRole) {
-        logger.info(tag, 'Removing role');
+        logger.info(tag, 'Member has role, removing role');
         await member.roles.remove(role, 'GDN: Toggled role off');
         reply = `you no longer have the ${role.name} role`;
       } else {
-        logger.info(tag, 'Adding role');
+        logger.info(tag, 'Member does not have role, adding role');
         await member.roles.add(role, 'GDN: Toggled role on');
         reply = `you now have the ${role.name} role`;
       }
