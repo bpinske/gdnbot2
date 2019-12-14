@@ -2,10 +2,10 @@ export const CMD_PREFIX = '!';
 
 export enum CMD_NAMES {
   AUTHME = 'authme',
-  GDN_LIST = 'gdn_list',
-  GDN_ENROLL = 'gdn_enroll',
-  GDN_UPDATE = 'gdn_update',
-  GDN_ENABLE_AUTHME = 'gdn_enable_authme',
+  GDN_LIST = 'gdn-list',
+  GDN_ENROLL = 'gdn-enroll',
+  GDN_UPDATE = 'gdn-update',
+  GDN_ENABLE_AUTHME = 'gdn-enable-authme',
 }
 
 /**
