@@ -6,7 +6,7 @@ import { stripIndents, oneLine } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
-import { CMD_NAMES } from '../../helpers/constants';
+import { CMD_NAMES, API_ERROR, CMD_PREFIX } from '../../helpers/constants';
 
 // Checks
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
@@ -74,7 +74,7 @@ export default class AuthmeCommand extends GDNCommand {
     // Prepare a tag for logging
     const tag = getLogTag(message.id);
 
-    logger.info(tag, `[EVENT START: !${this.name}]`);
+    logger.info(tag, `[EVENT START: ${CMD_PREFIX}${this.name}]`);
 
     /**
      * PERFORMING AUTH CHECKS
@@ -126,20 +126,42 @@ export default class AuthmeCommand extends GDNCommand {
      */
     logger.info(tag, 'Sending hash + instructions to member');
 
-    const hashMessage = await member.send(stripIndents`
-      ${oneLine`
-        You want access? You have **five minutes** to get this string into your SA profile
-        (anywhere in the **Additional Information** section here
-        https://forums.somethingawful.com/member.php?action=editprofile):
-      `}
+    let hashMessage;
+    try {
+      hashMessage = await member.send(stripIndents`
+        ${oneLine`
+          You want access? You have **five minutes** to get this string into your SA profile
+          (anywhere in the **Additional Information** section here
+          https://forums.somethingawful.com/member.php?action=editprofile):
+        `}
 
-      **${hash}**
+        **${hash}**
 
-      ${oneLine`
-        After you've completed this, return **here** and respond with **Praise Lowtax** to verify
-        your SA membership.
-      `}
-    `);
+        ${oneLine`
+          After you've completed this, return **here** and respond with **Praise Lowtax** to verify
+          your SA membership.
+        `}
+      `);
+    } catch (err) {
+      if (err.code === API_ERROR.CANNOT_MESSAGE_USER) {
+        return message.reply(stripIndents`
+          ${oneLine`
+            your privacy settings prevent me from sending you further instructions as DM's. Please
+            temporarily toggle on "Allow direct messages from server members" for this server from
+            your privacy settings before trying the command again :bee:
+          `}
+
+          ${oneLine`
+            If you need help with this, please check out the
+            "**Selective Hearing: Direct Message Edition**" section of this Discord support article:
+            https://support.discordapp.com/hc/en-us/articles/217916488-Blocking-Privacy-Settings-
+          `}
+        `);
+      } else {
+        logger.error({ ...tag, err }, 'Error sending hash to user');
+        throw err;
+      }
+    }
 
     /**
      * WAITING FOR USER RESPONSE TO TRIGGER HASH PLACEMENT VERIFICATION
