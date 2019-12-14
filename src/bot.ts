@@ -40,6 +40,7 @@ bot.registry
   .registerGroups([
     ['auth', 'Authentication'],
     ['gdn', 'Goon Discord Network'],
+    ['public', 'For Everyone'],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands({
