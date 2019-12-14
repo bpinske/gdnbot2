@@ -20,7 +20,10 @@ const reasonNoPostCountFound = oneLine`
  * This will get called _after_ the hash has been successfully verified, which means we're
  * assuming the username is valid.
  */
-export default async function getSAPostCount (tag: LogTag, profile: CheerioStatic): Promise<SAPostCount> {
+export default async function getSAPostCount (
+  tag: LogTag,
+  profile: CheerioStatic,
+): Promise<SAPostCount> {
   logger.info(tag, 'Retrieving post count from SA profile');
 
   // Prepare to parse it

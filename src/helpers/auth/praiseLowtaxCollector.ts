@@ -18,7 +18,9 @@ const collectorOptions: AwaitMessagesOptions = {
  * adding the auth hash to their SA profile. This should trigger the verification step of the
  * authme process.
  */
-export default async function praiseLowtaxCollector (channel: DMChannel): Promise<CollectorResults> {
+export default async function praiseLowtaxCollector (
+  channel: DMChannel,
+): Promise<CollectorResults> {
   return channel.awaitMessages(filter, collectorOptions)
     .then(() => ({ cancelled: false }))
     .catch(() => ({ cancelled: true }));

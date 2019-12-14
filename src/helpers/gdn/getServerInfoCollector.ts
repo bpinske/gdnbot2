@@ -15,7 +15,10 @@ export interface ServerInfoArgs {
 /**
  * An ArgumentCollector for prompting users for a server description and invite code
  */
-export default function getServerInfoCollector (tag: LogTag, client: CommandoClient): ArgumentCollector {
+export default function getServerInfoCollector (
+  tag: LogTag,
+  client: CommandoClient,
+): ArgumentCollector {
   return new ArgumentCollector(client, [
     {
       key: 'description',
@@ -55,9 +58,10 @@ export default function getServerInfoCollector (tag: LogTag, client: CommandoCli
         }
 
         /**
-         * TODO: `invite.expiresAt` via `this.client.fetchInvite()` will _always_ be null. To fix this,
-         * the bot would need to be granted the MANAGE_GUILD/"Manage Server" permission, at which point
-         * we could use message.guild.fetchInvites(), .get() by `inviteCode`, and view that info...
+         * TODO: `invite.expiresAt` via `this.client.fetchInvite()` will _always_ be null. To fix
+         * this, the bot would need to be granted the MANAGE_GUILD/"Manage Server" permission, at
+         * which point we could use message.guild.fetchInvites(), .get() by `inviteCode`, and view
+         * that info...
          */
         // null = eternal, datetime = expires
         if (invite.expiresAt !== null) {

@@ -24,10 +24,17 @@ const errorNoValidate = oneLine`
 /**
  * Confirm via GoonAuth that the user placed the hash in their profile
  */
-export default async function confirmHash (tag: LogTag, member: GuildMember, username: string): Promise<ConfirmedHash> {
+export default async function confirmHash (
+  tag: LogTag,
+  member: GuildMember,
+  username: string,
+): Promise<ConfirmedHash> {
   try {
     logger.info(tag, 'Confirming hash placement in SA profile');
-    const { data } = await axiosGoonAuth.post<APIConfirmHash>(GOON_AUTH_URLS.CONFIRM_HASH, { username });
+    const { data } = await axiosGoonAuth.post<APIConfirmHash>(
+      GOON_AUTH_URLS.CONFIRM_HASH,
+      { username },
+    );
     const { validated } = data;
 
     if (!validated) {
