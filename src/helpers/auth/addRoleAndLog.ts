@@ -4,6 +4,7 @@ import { CommandoMessage } from 'discord.js-commando';
 
 import logger, { LogTag } from '../logger';
 import { CMD_PREFIX, CMD_NAMES, API_ERROR } from '../constants';
+import tryDM from '../tryDM';
 
 /**
  * The bot doesn't have access to the specified logging channel, so it can't record a successful
@@ -101,7 +102,11 @@ export default async function addRoleAndLog (
   }
 
   logger.info(tag, 'Informing user of successful auth');
-  await member.send(
+
+  await tryDM(
+    tag,
     `Welcome to ${role.guild.name}! You have been granted the **${role.name}** role :bee:`,
+    member,
+    message,
   );
 }
