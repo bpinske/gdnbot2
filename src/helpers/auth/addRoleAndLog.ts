@@ -64,7 +64,7 @@ export default async function addRoleAndLog (
   logger.info(tag, 'Adding role to member');
 
   try {
-    await member.edit({ roles: [role] }, 'GDN: Successful Auth');
+    await member.roles.add(role, 'GDN: Successful Auth');
   } catch (err) {
     logger.error({ ...tag, err }, oneLine`
       Error in guild ${role.guild.name} adding role ${role.name} to member ${member.user.tag}
