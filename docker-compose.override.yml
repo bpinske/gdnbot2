@@ -9,3 +9,5 @@ services:
       # Mount the source code so that we can edit it locally while it runs in the container
       - ./src/:/usr/src/app/src
     command: "npm start"
+    environment:
+      - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN_DEV}
