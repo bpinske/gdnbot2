@@ -2,6 +2,9 @@ version: "3.7"
 
 services:
   bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       # Mount the source code so that we can edit it locally while it runs in the container
       - ./src/:/usr/src/app/src

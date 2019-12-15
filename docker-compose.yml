@@ -2,9 +2,6 @@ version: "3.7"
 
 services:
   bot:
-    build:
-      context: .
-      dockerfile: Dockerfile
     user: root
     environment:
       - DISCORD_BOT_TOKEN
