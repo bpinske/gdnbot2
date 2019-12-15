@@ -38,18 +38,11 @@ export default class AuthmeCommand extends GDNCommand {
       name: CMD_NAMES.AUTHME,
       group: 'auth',
       memberName: 'authme',
-      description: 'Authenticate your SA account',
+      description: 'Authenticate your membership to the SA forums',
       details: stripIndents`
-        To authenticate your SA account, follow these simple instructions:
-
         ${oneLine`
-          1. Type **!authme SA-Username-Here** to begin (replace **SA-Username-Here** with your
-            actual SA username; spaces are fine too).
-        `}
-
-        ${oneLine`
-          2. After you paste the code on your profile, go back to the bot and
-          **type 'Praise Lowtax'** to finish the auth process.
+          To confirm that you have an active SA account, type **!authme SA-Username-Here**. You will
+          be DM'd with further instructions :bee:
         `}
       `,
       examples: [
