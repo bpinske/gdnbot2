@@ -14,6 +14,7 @@ export enum CMD_NAMES {
   GDN_UPDATE = 'gdn-update',
   GDN_ENABLE_AUTHME = 'gdn-enable-authme',
   PUBLIC_TOGGLE_ROLE = 'toggle-role',
+  OWNER_EARPLUGS = 'earplugs',
 }
 
 /**
@@ -74,4 +75,8 @@ export enum API_ERROR {
   INVALID_API_VERSION = 50041,
   REACTION_BLOCKED = 90001,
   RESOURCE_OVERLOADED = 130000,
+}
+
+export enum SETTINGS {
+  EARPLUGS_IN = 'earplugs',
 }
