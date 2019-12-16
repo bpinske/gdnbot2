@@ -41,6 +41,7 @@ bot.registry
     [CMD_GROUPS.AUTH, 'Authentication'],
     [CMD_GROUPS.GDN, 'Goon Discord Network'],
     [CMD_GROUPS.PUBLIC, 'For Everyone'],
+    [CMD_GROUPS.OWNER, 'Bot Administration'],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands({
