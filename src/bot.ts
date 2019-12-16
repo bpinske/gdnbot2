@@ -114,7 +114,7 @@ bot.on('guildDelete', (guild: Guild) => {
 // When a Member joins a Guild
 bot.on('guildMemberAdd', autoAuth);
 
-bot.on('commandError', async (command: Command, err: Error, message: CommandoMessage) => {
+bot.on('commandError', (command: Command, err: Error, message: CommandoMessage) => {
   message.channel.stopTyping();
 });
 
