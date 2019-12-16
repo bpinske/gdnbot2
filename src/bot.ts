@@ -72,6 +72,7 @@ bot.once('ready', () => {
     \____/_____/_/ |_/_____/\____/\__/
   `);
   logger.info(`Logged in as ${bot.user.tag}`);
+  logger.info(`Command prefix: ${bot.commandPrefix}`);
   logger.info('---:getin:---');
   /* eslint-enable no-useless-escape */
 
