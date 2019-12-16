@@ -2,6 +2,7 @@
 import dotenv from 'dotenv';
 
 import { CommandoClient, SQLiteProvider, Command, CommandoMessage } from 'discord.js-commando';
+import { Guild } from 'discord.js';
 import sqlite from 'sqlite';
 import path from 'path';
 import { stripIndents } from 'common-tags';
@@ -99,12 +100,14 @@ bot.on('error', (err) => {
  */
 
 // When the bot joins a Guild
-bot.on('guildCreate', () => {
+bot.on('guildCreate', (guild: Guild) => {
+  logger.info(`Joined guild ${guild.name} (${guild.id})`);
   updateServerCountActivity(bot);
 });
 
 // When the bot leaves a Guild
-bot.on('guildDelete', () => {
+bot.on('guildDelete', (guild: Guild) => {
+  logger.info(`Left guild ${guild.name} (${guild.id})`);
   updateServerCountActivity(bot);
 });
 
