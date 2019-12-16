@@ -16,7 +16,6 @@ export enum CMD_NAMES {
   GDN_UPDATE = 'gdn-update',
   GDN_ENABLE_AUTHME = 'gdn-enable-authme',
   PUBLIC_TOGGLE_ROLE = 'toggle-role',
-  OWNER_EARPLUGS = 'earplugs',
 }
 
 /**
@@ -80,5 +79,4 @@ export enum API_ERROR {
 }
 
 export enum SETTINGS {
-  EARPLUGS_IN = 'earplugs',
 }
