@@ -3,4 +3,5 @@ version: "3.7"
 services:
   bot:
     environment:
+      - PREFIX=$$
       - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN_STG}
