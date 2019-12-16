@@ -1,4 +1,6 @@
-export const CMD_PREFIX = '!';
+const { PREFIX } = process.env;
+
+export const CMD_PREFIX = PREFIX || '!';
 
 export enum CMD_GROUPS {
   AUTH = 'auth',
