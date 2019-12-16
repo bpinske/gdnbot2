@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   bot:
-    image: iamkale/gdnbot2:2.1.0
+    image: iamkale/gdnbot2:2.1.1
     user: root
     environment:
       - DISCORD_BOT_TOKEN
