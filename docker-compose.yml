@@ -9,6 +9,10 @@ services:
       - GDN_API_TOKEN
       - PAPERTRAIL_HOST
       - PAPERTRAIL_PORT
+      - SESSION_ID
+      - SESSION_HASH
+      - BBUSER_ID
+      - BBPASSWORD
     volumes:
       # Preserve the settings database on the host filesystem
       - ./settings.db:/usr/src/app/settings.db:rw
