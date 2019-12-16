@@ -1,6 +1,12 @@
 import bunyan from 'bunyan';
 import bsyslog from 'bunyan-syslog';
 
+import {
+  NODE_ENV,
+  PAPERTRAIL_HOST,
+  PAPERTRAIL_PORT,
+} from './constants';
+
 /**
  * A logger responsible for the following:
  *
@@ -39,7 +45,7 @@ const logger = bunyan.createLogger({
   ],
 });
 
-if (process.env.NODE_ENV === 'production') {
+if (NODE_ENV === 'production') {
   // Help Papertrail understand that this is the same system regardless of container ID
   logger.fields.hostname = 'prod-gdnbot2';
   // Add a Papertrail stream
@@ -49,8 +55,8 @@ if (process.env.NODE_ENV === 'production') {
     stream: bsyslog.createBunyanStream({
       type: 'udp',
       facility: bsyslog.local0,
-      host: process.env.PAPERTRAIL_HOST,
-      port: Number(process.env.PAPERTRAIL_PORT) || -1,
+      host: PAPERTRAIL_HOST,
+      port: Number(PAPERTRAIL_PORT),
     }),
   });
 }

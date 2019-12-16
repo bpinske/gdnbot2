@@ -6,7 +6,7 @@ import { stripIndents, oneLine } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
-import { CMD_NAMES, API_ERROR, CMD_PREFIX } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, API_ERROR, MIN_POST_COUNT } from '../../helpers/constants';
 
 // Checks
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
@@ -28,21 +28,18 @@ interface AuthmeCommandArgs {
   username: string;
 }
 
-// Default to requiring the user to have posted at least 50 times (a deterrent to creating new SA
-// accounts to bypass a blacklist)
-const MIN_POST_COUNT = Number(process.env.MIN_POST_COUNT) || 50;
-
 export default class AuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.AUTHME,
-      group: 'auth',
+      group: CMD_GROUPS.AUTH,
       memberName: 'authme',
       description: 'Authenticate your membership to the SA forums',
       details: stripIndents`
         ${oneLine`
-          To confirm that you have an active SA account, type **!authme SA-Username-Here**. You will
-          be DM'd with further instructions :bee:
+          To confirm that you have an active SA account, type
+          **${client.commandPrefix}${CMD_NAMES.AUTHME} SA-Username-Here**. You will be DM'd with
+          further instructions :bee:
         `}
       `,
       examples: [
@@ -63,11 +60,12 @@ export default class AuthmeCommand extends GDNCommand {
 
   async run (message: CommandoMessage, { username }: AuthmeCommandArgs) {
     const { guild, member } = message;
+    const { commandPrefix } = this.client;
 
     // Prepare a tag for logging
     const tag = getLogTag(message.id);
 
-    logger.info(tag, `[EVENT START: ${CMD_PREFIX}${this.name}]`);
+    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
 
     /**
      * PERFORMING AUTH CHECKS

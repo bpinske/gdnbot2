@@ -5,7 +5,7 @@ import GDNEmbed from '../../helpers/GDNEmbed';
 import GDNCommand from '../../helpers/GDNCommand';
 import listTextChannels from '../../helpers/gdn/listTextChannels';
 import listRoles from '../../helpers/gdn/listRoles';
-import { CMD_NAMES } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
 
 interface ListCommandArgs {
   option: string;
@@ -32,7 +32,7 @@ export default class ListCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_LIST,
-      group: 'gdn',
+      group: CMD_GROUPS.GDN,
       memberName: 'list',
       description: 'View server roles or channels',
       guildOnly: true,

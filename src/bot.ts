@@ -7,7 +7,7 @@ import path from 'path';
 import { stripIndents } from 'common-tags';
 
 import logger from './helpers/logger';
-import { CMD_PREFIX } from './helpers/constants';
+import { CMD_PREFIX, CMD_GROUPS, DISCORD_BOT_TOKEN } from './helpers/constants';
 
 // Event handlers
 import autoAuth from './eventHandlers/autoAuth';
@@ -38,9 +38,10 @@ sqlite.open(path.join(__dirname, '../settings.db'))
 bot.registry
   .registerDefaultTypes()
   .registerGroups([
-    ['auth', 'Authentication'],
-    ['gdn', 'Goon Discord Network'],
-    ['public', 'For Everyone'],
+    [CMD_GROUPS.AUTH, 'Authentication'],
+    [CMD_GROUPS.GDN, 'Goon Discord Network'],
+    [CMD_GROUPS.PUBLIC, 'For Everyone'],
+    [CMD_GROUPS.OWNER, 'Bot Administration'],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands({
@@ -71,6 +72,7 @@ bot.once('ready', () => {
     \____/_____/_/ |_/_____/\____/\__/
   `);
   logger.info(`Logged in as ${bot.user.tag}`);
+  logger.info(`Command prefix: ${bot.commandPrefix}`);
   logger.info('---:getin:---');
   /* eslint-enable no-useless-escape */
 
@@ -122,4 +124,4 @@ bot.setInterval(
 );
 
 // Start the bot
-bot.login(process.env.DISCORD_BOT_TOKEN);
+bot.login(DISCORD_BOT_TOKEN);

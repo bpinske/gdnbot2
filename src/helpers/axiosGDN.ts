@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { GDN_API_TOKEN } from './constants';
+
 export interface APIGuild {
   'server_id': string;
   'name': string;
@@ -35,7 +37,7 @@ export interface APIMember {
 export const axiosGDN = axios.create({
   baseURL: 'http://gdn',
   headers: {
-    Authorization: `Token ${process.env.GDN_API_TOKEN}`,
+    Authorization: `Token ${GDN_API_TOKEN}`,
     'Content-Type': 'application/json',
     Accept: 'application/json',
   },
