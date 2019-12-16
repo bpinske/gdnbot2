@@ -4,7 +4,7 @@ import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { oneLine, stripIndents } from 'common-tags';
 
 import GDNCommand from '../../helpers/GDNCommand';
-import { CMD_NAMES, API_ERROR } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, API_ERROR } from '../../helpers/constants';
 import logger, { getLogTag } from '../../helpers/logger';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
@@ -17,7 +17,7 @@ export default class SetDescriptionCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.PUBLIC_TOGGLE_ROLE,
-      group: 'public',
+      group: CMD_GROUPS.PUBLIC,
       memberName: 'toggle_role',
       description: 'Toggle a server role on yourself',
       details: stripIndents`

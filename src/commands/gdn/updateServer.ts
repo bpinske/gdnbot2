@@ -9,7 +9,7 @@ import { inviteCodeToInviteURL, inviteURLToInviteCode } from '../../helpers/gdn/
 import { axiosGDN, APIGuildUpdate, GDN_URLS } from '../../helpers/axiosGDN';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 import GDNEmbed from '../../helpers/GDNEmbed';
-import { CMD_NAMES } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
@@ -17,7 +17,7 @@ export default class SetDescriptionCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_UPDATE,
-      group: 'gdn',
+      group: CMD_GROUPS.GDN,
       memberName: 'update_server_info',
       description: 'Update server info in Goon Discord Network',
       details: oneLine`

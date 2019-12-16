@@ -3,7 +3,7 @@ import { oneLine, stripIndents } from 'common-tags';
 
 import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
-import { CMD_NAMES } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
 import getRoleCollector, { RoleArgs } from '../../helpers/gdn/getRoleCollector';
 import getChannelCollector, { ChannelArgs } from '../../helpers/gdn/getChannelCollector';
 import { axiosGDN, GDN_URLS, APIGuildAuthme } from '../../helpers/axiosGDN';
@@ -16,7 +16,7 @@ export default class EnableAuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_ENABLE_AUTHME,
-      group: 'gdn',
+      group: CMD_GROUPS.GDN,
       memberName: 'enable_authme',
       description: 'Enable `!authme`',
       details: stripIndents`

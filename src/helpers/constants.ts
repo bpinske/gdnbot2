@@ -1,5 +1,12 @@
 export const CMD_PREFIX = '!';
 
+export enum CMD_GROUPS {
+  AUTH = 'auth',
+  GDN = 'gdn',
+  PUBLIC = 'public',
+  OWNER = 'owner',
+}
+
 export enum CMD_NAMES {
   AUTHME = 'authme',
   GDN_LIST = 'gdn-list',

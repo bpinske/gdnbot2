@@ -6,7 +6,7 @@ import { stripIndents, oneLine } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
-import { CMD_NAMES, API_ERROR, CMD_PREFIX } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, API_ERROR, CMD_PREFIX } from '../../helpers/constants';
 
 // Checks
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
@@ -36,7 +36,7 @@ export default class AuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.AUTHME,
-      group: 'auth',
+      group: CMD_GROUPS.AUTH,
       memberName: 'authme',
       description: 'Authenticate your membership to the SA forums',
       details: stripIndents`

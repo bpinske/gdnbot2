@@ -9,7 +9,7 @@ import { axiosGDN, GDN_URLS, APIGuild } from '../../helpers/axiosGDN';
 import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getServerInfoCollector';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 import { inviteCodeToInviteURL } from '../../helpers/gdn/guildInvites';
-import { CMD_NAMES, CMD_PREFIX } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, CMD_PREFIX } from '../../helpers/constants';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
@@ -23,7 +23,7 @@ export default class ListCommand extends GDNCommand {
   constructor (client: CommandoClient) {
     super(client, {
       name: CMD_NAMES.GDN_ENROLL,
-      group: 'gdn',
+      group: CMD_GROUPS.GDN,
       memberName: 'enroll_server',
       description: 'Enroll server in Goon Discord Network',
       details: stripIndents`

@@ -7,7 +7,7 @@ import path from 'path';
 import { stripIndents } from 'common-tags';
 
 import logger from './helpers/logger';
-import { CMD_PREFIX } from './helpers/constants';
+import { CMD_PREFIX, CMD_GROUPS } from './helpers/constants';
 
 // Event handlers
 import autoAuth from './eventHandlers/autoAuth';
@@ -38,9 +38,9 @@ sqlite.open(path.join(__dirname, '../settings.db'))
 bot.registry
   .registerDefaultTypes()
   .registerGroups([
-    ['auth', 'Authentication'],
-    ['gdn', 'Goon Discord Network'],
-    ['public', 'For Everyone'],
+    [CMD_GROUPS.AUTH, 'Authentication'],
+    [CMD_GROUPS.GDN, 'Goon Discord Network'],
+    [CMD_GROUPS.PUBLIC, 'For Everyone'],
   ])
   .registerDefaultGroups()
   .registerDefaultCommands({
