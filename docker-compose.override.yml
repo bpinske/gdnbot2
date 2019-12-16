@@ -11,4 +11,4 @@ services:
     command: "npm start"
     environment:
       - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN_DEV}
-      - PREFIX=$$
+      - CMD_PREFIX=$$
