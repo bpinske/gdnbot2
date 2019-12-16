@@ -4,7 +4,7 @@ import { CommandoClient, CommandoMessage } from 'discord.js-commando';
 import { oneLine, stripIndents } from 'common-tags';
 
 import GDNCommand from '../../helpers/GDNCommand';
-import { CMD_GROUPS, CMD_NAMES, API_ERROR, CMD_PREFIX } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, API_ERROR } from '../../helpers/constants';
 import logger, { getLogTag } from '../../helpers/logger';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
@@ -81,9 +81,11 @@ export default class SetDescriptionCommand extends GDNCommand {
 
   async run (message: CommandoMessage, { role }: RoleArgs) {
     const { id, guild, member } = message;
+    const { commandPrefix } = this.client;
+
     const tag = getLogTag(id);
 
-    logger.info(tag, `[EVENT START: ${CMD_PREFIX}${this.name}]`);
+    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
 
     logger.info(
       tag,

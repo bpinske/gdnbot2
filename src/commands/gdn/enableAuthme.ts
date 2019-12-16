@@ -18,7 +18,7 @@ export default class EnableAuthmeCommand extends GDNCommand {
       name: CMD_NAMES.GDN_ENABLE_AUTHME,
       group: CMD_GROUPS.GDN,
       memberName: 'enable_authme',
-      description: 'Enable `!authme`',
+      description: `Enable \`${client.commandPrefix}${CMD_NAMES.AUTHME}\``,
       details: stripIndents`
         Enrolled servers can use this command to enable the use of \`!authme\` on their server.
 
@@ -49,11 +49,11 @@ export default class EnableAuthmeCommand extends GDNCommand {
 
   async run (message: CommandoMessage) {
     const { id, guild } = message;
-    const { commandPrefix: prefix } = this.client;
+    const { commandPrefix } = this.client;
 
     const tag = getLogTag(id);
 
-    logger.info(tag, `[EVENT START: ${prefix}${this.name}]`);
+    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
 
     /**
      * Check that server is enrolled
@@ -97,7 +97,8 @@ export default class EnableAuthmeCommand extends GDNCommand {
       logger.info(tag, 'User did not specify a roleID, exiting');
 
       return message.reply(oneLine`
-        a role ID is required to continue. Feel free to run ${prefix}${this.name} to try again.
+        a role ID is required to continue. Feel free to run ${commandPrefix}${this.name} to try
+        again.
       `);
     }
 
@@ -129,7 +130,8 @@ export default class EnableAuthmeCommand extends GDNCommand {
       logger.info(tag, 'User did not specify a roleID, exiting');
 
       return message.reply(oneLine`
-        a channel ID is required to continue. Feel free to run ${prefix}${this.name} to try again.
+        a channel ID is required to continue. Feel free to run ${commandPrefix}${this.name} to try
+        again.
       `);
     }
 
@@ -163,7 +165,8 @@ export default class EnableAuthmeCommand extends GDNCommand {
       `}
 
       ${oneLine`
-        You can update either of these values at any time by re-running \`${prefix}${this.name}\`.
+        You can update either of these values at any time by re-running
+        \`${commandPrefix}${this.name}\`.
       `}
     `);
   }

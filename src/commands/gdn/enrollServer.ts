@@ -9,7 +9,7 @@ import { axiosGDN, GDN_URLS, APIGuild } from '../../helpers/axiosGDN';
 import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getServerInfoCollector';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 import { inviteCodeToInviteURL } from '../../helpers/gdn/guildInvites';
-import { CMD_GROUPS, CMD_NAMES, CMD_PREFIX } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
@@ -34,7 +34,7 @@ export default class ListCommand extends GDNCommand {
 
         ${oneLine`
           Enrolled servers can also activate \`!authme\`
-          (see \`${CMD_PREFIX}${CMD_NAMES.GDN_ENABLE_AUTHME}\`) to help
+          (see \`${client.commandPrefix}${CMD_NAMES.GDN_ENABLE_AUTHME}\`) to help
           automate SA membership detection for enhanced channel access control.
         `}
       `,
@@ -49,11 +49,11 @@ export default class ListCommand extends GDNCommand {
       name,
       memberCount,
     } = message.guild;
-    const { commandPrefix: prefix } = this.client;
+    const { commandPrefix } = this.client;
 
     const tag = getLogTag(message.id);
 
-    logger.info(tag, `[EVENT START: ${prefix}${this.name}]`);
+    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
     logger.debug(tag, `Called in ${name} (${id})`);
 
     // Give some feedback that the bot is doing something
@@ -69,8 +69,8 @@ export default class ListCommand extends GDNCommand {
 
       message.channel.stopTyping();
       return message.reply(oneLine`
-        this server has already been enrolled. Please use \`${CMD_PREFIX}${CMD_NAMES.GDN_UPDATE}\`
-        instead.
+        this server has already been enrolled. Please use
+        \`${commandPrefix}${CMD_NAMES.GDN_UPDATE}\` instead.
       `);
     }
 

@@ -6,7 +6,7 @@ import { stripIndents, oneLine } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
-import { CMD_GROUPS, CMD_NAMES, API_ERROR, CMD_PREFIX } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, API_ERROR } from '../../helpers/constants';
 
 // Checks
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
@@ -41,8 +41,9 @@ export default class AuthmeCommand extends GDNCommand {
       description: 'Authenticate your membership to the SA forums',
       details: stripIndents`
         ${oneLine`
-          To confirm that you have an active SA account, type **!authme SA-Username-Here**. You will
-          be DM'd with further instructions :bee:
+          To confirm that you have an active SA account, type
+          **${client.commandPrefix}${CMD_NAMES.AUTHME} SA-Username-Here**. You will be DM'd with
+          further instructions :bee:
         `}
       `,
       examples: [
@@ -63,11 +64,12 @@ export default class AuthmeCommand extends GDNCommand {
 
   async run (message: CommandoMessage, { username }: AuthmeCommandArgs) {
     const { guild, member } = message;
+    const { commandPrefix } = this.client;
 
     // Prepare a tag for logging
     const tag = getLogTag(message.id);
 
-    logger.info(tag, `[EVENT START: ${CMD_PREFIX}${this.name}]`);
+    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
 
     /**
      * PERFORMING AUTH CHECKS
