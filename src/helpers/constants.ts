@@ -77,6 +77,3 @@ export enum API_ERROR {
   REACTION_BLOCKED = 90001,
   RESOURCE_OVERLOADED = 130000,
 }
-
-export enum SETTINGS {
-}
