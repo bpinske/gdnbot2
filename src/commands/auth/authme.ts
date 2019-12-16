@@ -6,7 +6,7 @@ import { stripIndents, oneLine } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
-import { CMD_GROUPS, CMD_NAMES, API_ERROR } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, API_ERROR, MIN_POST_COUNT } from '../../helpers/constants';
 
 // Checks
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
@@ -27,10 +27,6 @@ import addUserToDB from '../../helpers/auth/addUserToDB';
 interface AuthmeCommandArgs {
   username: string;
 }
-
-// Default to requiring the user to have posted at least 50 times (a deterrent to creating new SA
-// accounts to bypass a blacklist)
-const MIN_POST_COUNT = Number(process.env.MIN_POST_COUNT) || 50;
 
 export default class AuthmeCommand extends GDNCommand {
   constructor (client: CommandoClient) {

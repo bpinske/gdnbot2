@@ -7,7 +7,7 @@ import path from 'path';
 import { stripIndents } from 'common-tags';
 
 import logger from './helpers/logger';
-import { CMD_PREFIX, CMD_GROUPS } from './helpers/constants';
+import { CMD_PREFIX, CMD_GROUPS, DISCORD_BOT_TOKEN } from './helpers/constants';
 
 // Event handlers
 import autoAuth from './eventHandlers/autoAuth';
@@ -124,4 +124,4 @@ bot.setInterval(
 );
 
 // Start the bot
-bot.login(process.env.DISCORD_BOT_TOKEN);
+bot.login(DISCORD_BOT_TOKEN);

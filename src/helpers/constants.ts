@@ -1,6 +1,21 @@
-const { PREFIX } = process.env;
-
-export const CMD_PREFIX = PREFIX || '!';
+export const {
+  NODE_ENV,
+  DISCORD_BOT_TOKEN,
+  GDN_API_TOKEN,
+  // SA Forum Cookies
+  SESSION_ID,
+  SESSION_HASH,
+  BBUSER_ID,
+  BBPASSWORD,
+  // Logging
+  PAPERTRAIL_HOST,
+  PAPERTRAIL_PORT = -1,
+  // Bot Config
+  CMD_PREFIX = '!',
+  // Default to requiring the user to have posted at least 50 times (a deterrent to creating new SA
+  // accounts to bypass a blacklist)
+  MIN_POST_COUNT = 50,
+} = process.env;
 
 export enum CMD_GROUPS {
   AUTH = 'auth',

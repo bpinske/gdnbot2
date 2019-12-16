@@ -1,10 +1,12 @@
 import axios from 'axios';
 
+import { SESSION_ID, SESSION_HASH, BBUSER_ID, BBPASSWORD } from './constants';
+
 const COOKIES = {
-  sessionid: process.env.SESSION_ID,
-  sessionhash: process.env.SESSION_HASH,
-  bbuserid: process.env.BBUSER_ID,
-  bbpassword: process.env.BBPASSWORD,
+  sessionid: SESSION_ID,
+  sessionhash: SESSION_HASH,
+  bbuserid: BBUSER_ID,
+  bbpassword: BBPASSWORD,
 };
 
 // Format the above cookies into a value suitable for use as the Cookie header
