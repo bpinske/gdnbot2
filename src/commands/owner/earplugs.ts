@@ -42,7 +42,7 @@ export default class EarplugsCommand extends GDNCommand {
       return null;
     }
 
-    let hasEarplugsIn = Boolean(await this.client.settings.get(SETTINGS.EARPLUGS_IN));
+    let hasEarplugsIn = Boolean(await guild.settings.get(SETTINGS.EARPLUGS_IN));
 
     logger.debug(tag, `Bot has earplugs in: ${hasEarplugsIn}`);
 
@@ -54,7 +54,7 @@ export default class EarplugsCommand extends GDNCommand {
 
     logger.debug(tag, `Setting "${SETTINGS.EARPLUGS_IN}" to ${!hasEarplugsIn}`);
 
-    await this.client.settings.set(SETTINGS.EARPLUGS_IN, !hasEarplugsIn);
+    await guild.settings.set(SETTINGS.EARPLUGS_IN, !hasEarplugsIn);
     hasEarplugsIn = !hasEarplugsIn;
 
     return message.reply(`my earplugs ${hasEarplugsIn ? 'are now in' : 'have been taken out'}.`);
