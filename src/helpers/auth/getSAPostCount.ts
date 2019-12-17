@@ -7,7 +7,7 @@ interface SAPostCount {
   reason?: string;
 }
 
-const postCountRegEx = /been (\d+) posts/i;
+const postCountRegEx = /been (-?\d+) posts/i;
 
 const reasonNoPostCountFound = oneLine`
   I could not find a post count on the SA profile page for the username you provided. The bot
