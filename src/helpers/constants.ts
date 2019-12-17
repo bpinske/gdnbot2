@@ -12,9 +12,8 @@ export const {
   PAPERTRAIL_PORT = -1,
   // Bot Config
   CMD_PREFIX = '!',
-  // Default to requiring the user to have posted at least 50 times (a deterrent to creating new SA
-  // accounts to bypass a blacklist)
-  MIN_POST_COUNT = 50,
+  // Default to requiring the user to have registered at least 7 days ago (a deterrent to creating
+  // new SA accounts to bypass a blacklist)
   MIN_ACCOUNT_AGE_DAYS = 7,
 } = process.env;
 
