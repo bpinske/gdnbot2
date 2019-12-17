@@ -13,6 +13,7 @@ services:
       - SESSION_HASH
       - BBUSER_ID
       - BBPASSWORD
+      - MIN_ACCOUNT_AGE_DAYS
     volumes:
       # Preserve the settings database on the host filesystem
       - ./settings.db:/usr/src/app/settings.db:rw
