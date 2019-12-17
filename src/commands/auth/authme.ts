@@ -214,7 +214,7 @@ export default class AuthmeCommand extends GDNCommand {
 
     if (age < MIN_ACCOUNT_AGE_DAYS) {
       logger.info(tag, 'User account age in days is below minimum, exiting');
-      return message.say(oneLine`
+      return member.send(oneLine`
         Your SA account must be at least ${MIN_ACCOUNT_AGE_DAYS} days old. Please try again later.
       `);
     }
