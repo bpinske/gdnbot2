@@ -6,7 +6,7 @@ import { stripIndents, oneLine } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import logger, { getLogTag } from '../../helpers/logger';
 import cleanupMessages from '../../helpers/cleanupMessages';
-import { CMD_GROUPS, CMD_NAMES, API_ERROR, MIN_POST_COUNT } from '../../helpers/constants';
+import { CMD_GROUPS, CMD_NAMES, API_ERROR, MIN_ACCOUNT_AGE_DAYS } from '../../helpers/constants';
 
 // Checks
 import isMemberBlacklisted from '../../checks/isMemberBlacklisted';
@@ -20,7 +20,7 @@ import getHash from '../../helpers/auth/getHash';
 import confirmHash from '../../helpers/auth/confirmHash';
 import getSAProfile from '../../helpers/auth/getSAProfile';
 import getSAID from '../../helpers/auth/getSAID';
-import getSAPostCount from '../../helpers/auth/getSAPostCount';
+import getSAAge from '../../helpers/auth/getSAAge';
 import addRoleAndLog from '../../helpers/auth/addRoleAndLog';
 import addUserToDB from '../../helpers/auth/addUserToDB';
 
@@ -203,19 +203,19 @@ export default class AuthmeCommand extends GDNCommand {
     }
 
     /**
-     * RETRIEVING POST COUNT FROM USER PROFILE
+     * CALCULATING ACCOUNT AGE FROM USER PROFILE
      */
-    const { count, reason: reasonNoPostCount } = await getSAPostCount(tag, profile);
+    const { age, reason: reasonNoRegDate } = await getSAAge(tag, profile);
 
-    if (count < 0) {
-      return member.send(reasonNoPostCount);
+    // Reg dates in the past will have a negative age
+    if (age === undefined) {
+      return member.send(reasonNoRegDate);
     }
 
-    // Require SA accounts to have a minimum number of posts
-    if (count < MIN_POST_COUNT) {
-      logger.info(tag, 'User post count is below minimum, exiting');
+    if (age < MIN_ACCOUNT_AGE_DAYS) {
+      logger.info(tag, 'User account age in days is below minimum, exiting');
       return message.say(oneLine`
-        Your SA account has an insufficient posting history. Please try again later.
+        Your SA account must be at least ${MIN_ACCOUNT_AGE_DAYS} days old. Please try again later.
       `);
     }
 
