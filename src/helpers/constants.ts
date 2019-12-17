@@ -15,6 +15,7 @@ export const {
   // Default to requiring the user to have posted at least 50 times (a deterrent to creating new SA
   // accounts to bypass a blacklist)
   MIN_POST_COUNT = 50,
+  MIN_ACCOUNT_AGE_DAYS = 7,
 } = process.env;
 
 export enum CMD_GROUPS {
