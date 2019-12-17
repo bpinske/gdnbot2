@@ -22,6 +22,7 @@
     "discord.js": "github:discordjs/discord.js",
     "discord.js-commando": "github:MasterKale/Commando",
     "dotenv": "^8.2.0",
+    "luxon": "^1.21.3",
     "sqlite": "^3.0.3"
   },
   "devDependencies": {
@@ -30,6 +31,7 @@
     "@types/cheerio": "^0.22.15",
     "@types/common-tags": "^1.8.0",
     "@types/jest": "^24.0.23",
+    "@types/luxon": "^1.21.0",
     "@types/moxios": "^0.4.9",
     "@types/ws": "^6.0.4",
     "@typescript-eslint/eslint-plugin": "^2.10.0",
