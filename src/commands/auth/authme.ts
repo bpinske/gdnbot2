@@ -23,6 +23,7 @@ import getSAID from '../../helpers/auth/getSAID';
 import getSAAge from '../../helpers/auth/getSAAge';
 import addRoleAndLog from '../../helpers/auth/addRoleAndLog';
 import addUserToDB from '../../helpers/auth/addUserToDB';
+import logCommandStart from '../../helpers/logCommandStart';
 
 interface AuthmeCommandArgs {
   username: string;
@@ -60,12 +61,11 @@ export default class AuthmeCommand extends GDNCommand {
 
   async run (message: CommandoMessage, { username }: AuthmeCommandArgs) {
     const { guild, member } = message;
-    const { commandPrefix } = this.client;
 
     // Prepare a tag for logging
     const tag = getLogTag(message.id);
 
-    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
+    logCommandStart(tag, message);
 
     /**
      * PERFORMING AUTH CHECKS

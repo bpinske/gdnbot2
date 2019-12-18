@@ -37,13 +37,13 @@ export default function getServerInfoCollector (
          * See if the provided invite code is for an invite that'll expire
          */
 
-        logger.info(tag, `Confirming invite code "${inviteCode}" is valid and won't expire`);
+        logger.info(tag, `Confirming invite code '${inviteCode}' is valid and won't expire`);
 
         let invite;
         try {
           invite = await client.fetchInvite(inviteCode);
         } catch (err) {
-          if (err.code === API_ERROR.UNKNOWN_INVITE) {
+          if (err.code === API_ERROR.UNKNOWN_INVITE || err.message === '404: Not Found') {
             logger.info(tag, 'Invalid invite code, exiting');
 
             return oneLine`

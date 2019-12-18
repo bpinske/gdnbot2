@@ -6,6 +6,7 @@ import { oneLine, stripIndents } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import { CMD_GROUPS, CMD_NAMES, API_ERROR } from '../../helpers/constants';
 import logger, { getLogTag } from '../../helpers/logger';
+import logCommandStart from '../../helpers/logCommandStart';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
@@ -31,6 +32,8 @@ export default class SetDescriptionCommand extends GDNCommand {
           permissions than you currently have. This bot's pretty capable, but not _that_
           capable :wink:
         `}
+
+        _In memory of BroBot (2016 - 2019)_ :robot:
       `,
       guildOnly: true,
       examples: [
@@ -46,9 +49,7 @@ export default class SetDescriptionCommand extends GDNCommand {
             const { id } = message;
             const tag = getLogTag(id);
 
-            const { commandPrefix: prefix } = this.client;
-
-            logger.info(tag, `[EVENT START: ${prefix}${this.name}]`);
+            logCommandStart(tag, message);
 
             logger.info(tag, `Validating role name "${roleName}"`);
 
@@ -81,16 +82,8 @@ export default class SetDescriptionCommand extends GDNCommand {
 
   async run (message: CommandoMessage, { role }: RoleArgs) {
     const { id, guild, member } = message;
-    const { commandPrefix } = this.client;
 
     const tag = getLogTag(id);
-
-    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
-
-    logger.info(
-      tag,
-      `Toggling role "${role.name}" in ${guild.name} (${guild.id}) on ${member.user.tag}`,
-    );
 
     /**
      * See if the server is enrolled
@@ -112,6 +105,14 @@ export default class SetDescriptionCommand extends GDNCommand {
         logger.info(tag, 'Role is not authme role and is safe to toggle');
       }
     }
+
+    logger.info(
+      tag,
+      oneLine`
+        Toggling role "${role.name}" in ${guild.name} (${guild.id}) on
+        ${member.user.tag} (${member.id})
+      `,
+    );
 
     const hasRole = member.roles.has(role.id);
 

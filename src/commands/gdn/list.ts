@@ -6,6 +6,8 @@ import GDNCommand from '../../helpers/GDNCommand';
 import listTextChannels from '../../helpers/gdn/listTextChannels';
 import listRoles from '../../helpers/gdn/listRoles';
 import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
+import logger, { getLogTag } from '../../helpers/logger';
+import logCommandStart from '../../helpers/logCommandStart';
 
 interface ListCommandArgs {
   option: string;
@@ -53,7 +55,13 @@ export default class ListCommand extends GDNCommand {
   }
 
   run (message: CommandoMessage, { option }: ListCommandArgs) {
-    const { guild } = message;
+    const { id, guild } = message;
+
+    const tag = getLogTag(id);
+
+    logCommandStart(tag, message);
+
+    logger.info(tag, `Displaying list of ${option}`);
 
     const listEmbed = new GDNEmbed()
       .setTitle(`${guild.name} ${capitalize(option)}:`);

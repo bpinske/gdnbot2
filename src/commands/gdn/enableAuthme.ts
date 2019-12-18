@@ -7,6 +7,7 @@ import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
 import getRoleCollector, { RoleArgs } from '../../helpers/gdn/getRoleCollector';
 import getChannelCollector, { ChannelArgs } from '../../helpers/gdn/getChannelCollector';
 import { axiosGDN, GDN_URLS, APIGuildAuthme } from '../../helpers/axiosGDN';
+import logCommandStart from '../../helpers/logCommandStart';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
@@ -53,7 +54,7 @@ export default class EnableAuthmeCommand extends GDNCommand {
 
     const tag = getLogTag(id);
 
-    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
+    logCommandStart(tag, message);
 
     /**
      * Check that server is enrolled
