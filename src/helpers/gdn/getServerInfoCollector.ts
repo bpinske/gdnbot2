@@ -43,7 +43,7 @@ export default function getServerInfoCollector (
         try {
           invite = await client.fetchInvite(inviteCode);
         } catch (err) {
-          if (err.code === API_ERROR.UNKNOWN_INVITE) {
+          if (err.code === API_ERROR.UNKNOWN_INVITE || err.message === '404: Not Found') {
             logger.info(tag, 'Invalid invite code, exiting');
 
             return oneLine`
