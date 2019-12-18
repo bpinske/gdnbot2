@@ -37,7 +37,7 @@ export default function getServerInfoCollector (
          * See if the provided invite code is for an invite that'll expire
          */
 
-        logger.info(tag, `Confirming invite code "${inviteCode}" is valid and won't expire`);
+        logger.info(tag, `Confirming invite code '${inviteCode}' is valid and won't expire`);
 
         let invite;
         try {
