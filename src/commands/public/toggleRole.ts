@@ -32,6 +32,8 @@ export default class SetDescriptionCommand extends GDNCommand {
           permissions than you currently have. This bot's pretty capable, but not _that_
           capable :wink:
         `}
+
+        _In memory of BroBot (2016 - 2019)_ :robot:
       `,
       guildOnly: true,
       examples: [
