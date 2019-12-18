@@ -6,6 +6,7 @@ import { oneLine, stripIndents } from 'common-tags';
 import GDNCommand from '../../helpers/GDNCommand';
 import { CMD_GROUPS, CMD_NAMES, API_ERROR } from '../../helpers/constants';
 import logger, { getLogTag } from '../../helpers/logger';
+import logCommandStart from '../../helpers/logCommandStart';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
@@ -46,9 +47,7 @@ export default class SetDescriptionCommand extends GDNCommand {
             const { id } = message;
             const tag = getLogTag(id);
 
-            const { commandPrefix: prefix } = this.client;
-
-            logger.info(tag, `[EVENT START: ${prefix}${this.name}]`);
+            logCommandStart(tag, message);
 
             logger.info(tag, `Validating role name "${roleName}"`);
 
@@ -81,13 +80,8 @@ export default class SetDescriptionCommand extends GDNCommand {
 
   async run (message: CommandoMessage, { role }: RoleArgs) {
     const { id, guild, member } = message;
-    const { commandPrefix } = this.client;
 
     const tag = getLogTag(id);
-
-    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
-
-    logger.debug(tag, `Called by ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`);
 
     /**
      * See if the server is enrolled

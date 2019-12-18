@@ -10,6 +10,7 @@ import { axiosGDN, APIGuildUpdate, GDN_URLS } from '../../helpers/axiosGDN';
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 import GDNEmbed from '../../helpers/GDNEmbed';
 import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
+import logCommandStart from '../../helpers/logCommandStart';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 
@@ -30,14 +31,11 @@ export default class SetDescriptionCommand extends GDNCommand {
   }
 
   async run (message: CommandoMessage) {
-    const { id, guild, member } = message;
-    const { commandPrefix: prefix } = this.client;
+    const { id, guild } = message;
 
     const tag = getLogTag(id);
 
-    logger.info(tag, `[START EVENT] ${prefix}${this.name}`);
-
-    logger.debug(tag, `Called by ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`);
+    logCommandStart(tag, message);
 
     message.channel.startTyping();
 

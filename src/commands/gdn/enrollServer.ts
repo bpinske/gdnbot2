@@ -10,6 +10,7 @@ import getServerInfoCollector, { ServerInfoArgs } from '../../helpers/gdn/getSer
 import truncateServerDescription from '../../helpers/gdn/truncateServerDescription';
 import { inviteCodeToInviteURL } from '../../helpers/gdn/guildInvites';
 import { CMD_GROUPS, CMD_NAMES } from '../../helpers/constants';
+import logCommandStart from '../../helpers/logCommandStart';
 
 import hasGuildEnrolled from '../../checks/hasGuildEnrolled';
 import hasMemberAuthed from '../../checks/hasMemberAuthed';
@@ -49,9 +50,7 @@ export default class ListCommand extends GDNCommand {
 
     const tag = getLogTag(id);
 
-    logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
-
-    logger.debug(tag, `Called by ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`);
+    logCommandStart(tag, message);
 
     // Give some feedback that the bot is doing something
     message.channel.startTyping();
