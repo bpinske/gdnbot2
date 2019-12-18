@@ -44,17 +44,14 @@ export default class ListCommand extends GDNCommand {
   }
 
   async run (message: CommandoMessage) {
-    const {
-      id,
-      name,
-      memberCount,
-    } = message.guild;
+    const { id, guild, member } = message;
     const { commandPrefix } = this.client;
 
-    const tag = getLogTag(message.id);
+    const tag = getLogTag(id);
 
     logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
-    logger.debug(tag, `Called in ${name} (${id})`);
+
+    logger.debug(tag, `Called by ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`);
 
     // Give some feedback that the bot is doing something
     message.channel.startTyping();
@@ -62,7 +59,7 @@ export default class ListCommand extends GDNCommand {
     /**
      * Ensure that the server hasn't been authed before
      */
-    const { isEnrolled } = await hasGuildEnrolled(tag, message.guild);
+    const { isEnrolled } = await hasGuildEnrolled(tag, guild);
 
     if (isEnrolled) {
       logger.info(tag, 'Server is already enrolled, exiting');
@@ -77,7 +74,7 @@ export default class ListCommand extends GDNCommand {
     /**
      * Ensure the user has authed before
      */
-    const { hasAuthed, memberData } = await hasMemberAuthed(tag, message.member);
+    const { hasAuthed, memberData } = await hasMemberAuthed(tag, member);
 
     if (!hasAuthed) {
       logger.info(tag, 'User has not authed before, exiting');
@@ -139,10 +136,10 @@ export default class ListCommand extends GDNCommand {
 
     // Prepare server details for submission
     const details: APIGuild = {
-      name,
-      server_id: id,
+      name: guild.name,
+      server_id: guild.id,
       description: truncateServerDescription(description),
-      user_count: roundDown(memberCount),
+      user_count: roundDown(guild.memberCount),
       invite_url: inviteCodeToInviteURL(inviteCode),
     };
 

@@ -30,12 +30,14 @@ export default class SetDescriptionCommand extends GDNCommand {
   }
 
   async run (message: CommandoMessage) {
-    const { id, guild } = message;
+    const { id, guild, member } = message;
     const { commandPrefix: prefix } = this.client;
 
     const tag = getLogTag(id);
 
     logger.info(tag, `[START EVENT] ${prefix}${this.name}`);
+
+    logger.debug(tag, `Called by ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`);
 
     message.channel.startTyping();
 

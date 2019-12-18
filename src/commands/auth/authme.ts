@@ -67,6 +67,8 @@ export default class AuthmeCommand extends GDNCommand {
 
     logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
 
+    logger.debug(tag, `Called by ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`);
+
     /**
      * PERFORMING AUTH CHECKS
      */

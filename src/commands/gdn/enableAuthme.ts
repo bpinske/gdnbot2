@@ -48,12 +48,14 @@ export default class EnableAuthmeCommand extends GDNCommand {
   }
 
   async run (message: CommandoMessage) {
-    const { id, guild } = message;
+    const { id, guild, member } = message;
     const { commandPrefix } = this.client;
 
     const tag = getLogTag(id);
 
     logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
+
+    logger.debug(tag, `Called by ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`);
 
     /**
      * Check that server is enrolled

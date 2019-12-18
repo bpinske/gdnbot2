@@ -87,10 +87,7 @@ export default class SetDescriptionCommand extends GDNCommand {
 
     logger.info(tag, `[EVENT START: ${commandPrefix}${this.name}]`);
 
-    logger.info(
-      tag,
-      `Toggling role "${role.name}" in ${guild.name} (${guild.id}) on ${member.user.tag}`,
-    );
+    logger.debug(tag, `Called by ${member.user.tag} (${member.id}) in ${guild.name} (${guild.id})`);
 
     /**
      * See if the server is enrolled
@@ -112,6 +109,14 @@ export default class SetDescriptionCommand extends GDNCommand {
         logger.info(tag, 'Role is not authme role and is safe to toggle');
       }
     }
+
+    logger.info(
+      tag,
+      oneLine`
+        Toggling role "${role.name}" in ${guild.name} (${guild.id}) on
+        ${member.user.tag} (${member.id})
+      `,
+    );
 
     const hasRole = member.roles.has(role.id);
 
