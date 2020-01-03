@@ -59,14 +59,17 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
       // Patch the server count
       try {
         const count = roundDown(authedUsers.size);
-
-        logger.debug(subTag, `Rounded user count: ${count}`);
-
-        await axiosGDN.patch(`${GDN_URLS.GUILDS}/${guild.id}`, {
+        // Updated server info
+        const payload = {
+          name: guild.name,
           user_count: count,
-        });
+        };
 
-        logger.info(subTag, 'Successfully updated member count');
+        logger.debug({ ...subTag, payload }, 'Updating server info');
+
+        await axiosGDN.patch(`${GDN_URLS.GUILDS}/${guild.id}`, payload);
+
+        logger.info(subTag, 'Successfully updated member count and name');
       } catch (err) {
         logger.error({ ...subTag, err }, 'Error sending updated count to server');
       }
