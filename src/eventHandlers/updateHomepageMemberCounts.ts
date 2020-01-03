@@ -1,4 +1,4 @@
-import { SnowflakeUtil } from 'discord.js';
+import { SnowflakeUtil, Collection, GuildMember } from 'discord.js';
 import { CommandoClient } from 'discord.js-commando';
 
 import logger, { getLogTag } from '../helpers/logger';
@@ -40,33 +40,46 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
       // Grab the auth role ID registered with the backend
       const authedRoleID = guildsMap[guild.id].validated_role_id;
 
-      let authedUsers;
-      let message;
+      let authedUsers: Collection<string, GuildMember>;
+      let message: string;
       if (!authedRoleID) {
         // Auth wasn't set up here, so just return the total number of Members
         authedUsers = guild.members;
-        message = `Updating total member count for ${guild.name}: ${authedUsers.size}`;
+        message = 'Updating total member count';
       } else {
         // Go through each Member and filter for ones that have the Guild's auth role
         authedUsers = guild.members.filter(
           member => member.roles.some(role => role.id === authedRoleID),
         );
-        message = `Updating authed member count for ${guild.name}: ${authedUsers.size}`;
+        message = 'Updating authed member count';
       }
 
-      logger.info(subTag, message);
+      /**
+       * Sometimes servers will be misconfigured, with an authme role specified but no one assigned
+       * to it. In those cases, fall back to using total member count so that the homepage doesn't
+       * display "0 goons"
+       */
+      if (authedRoleID && authedUsers.size < 1) {
+        authedUsers = guild.members;
+        message = 'Authed member count was zero. Updating total member count';
+      }
+
+      logger.info(subTag, `${message} for ${guild.name}: ${authedUsers.size}`);
 
       // Patch the server count
       try {
         const count = roundDown(authedUsers.size);
-
-        logger.debug(subTag, `Rounded user count: ${count}`);
-
-        await axiosGDN.patch(`${GDN_URLS.GUILDS}/${guild.id}`, {
+        // Updated server info
+        const payload = {
+          name: guild.name,
           user_count: count,
-        });
+        };
 
-        logger.info(subTag, 'Successfully updated member count');
+        logger.debug({ ...subTag, payload }, 'Updating server info');
+
+        await axiosGDN.patch(`${GDN_URLS.GUILDS}/${guild.id}`, payload);
+
+        logger.info(subTag, 'Successfully updated member count and name');
       } catch (err) {
         logger.error({ ...subTag, err }, 'Error sending updated count to server');
       }
