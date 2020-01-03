@@ -1,4 +1,4 @@
-import { SnowflakeUtil } from 'discord.js';
+import { SnowflakeUtil, Collection, GuildMember } from 'discord.js';
 import { CommandoClient } from 'discord.js-commando';
 
 import logger, { getLogTag } from '../helpers/logger';
@@ -40,8 +40,8 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
       // Grab the auth role ID registered with the backend
       const authedRoleID = guildsMap[guild.id].validated_role_id;
 
-      let authedUsers;
-      let message;
+      let authedUsers: Collection<string, GuildMember>;
+      let message: string;
       if (!authedRoleID) {
         // Auth wasn't set up here, so just return the total number of Members
         authedUsers = guild.members;
