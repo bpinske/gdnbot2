@@ -45,16 +45,16 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
       if (!authedRoleID) {
         // Auth wasn't set up here, so just return the total number of Members
         authedUsers = guild.members;
-        message = `Updating total member count for ${guild.name}: ${authedUsers.size}`;
+        message = 'Updating total member count';
       } else {
         // Go through each Member and filter for ones that have the Guild's auth role
         authedUsers = guild.members.filter(
           member => member.roles.some(role => role.id === authedRoleID),
         );
-        message = `Updating authed member count for ${guild.name}: ${authedUsers.size}`;
+        message = 'Updating authed member count';
       }
 
-      logger.info(subTag, message);
+      logger.info(subTag, `${message} for ${guild.name}: ${authedUsers.size}`);
 
       // Patch the server count
       try {
