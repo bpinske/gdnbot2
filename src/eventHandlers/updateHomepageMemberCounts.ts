@@ -54,6 +54,16 @@ export async function updateHomepageMemberCounts (bot: CommandoClient) {
         message = 'Updating authed member count';
       }
 
+      /**
+       * Sometimes servers will be misconfigured, with an authme role specified but no one assigned
+       * to it. In those cases, fall back to using total member count so that the homepage doesn't
+       * display "0 goons"
+       */
+      if (authedRoleID && authedUsers.size < 1) {
+        authedUsers = guild.members;
+        message = 'Authed member count was zero. Updating total member count';
+      }
+
       logger.info(subTag, `${message} for ${guild.name}: ${authedUsers.size}`);
 
       // Patch the server count
