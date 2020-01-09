@@ -2,12 +2,12 @@
 import dotenv from 'dotenv';
 
 import { CommandoClient, SQLiteProvider, Command, CommandoMessage } from 'discord.js-commando';
-import { Guild } from 'discord.js';
+import { Guild, SnowflakeUtil } from 'discord.js';
 import sqlite from 'sqlite';
 import path from 'path';
 import { stripIndents } from 'common-tags';
 
-import logger from './helpers/logger';
+import logger, { getLogTag } from './helpers/logger';
 import { CMD_PREFIX, CMD_GROUPS, DISCORD_BOT_TOKEN } from './helpers/constants';
 
 // Event handlers
@@ -17,6 +17,7 @@ import {
   updateHomepageMemberCounts,
   UPDATE_INTERVAL,
 } from './eventHandlers/updateHomepageMemberCounts';
+import removeGuildFromGDN from './eventHandlers/removeGuildFromGDN';
 
 dotenv.config();
 
@@ -79,8 +80,10 @@ bot.once('ready', () => {
 
   bot.user.setActivity('in the forge');
 
+  const tag = getLogTag('botinit');
+
   // Update bot activity to reflect number of guilds
-  updateServerCountActivity(bot);
+  updateServerCountActivity(tag, bot);
   // Update homepage server counts on boot
   updateHomepageMemberCounts(bot);
 });
@@ -101,14 +104,20 @@ bot.on('error', (err) => {
 
 // When the bot joins a Guild
 bot.on('guildCreate', (guild: Guild) => {
+  const tag = getLogTag(SnowflakeUtil.generate());
+
   logger.info(`Joined guild ${guild.name} (${guild.id})`);
-  updateServerCountActivity(bot);
+  updateServerCountActivity(tag, bot);
 });
 
 // When the bot leaves a Guild
 bot.on('guildDelete', (guild: Guild) => {
-  logger.info(`Left guild ${guild.name} (${guild.id})`);
-  updateServerCountActivity(bot);
+  const tag = getLogTag(SnowflakeUtil.generate());
+
+  logger.info(tag, `Left guild ${guild.name} (${guild.id})`);
+
+  updateServerCountActivity(tag, bot);
+  removeGuildFromGDN(tag, guild);
 });
 
 // When a Member joins a Guild
