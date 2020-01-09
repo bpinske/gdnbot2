@@ -1,8 +1,8 @@
 import { Guild } from 'discord.js';
+import { AxiosError } from 'axios';
 
 import logger, { LogTag } from '../helpers/logger';
 import { axiosGDN, GDN_URLS } from '../helpers/axiosGDN';
-import { AxiosError } from 'axios';
 
 /**
  * Remove a Discord Guild from GDN
