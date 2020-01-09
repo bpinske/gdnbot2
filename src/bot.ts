@@ -17,6 +17,7 @@ import {
   updateHomepageMemberCounts,
   UPDATE_INTERVAL,
 } from './eventHandlers/updateHomepageMemberCounts';
+import removeGuildFromGDN from './eventHandlers/removeGuildFromGDN';
 
 dotenv.config();
 
@@ -116,6 +117,7 @@ bot.on('guildDelete', (guild: Guild) => {
   logger.info(tag, `Left guild ${guild.name} (${guild.id})`);
 
   updateServerCountActivity(tag, bot);
+  removeGuildFromGDN(tag, guild);
 });
 
 // When a Member joins a Guild
